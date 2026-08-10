@@ -102,11 +102,3 @@ mostrar_matriz(encabezadosG, MatrizG)
 print()
 print()
 mostrar_matriz(encabezadosP, MatrizP)
-
-# GIT COMMIT
-'''
-Addicion de matrices para gastos y presupuestos, con las funciones necesarias para crearlas y llenar las mismas matrices
-y mostrarlas de una forma customizada dentro de la funcion de imprimir matrices, se hizo una lista de encabezados de ambas 
-matrices para lograr un efecto de plantilla de excel. Cumpliendo asi la tarea para la clase del 17/08/2026 
-Tambien se agregaron los minimo 5 de datos como listas de variables para cada matriz
-'''
