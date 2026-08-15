@@ -15,6 +15,8 @@ DescripcionG = [
     "Inscripción a taller de Excel"
 ]
 
+EstadoG = [True, True, True, True, True]
+
 #--------------------------LISTAS PRESUPUESTOS--------------------------------------------#
 NombreP = ["Limite Alimentos", "Limite Transporte", "Limite Ocio", "Limite Salud", "Limite Educación"]
 
@@ -32,6 +34,8 @@ DescripcionP = [
     "Libros y materiales de estudio"
 ]
 
+EstadoP = [True, True, True, True, True]
+
 # CREACION Y LLENADO DINÁMICO DE MATRICES
 def llenar_matrizGastos(matriz):
     filas = len(matriz)
@@ -48,6 +52,8 @@ def llenar_matrizGastos(matriz):
                 matriz[fil][col] = CategoriaG[fil]
             elif col == 4:
                 matriz[fil][col] = DescripcionG[fil]
+            elif col == 5:
+                matriz[fil][col] = "Activo" if EstadoG[fil] else "Inactivo"
 
 def llenar_matrizPresupuestos(matriz):
     filas = len(matriz)
@@ -64,10 +70,12 @@ def llenar_matrizPresupuestos(matriz):
                 matriz[fil][col] = CategoriaP[fil]
             elif col == 4:
                 matriz[fil][col] = DescripcionP[fil]
+            elif col == 5:
+                matriz[fil][col] = "Activo" if EstadoP[fil] else "Inactivo"
 
 def obtener_matriz_gastos():
     cant_filas = len(NombreG)
-    cant_columnas = 5
+    cant_columnas = 6
     if cant_filas == 0:
         return []
     matriz = [[0] * cant_columnas for _ in range(cant_filas)]
@@ -76,7 +84,7 @@ def obtener_matriz_gastos():
 
 def obtener_matriz_presupuestos():
     cant_filas = len(NombreP)
-    cant_columnas = 5
+    cant_columnas = 6
     if cant_filas == 0:
         return []
     matriz = [[0] * cant_columnas for _ in range(cant_filas)]
@@ -148,7 +156,8 @@ def listar_gastos_numerados():
         return False
     print("\nLISTADO DE GASTOS:")
     for i in range(len(NombreG)):
-        print(f"{i + 1}. {NombreG[i]} | Monto: ${MontoG[i]} | Cat: {CategoriaG[i]} | Fecha: {FechaG[i]}")
+        est = "Activo" if EstadoG[i] else "Inactivo"
+        print(f"{i + 1}. {NombreG[i]} | Monto: ${MontoG[i]} | Cat: {CategoriaG[i]} | Fecha: {FechaG[i]} | Estado: {est}")
     return True
 
 def agregar_gasto():
@@ -164,7 +173,8 @@ def agregar_gasto():
     FechaG.append(fecha)
     CategoriaG.append(categoria)
     DescripcionG.append(descripcion)
-    print("¡Gasto agregado exitosamente!\n")
+    EstadoG.append(True)
+    print("¡Gasto agregado exitosamente (Estado: Activo)!\n")
 
 def consultar_gasto():
     print("\n--- [R] CONSULTAR / BUSCAR GASTOS ---")
@@ -192,10 +202,11 @@ def consultar_gasto():
         print("No se encontraron gastos que coincidan con la búsqueda.")
     else:
         print(f"\nSe encontraron {len(coincidencias)} resultado(s):")
-        encabezados = ["#", "Gasto", "Monto", "Fecha", "Categoría", "Descripción"]
+        encabezados = ["#", "Gasto", "Monto", "Fecha", "Categoría", "Descripción", "Estado"]
         matriz_res = []
         for idx in coincidencias:
-            matriz_res.append([idx + 1, NombreG[idx], MontoG[idx], FechaG[idx], CategoriaG[idx], DescripcionG[idx]])
+            est = "Activo" if EstadoG[idx] else "Inactivo"
+            matriz_res.append([idx + 1, NombreG[idx], MontoG[idx], FechaG[idx], CategoriaG[idx], DescripcionG[idx], est])
         mostrar_matriz(encabezados, matriz_res)
 
 def modificar_gasto():
@@ -235,16 +246,23 @@ def modificar_gasto():
     CategoriaG[idx] = pedir_opcional("Nueva categoría", CategoriaG[idx])
     DescripcionG[idx] = pedir_opcional("Nueva descripción", DescripcionG[idx])
 
+    estado_actual = "Activo" if EstadoG[idx] else "Inactivo"
+    cambiar_est = input(f"¿Desea cambiar el estado actual ({estado_actual})? (s/n): ").strip().lower()
+    if cambiar_est == 's':
+        EstadoG[idx] = not EstadoG[idx]
+        nuevo_est = "Activo" if EstadoG[idx] else "Inactivo"
+        print(f"Estado cambiado a: {nuevo_est}")
+
     print("¡Gasto actualizado exitosamente!\n")
 
 def eliminar_gasto():
-    print("\n--- [D] ELIMINAR GASTO ---")
+    print("\n--- [D] DAR DE BAJA LÓGICA GASTO ---")
     if not listar_gastos_numerados():
         return
 
     while True:
         try:
-            opc = int(input("\nSeleccione el número de gasto a eliminar (0 para cancelar): "))
+            opc = int(input("\nSeleccione el número de gasto a dar de baja (0 para cancelar): "))
             if opc == 0:
                 return
             if 1 <= opc <= len(NombreG):
@@ -254,14 +272,20 @@ def eliminar_gasto():
         except ValueError:
             print("Debe ingresar un número entero válido.")
 
-    confirmacion = input(f"¿Está seguro de eliminar '{NombreG[idx]}' de ${MontoG[idx]}? (s/n): ").strip().lower()
+    if not EstadoG[idx]:
+        print(f"El gasto '{NombreG[idx]}' ya se encuentra en estado INACTIVO.")
+        reactivar = input("¿Desea reactivarlo? (s/n): ").strip().lower()
+        if reactivar == 's':
+            EstadoG[idx] = True
+            print(f"¡Gasto '{NombreG[idx]}' reactivado (Activo) correctamente!\n")
+        else:
+            print("Operación cancelada.\n")
+        return
+
+    confirmacion = input(f"¿Está seguro de dar de baja el gasto '{NombreG[idx]}' de ${MontoG[idx]}? (s/n): ").strip().lower()
     if confirmacion == 's':
-        eliminado = NombreG.pop(idx)
-        MontoG.pop(idx)
-        FechaG.pop(idx)
-        CategoriaG.pop(idx)
-        DescripcionG.pop(idx)
-        print(f"¡Gasto '{eliminado}' eliminado correctamente!\n")
+        EstadoG[idx] = False
+        print(f"¡Gasto '{NombreG[idx]}' dado de baja correctamente (Estado: Inactivo)!\n")
     else:
         print("Operación cancelada.\n")
 
@@ -274,7 +298,8 @@ def listar_presupuestos_numerados():
         return False
     print("\nLISTADO DE PRESUPUESTOS:")
     for i in range(len(NombreP)):
-        print(f"{i + 1}. {NombreP[i]} | Límite: ${MontoP[i]} | Cat: {CategoriaP[i]} | Fecha: {FechaP[i]}")
+        est = "Activo" if EstadoP[i] else "Inactivo"
+        print(f"{i + 1}. {NombreP[i]} | Límite: ${MontoP[i]} | Cat: {CategoriaP[i]} | Fecha: {FechaP[i]} | Estado: {est}")
     return True
 
 def agregar_presupuesto():
@@ -290,7 +315,8 @@ def agregar_presupuesto():
     FechaP.append(fecha)
     CategoriaP.append(categoria)
     DescripcionP.append(descripcion)
-    print("¡Presupuesto agregado exitosamente!\n")
+    EstadoP.append(True)
+    print("¡Presupuesto agregado exitosamente (Estado: Activo)!\n")
 
 def consultar_presupuesto():
     print("\n--- [R] CONSULTAR / BUSCAR PRESUPUESTOS ---")
@@ -318,10 +344,11 @@ def consultar_presupuesto():
         print("No se encontraron presupuestos que coincidan con la búsqueda.")
     else:
         print(f"\nSe encontraron {len(coincidencias)} resultado(s):")
-        encabezados = ["#", "Presupuesto", "Monto Límite", "Fecha", "Categoría", "Descripción"]
+        encabezados = ["#", "Presupuesto", "Monto Límite", "Fecha", "Categoría", "Descripción", "Estado"]
         matriz_res = []
         for idx in coincidencias:
-            matriz_res.append([idx + 1, NombreP[idx], MontoP[idx], FechaP[idx], CategoriaP[idx], DescripcionP[idx]])
+            est = "Activo" if EstadoP[idx] else "Inactivo"
+            matriz_res.append([idx + 1, NombreP[idx], MontoP[idx], FechaP[idx], CategoriaP[idx], DescripcionP[idx], est])
         mostrar_matriz(encabezados, matriz_res)
 
 def modificar_presupuesto():
@@ -361,16 +388,23 @@ def modificar_presupuesto():
     CategoriaP[idx] = pedir_opcional("Nueva categoría", CategoriaP[idx])
     DescripcionP[idx] = pedir_opcional("Nueva descripción", DescripcionP[idx])
 
+    estado_actual = "Activo" if EstadoP[idx] else "Inactivo"
+    cambiar_est = input(f"¿Desea cambiar el estado actual ({estado_actual})? (s/n): ").strip().lower()
+    if cambiar_est == 's':
+        EstadoP[idx] = not EstadoP[idx]
+        nuevo_est = "Activo" if EstadoP[idx] else "Inactivo"
+        print(f"Estado cambiado a: {nuevo_est}")
+
     print("¡Presupuesto actualizado exitosamente!\n")
 
 def eliminar_presupuesto():
-    print("\n--- [D] ELIMINAR PRESUPUESTO ---")
+    print("\n--- [D] DAR DE BAJA LÓGICA PRESUPUESTO ---")
     if not listar_presupuestos_numerados():
         return
 
     while True:
         try:
-            opc = int(input("\nSeleccione el número de presupuesto a eliminar (0 para cancelar): "))
+            opc = int(input("\nSeleccione el número de presupuesto a dar de baja (0 para cancelar): "))
             if opc == 0:
                 return
             if 1 <= opc <= len(NombreP):
@@ -380,14 +414,20 @@ def eliminar_presupuesto():
         except ValueError:
             print("Debe ingresar un número entero válido.")
 
-    confirmacion = input(f"¿Está seguro de eliminar '{NombreP[idx]}' de ${MontoP[idx]}? (s/n): ").strip().lower()
+    if not EstadoP[idx]:
+        print(f"El presupuesto '{NombreP[idx]}' ya se encuentra en estado INACTIVO.")
+        reactivar = input("¿Desea reactivarlo? (s/n): ").strip().lower()
+        if reactivar == 's':
+            EstadoP[idx] = True
+            print(f"¡Presupuesto '{NombreP[idx]}' reactivado (Activo) correctamente!\n")
+        else:
+            print("Operación cancelada.\n")
+        return
+
+    confirmacion = input(f"¿Está seguro de dar de baja el presupuesto '{NombreP[idx]}' de ${MontoP[idx]}? (s/n): ").strip().lower()
     if confirmacion == 's':
-        eliminado = NombreP.pop(idx)
-        MontoP.pop(idx)
-        FechaP.pop(idx)
-        CategoriaP.pop(idx)
-        DescripcionP.pop(idx)
-        print(f"¡Presupuesto '{eliminado}' eliminado correctamente!\n")
+        EstadoP[idx] = False
+        print(f"¡Presupuesto '{NombreP[idx]}' dado de baja correctamente (Estado: Inactivo)!\n")
     else:
         print("Operación cancelada.\n")
 
@@ -395,8 +435,8 @@ def eliminar_presupuesto():
 # MENÚS DE NAVEGACIÓN
 # -----------------------------------------------------------------------------------
 def ver_tablas_completas():
-    encabezadosG = ["Gastos", "Monto", "Fecha", "Categoria", "Descripcion"]
-    encabezadosP = ["Presupuestos", "Monto Límite", "Fecha", "Categoria", "Descripcion"]
+    encabezadosG = ["Gastos", "Monto", "Fecha", "Categoria", "Descripcion", "Estado"]
+    encabezadosP = ["Presupuestos", "Monto Límite", "Fecha", "Categoria", "Descripcion", "Estado"]
 
     print("\n=================== MATRIZ DE GASTOS ===================")
     matriz_g = obtener_matriz_gastos()
@@ -417,7 +457,7 @@ def menu_gastos():
         print("2. Consultar / Buscar gasto")
         print("3. Agregar nuevo gasto (Crear)")
         print("4. Modificar un gasto (Actualizar)")
-        print("5. Eliminar un gasto (Eliminar)")
+        print("5. Dar de baja lógica un gasto")
         print("0. Volver al menú principal")
         print("========================================")
         opc = input("Seleccione una opción: ").strip()
@@ -446,7 +486,7 @@ def menu_presupuestos():
         print("2. Consultar / Buscar presupuesto")
         print("3. Agregar nuevo presupuesto (Crear)")
         print("4. Modificar un presupuesto (Actualizar)")
-        print("5. Eliminar un presupuesto (Eliminar)")
+        print("5. Dar de baja lógica un presupuesto")
         print("0. Volver al menú principal")
         print("========================================")
         opc = input("Seleccione una opción: ").strip()
