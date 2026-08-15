@@ -150,24 +150,32 @@ def pedir_opcional(mensaje, valor_actual):
 # -----------------------------------------------------------------------------------
 # CRUD: GASTOS
 # -----------------------------------------------------------------------------------
-def listar_gastos_numerados(solo_activos=False):
+def listar_gastos_activos():
     if not NombreG:
         print("No hay gastos registrados.")
         return False
     
     cant = 0
-    titulo = "LISTADO DE GASTOS ACTIVOS:" if solo_activos else "LISTADO DE TODOS LOS GASTOS:"
-    print(f"\n{titulo}")
+    print("\nLISTADO DE GASTOS ACTIVOS:")
     for i in range(len(NombreG)):
-        if solo_activos and not EstadoG[i]:
-            continue
-        cant += 1
-        est = "Activo" if EstadoG[i] else "Inactivo"
-        print(f"{i + 1}. {NombreG[i]} | Monto: ${MontoG[i]} | Cat: {CategoriaG[i]} | Fecha: {FechaG[i]} | Estado: {est}")
+        if EstadoG[i]:
+            cant += 1
+            print(f"{i + 1}. {NombreG[i]} | Monto: ${MontoG[i]} | Cat: {CategoriaG[i]} | Fecha: {FechaG[i]}")
     
-    if solo_activos and cant == 0:
+    if cant == 0:
         print("No hay gastos activos registrados.")
         return False
+    return True
+
+def listar_gastos_numerados():
+    if not NombreG:
+        print("No hay gastos registrados.")
+        return False
+    
+    print("\nLISTADO DE GASTOS:")
+    for i in range(len(NombreG)):
+        est = "Activo" if EstadoG[i] else "Inactivo"
+        print(f"{i + 1}. {NombreG[i]} | Monto: ${MontoG[i]} | Cat: {CategoriaG[i]} | Fecha: {FechaG[i]} | Estado: {est}")
     return True
 
 def agregar_gasto():
@@ -302,24 +310,32 @@ def eliminar_gasto():
 # -----------------------------------------------------------------------------------
 # CRUD: PRESUPUESTOS
 # -----------------------------------------------------------------------------------
-def listar_presupuestos_numerados(solo_activos=False):
+def listar_presupuestos_activos():
     if not NombreP:
         print("No hay presupuestos registrados.")
         return False
 
     cant = 0
-    titulo = "LISTADO DE PRESUPUESTOS ACTIVOS:" if solo_activos else "LISTADO DE TODOS LOS PRESUPUESTOS:"
-    print(f"\n{titulo}")
+    print("\nLISTADO DE PRESUPUESTOS ACTIVOS:")
     for i in range(len(NombreP)):
-        if solo_activos and not EstadoP[i]:
-            continue
-        cant += 1
-        est = "Activo" if EstadoP[i] else "Inactivo"
-        print(f"{i + 1}. {NombreP[i]} | Límite: ${MontoP[i]} | Cat: {CategoriaP[i]} | Fecha: {FechaP[i]} | Estado: {est}")
+        if EstadoP[i]:
+            cant += 1
+            print(f"{i + 1}. {NombreP[i]} | Límite: ${MontoP[i]} | Cat: {CategoriaP[i]} | Fecha: {FechaP[i]}")
     
-    if solo_activos and cant == 0:
+    if cant == 0:
         print("No hay presupuestos activos registrados.")
         return False
+    return True
+
+def listar_presupuestos_numerados():
+    if not NombreP:
+        print("No hay presupuestos registrados.")
+        return False
+
+    print("\nLISTADO DE PRESUPUESTOS:")
+    for i in range(len(NombreP)):
+        est = "Activo" if EstadoP[i] else "Inactivo"
+        print(f"{i + 1}. {NombreP[i]} | Límite: ${MontoP[i]} | Cat: {CategoriaP[i]} | Fecha: {FechaP[i]} | Estado: {est}")
     return True
 
 def agregar_presupuesto():
@@ -473,7 +489,7 @@ def menu_gastos():
         print("\n========================================")
         print("         GESTIÓN DE GASTOS              ")
         print("========================================")
-        print("1. Listar gastos (Activos / Todos)")
+        print("1. Listar gastos activos")
         print("2. Consultar / Buscar gasto")
         print("3. Agregar nuevo gasto (Crear)")
         print("4. Modificar un gasto (Actualizar)")
@@ -483,16 +499,7 @@ def menu_gastos():
         opc = input("Seleccione una opción: ").strip()
 
         if opc == "1":
-            print("\n--- [1] LISTAR GASTOS ---")
-            print("1. Listar gastos activos")
-            print("2. Listar todos los gastos")
-            sub_opc = input("Seleccione una opción: ").strip()
-            if sub_opc == "1":
-                listar_gastos_numerados(solo_activos=True)
-            elif sub_opc == "2":
-                listar_gastos_numerados(solo_activos=False)
-            else:
-                print("Opción no válida.")
+            listar_gastos_activos()
         elif opc == "2":
             consultar_gasto()
         elif opc == "3":
@@ -511,7 +518,7 @@ def menu_presupuestos():
         print("\n========================================")
         print("       GESTIÓN DE PRESUPUESTOS          ")
         print("========================================")
-        print("1. Listar presupuestos (Activos / Todos)")
+        print("1. Listar presupuestos activos")
         print("2. Consultar / Buscar presupuesto")
         print("3. Agregar nuevo presupuesto (Crear)")
         print("4. Modificar un presupuesto (Actualizar)")
@@ -521,16 +528,7 @@ def menu_presupuestos():
         opc = input("Seleccione una opción: ").strip()
 
         if opc == "1":
-            print("\n--- [1] LISTAR PRESUPUESTOS ---")
-            print("1. Listar presupuestos activos")
-            print("2. Listar todos los presupuestos")
-            sub_opc = input("Seleccione una opción: ").strip()
-            if sub_opc == "1":
-                listar_presupuestos_numerados(solo_activos=True)
-            elif sub_opc == "2":
-                listar_presupuestos_numerados(solo_activos=False)
-            else:
-                print("Opción no válida.")
+            listar_presupuestos_activos()
         elif opc == "2":
             consultar_presupuesto()
         elif opc == "3":
