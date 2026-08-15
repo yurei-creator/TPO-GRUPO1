@@ -172,12 +172,21 @@ def consultar_gasto():
         print("No hay gastos para consultar.")
         return
 
-    busqueda = pedir_texto_no_vacio("Ingrese término de búsqueda (nombre o categoría): ").lower()
+    busqueda_str = pedir_texto_no_vacio("Ingrese término de búsqueda (nombre, categoría o N° de fila): ")
+    busqueda_lower = busqueda_str.lower()
     coincidencias = []
 
+    # Búsqueda por número de fila (1..N)
+    if busqueda_str.isdigit():
+        num = int(busqueda_str)
+        if 1 <= num <= len(NombreG):
+            coincidencias.append(num - 1)
+
+    # Búsqueda por texto (nombre o categoría)
     for i in range(len(NombreG)):
-        if busqueda in NombreG[i].lower() or busqueda in CategoriaG[i].lower():
-            coincidencias.append(i)
+        if busqueda_lower in NombreG[i].lower() or busqueda_lower in CategoriaG[i].lower():
+            if i not in coincidencias:
+                coincidencias.append(i)
 
     if not coincidencias:
         print("No se encontraron gastos que coincidan con la búsqueda.")
@@ -289,12 +298,21 @@ def consultar_presupuesto():
         print("No hay presupuestos para consultar.")
         return
 
-    busqueda = pedir_texto_no_vacio("Ingrese término de búsqueda (nombre o categoría): ").lower()
+    busqueda_str = pedir_texto_no_vacio("Ingrese término de búsqueda (nombre, categoría o N° de fila): ")
+    busqueda_lower = busqueda_str.lower()
     coincidencias = []
 
+    # Búsqueda por número de fila (1..N)
+    if busqueda_str.isdigit():
+        num = int(busqueda_str)
+        if 1 <= num <= len(NombreP):
+            coincidencias.append(num - 1)
+
+    # Búsqueda por texto (nombre o categoría)
     for i in range(len(NombreP)):
-        if busqueda in NombreP[i].lower() or busqueda in CategoriaP[i].lower():
-            coincidencias.append(i)
+        if busqueda_lower in NombreP[i].lower() or busqueda_lower in CategoriaP[i].lower():
+            if i not in coincidencias:
+                coincidencias.append(i)
 
     if not coincidencias:
         print("No se encontraron presupuestos que coincidan con la búsqueda.")
