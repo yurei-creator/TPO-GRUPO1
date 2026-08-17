@@ -1,4 +1,5 @@
 #--------------------------LISTAS GASTOS--------------------------------------------#
+
 NombreG = ["Supermercado", "Gasolina", "Cine", "Farmacia", "Curso online"]
 
 MontoG = [120, 45, 25, 15.50, 80]
@@ -16,6 +17,8 @@ DescripcionG = [
 ]
 
 EstadoG = [True, True, True, True, True]
+
+gastos = [NombreG,MontoG,FechaG, CategoriaG, DescripcionG, EstadoG]
 
 #--------------------------LISTAS PRESUPUESTOS--------------------------------------------#
 NombreP = ["Limite Alimentos", "Limite Transporte", "Limite Ocio", "Limite Salud", "Limite Educación"]
@@ -36,69 +39,54 @@ DescripcionP = [
 
 EstadoP = [True, True, True, True, True]
 
+presupuestos = [NombreP, MontoP, FechaP, CategoriaP, DescripcionP, EstadoP]
+
+# Encabezados
+encabezadosG = ["Gastos", "Monto", "Fecha", "Categoria", "Descripcion"]
+encabezadosP = ["Presupuestos", "Monto", "Fecha", "Categoria", "Descripcion"]
+
 # CREACION Y LLENADO DINÁMICO DE MATRICES
-def llenar_matrizGastos(matriz):
-    filas = len(matriz)
-    columnas = len(matriz[0]) 
-    for fil in range(filas):
-        for col in range(columnas):
-            if col == 0:
-                matriz[fil][col] = NombreG[fil]
-            elif col == 1:
-                matriz[fil][col] = MontoG[fil]
-            elif col == 2:
-                matriz[fil][col] = FechaG[fil]
-            elif col == 3:
-                matriz[fil][col] = CategoriaG[fil]
-            elif col == 4:
-                matriz[fil][col] = DescripcionG[fil]
-            elif col == 5:
-                matriz[fil][col] = "Activo" if EstadoG[fil] else "Inactivo"
 
-def llenar_matrizPresupuestos(matriz):
-    filas = len(matriz)
-    columnas = len(matriz[0]) 
-    for fil in range(filas):
-        for col in range(columnas):
-            if col == 0:
-                matriz[fil][col] = NombreP[fil]
-            elif col == 1:
-                matriz[fil][col] = MontoP[fil]
-            elif col == 2:
-                matriz[fil][col] = FechaP[fil]
-            elif col == 3:
-                matriz[fil][col] = CategoriaP[fil]
-            elif col == 4:
-                matriz[fil][col] = DescripcionP[fil]
-            elif col == 5:
-                matriz[fil][col] = "Activo" if EstadoP[fil] else "Inactivo"
+def obtener_matriz_gastos(lista):
+    matriz = []
 
-def obtener_matriz_gastos():
-    cant_filas = len(NombreG)
-    cant_columnas = 6
-    if cant_filas == 0:
-        return []
-    matriz = [[0] * cant_columnas for _ in range(cant_filas)]
-    llenar_matrizGastos(matriz)
+    for col in range(len(lista[0])):
+        fila = [
+            lista[0][col],
+            lista[1][col],
+            lista[2][col],
+            lista[3][col],
+            lista[4][col],
+            "Activo" if lista[5][col] else "Inactivo"
+        ]
+
+        matriz.append(fila)
     return matriz
 
-def obtener_matriz_presupuestos():
-    cant_filas = len(NombreP)
-    cant_columnas = 6
-    if cant_filas == 0:
-        return []
-    matriz = [[0] * cant_columnas for _ in range(cant_filas)]
-    llenar_matrizPresupuestos(matriz)
+def obtener_matriz_presupuestos(lista):
+    matriz = []
+
+    for col in range(len(lista[0])):
+        fila = [
+            lista[0][col],
+            lista[1][col],
+            lista[2][col],
+            lista[3][col],
+            lista[4][col],
+            "Activo" if lista[5][col] else "Inactivo"
+        ]
+
+        matriz.append(fila)
     return matriz
 
 # MOSTRAR MATRICES
-def mostrar_matriz(encabezados, matriz):
+def mostrar_matriz(matriz, encabezados):
     if not matriz:
         print("No hay datos cargados.")
         return
 
     filas = len(matriz)
-    columnas = len(matriz[0])
+    columnas = len(encabezados)
     anchos = []
 
     for col in range(columnas):
@@ -150,33 +138,6 @@ def pedir_opcional(mensaje, valor_actual):
 # -----------------------------------------------------------------------------------
 # CRUD: GASTOS
 # -----------------------------------------------------------------------------------
-def listar_gastos_activos():
-    if not NombreG:
-        print("No hay gastos registrados.")
-        return False
-    
-    cant = 0
-    print("\nLISTADO DE GASTOS ACTIVOS:")
-    for i in range(len(NombreG)):
-        if EstadoG[i]:
-            cant += 1
-            print(f"{i + 1}. {NombreG[i]} | Monto: ${MontoG[i]} | Cat: {CategoriaG[i]} | Fecha: {FechaG[i]}")
-    
-    if cant == 0:
-        print("No hay gastos activos registrados.")
-        return False
-    return True
-
-def listar_gastos_numerados():
-    if not NombreG:
-        print("No hay gastos registrados.")
-        return False
-    
-    print("\nLISTADO DE GASTOS:")
-    for i in range(len(NombreG)):
-        est = "Activo" if EstadoG[i] else "Inactivo"
-        print(f"{i + 1}. {NombreG[i]} | Monto: ${MontoG[i]} | Cat: {CategoriaG[i]} | Fecha: {FechaG[i]} | Estado: {est}")
-    return True
 
 def agregar_gasto():
     print("\n--- [C] AGREGAR NUEVO GASTO ---")
@@ -310,33 +271,6 @@ def eliminar_gasto():
 # -----------------------------------------------------------------------------------
 # CRUD: PRESUPUESTOS
 # -----------------------------------------------------------------------------------
-def listar_presupuestos_activos():
-    if not NombreP:
-        print("No hay presupuestos registrados.")
-        return False
-
-    cant = 0
-    print("\nLISTADO DE PRESUPUESTOS ACTIVOS:")
-    for i in range(len(NombreP)):
-        if EstadoP[i]:
-            cant += 1
-            print(f"{i + 1}. {NombreP[i]} | Límite: ${MontoP[i]} | Cat: {CategoriaP[i]} | Fecha: {FechaP[i]}")
-    
-    if cant == 0:
-        print("No hay presupuestos activos registrados.")
-        return False
-    return True
-
-def listar_presupuestos_numerados():
-    if not NombreP:
-        print("No hay presupuestos registrados.")
-        return False
-
-    print("\nLISTADO DE PRESUPUESTOS:")
-    for i in range(len(NombreP)):
-        est = "Activo" if EstadoP[i] else "Inactivo"
-        print(f"{i + 1}. {NombreP[i]} | Límite: ${MontoP[i]} | Cat: {CategoriaP[i]} | Fecha: {FechaP[i]} | Estado: {est}")
-    return True
 
 def agregar_presupuesto():
     print("\n--- [C] AGREGAR NUEVO PRESUPUESTO ---")
@@ -484,12 +418,13 @@ def ver_tablas_completas():
     mostrar_matriz(encabezadosP, matriz_p)
     print()
 
-def menu_gastos():
-    while True:
+def menu_gastos(matrizG, encabezadoG):
+    menu = 1
+    while menu == 1:
         print("\n========================================")
         print("         GESTIÓN DE GASTOS              ")
         print("========================================")
-        print("1. Listar gastos activos")
+        print("1. Mostrar gastos")
         print("2. Consultar / Buscar gasto")
         print("3. Agregar nuevo gasto (Crear)")
         print("4. Modificar un gasto (Actualizar)")
@@ -499,7 +434,7 @@ def menu_gastos():
         opc = input("Seleccione una opción: ").strip()
 
         if opc == "1":
-            listar_gastos_activos()
+            mostrar_matriz(matrizG, encabezadoG)
         elif opc == "2":
             consultar_gasto()
         elif opc == "3":
@@ -509,16 +444,17 @@ def menu_gastos():
         elif opc == "5":
             eliminar_gasto()
         elif opc == "0":
-            break
+            menu = 0
         else:
             print("Opción no válida. Intente nuevamente.")
 
-def menu_presupuestos():
-    while True:
+def menu_presupuestos(matrizP, encabezadoP):
+    menu = 1
+    while menu == 1:
         print("\n========================================")
         print("       GESTIÓN DE PRESUPUESTOS          ")
         print("========================================")
-        print("1. Listar presupuestos activos")
+        print("1. Mostrar matriz")
         print("2. Consultar / Buscar presupuesto")
         print("3. Agregar nuevo presupuesto (Crear)")
         print("4. Modificar un presupuesto (Actualizar)")
@@ -528,7 +464,7 @@ def menu_presupuestos():
         opc = input("Seleccione una opción: ").strip()
 
         if opc == "1":
-            listar_presupuestos_activos()
+            mostrar_matriz(matrizP, encabezadoP)
         elif opc == "2":
             consultar_presupuesto()
         elif opc == "3":
@@ -538,12 +474,13 @@ def menu_presupuestos():
         elif opc == "5":
             eliminar_presupuesto()
         elif opc == "0":
-            break
+            menu = 0
         else:
             print("Opción no válida. Intente nuevamente.")
 
-def menu_principal():
-    while True:
+def menu_principal(matrizG, encabezadoG, matrizP, encabezadoP):
+    menu = 1
+    while menu == 1:
         print("\n========================================")
         print("    SISTEMA DE GESTIÓN FINANCIERA       ")
         print("========================================")
@@ -555,18 +492,22 @@ def menu_principal():
         opcion = input("Seleccione una opción: ").strip()
 
         if opcion == "1":
-            menu_gastos()
+            menu_gastos(matrizG, encabezadoG)
         elif opcion == "2":
-            menu_presupuestos()
+            menu_presupuestos(matrizP, encabezadoP)
         elif opcion == "3":
             ver_tablas_completas()
         elif opcion == "0":
             print("¡Gracias por utilizar el sistema! Hasta luego.")
-            break
+            menu = 0
         else:
             print("Opción no válida. Por favor, intente nuevamente.\n")
 
 if __name__ == "__main__":
-    menu_principal()
+
+    matrizG = obtener_matriz_gastos(gastos)
+    matrizP = obtener_matriz_presupuestos(presupuestos)
+
+    menu_principal(matrizG, encabezadosG, matrizP, encabezadosP)
 
 
