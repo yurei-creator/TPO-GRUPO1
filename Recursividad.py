@@ -101,18 +101,24 @@ def pedir_monto(mensaje):
         numero_valido = True
         monto = input(mensaje)
         puntos_encontrados = 0
+        monto_limpio = ""
+        
         if monto != "":
             for caracter in monto:
                 if caracter == "." or caracter == ",":
-                   puntos_encontrados += 1
-                if caracter == ".":
+                    puntos_encontrados += 1
                     monto_limpio += "."
-                if caracter == ",":
-                   monto_limpio += ","
-                elif caracter < "0" or caracter > "9":
+                elif caracter >= "0" and caracter <= "9":
+                    monto_limpio += caracter
+                else:
                     numero_valido = False
+            
             if puntos_encontrados > 1:
                 numero_valido = False
+                
+            if monto_limpio == ".":
+                numero_valido = False
+
             if numero_valido:
                 monto_final = float(monto_limpio)
                 if monto_final > 0:
@@ -121,11 +127,46 @@ def pedir_monto(mensaje):
                 else: 
                     print("El monto debe ser un número mayor a cero.")
             else:
-                print("Error: el formato introducido no es un numero valido")
+                print("Error: el formato introducido no es un número válido.")
         else:
             print("El campo no puede estar vacío.")
-def validar_fecha(fecha):
-    pass
+def solicitar_y_verificar_fecha():
+    #pedir y verificar el dia
+    dia = 0
+    while dia < 1 or dia > 31:
+        dia = int(input("Ingresa el día: "))
+        if dia < 1 or dia > 31:
+            print("Error: El día debe estar entre 1 y 31. Por favor, ingrese un valor válido.")
+
+    #pedir y verificar el mes
+    mes_valido = False
+    while not mes_valido:
+        mes = int(input("Ingresa el mes: "))
+        
+        if mes < 1 or mes > 12:
+            print("Error: El mes debe estar entre 1 y 12. Por favor, ingrese un valor válido.")
+        elif dia == 31 and mes in [4, 6, 9, 11]:
+            print("Error: El mes ingresado solo tiene 30 días. Por favor, ingrese un valor válido.")
+        elif dia >= 30 and mes == 2:
+            print("Error: Febrero nunca puede tener 30 o 31 días. Por favor, ingrese un valor válido.")
+        else:
+            mes_valido = True
+
+    #pedir y verificar el año
+    anio_valido = False
+    while not anio_valido:
+        anio = int(input("Ingresa el año (ej. 2026): "))
+        
+        # verificar si el año es bisiesto
+        es_bisiesto = (anio % 4 == 0 and (anio % 100 != 0 or anio % 400 == 0))
+
+        if dia == 29 and mes == 2 and not es_bisiesto:
+            print("Error: El año no es bisiesto, por lo que febrero no tiene 29 días.")
+            print("Por favor, ingresá otro año válido:")
+        else:
+            anio_valido = True
+
+    return f"{dia}/{mes}/{anio}"
 def pedir_texto_no_vacio(mensaje):
     text = False
     while not text:
@@ -178,7 +219,7 @@ def agregar_gasto():
     print("\n--- [C] AGREGAR NUEVO GASTO ---")
     nombre = pedir_texto_no_vacio("Ingrese nombre del gasto: ")
     monto = pedir_monto("Ingrese monto: ")
-    fecha = pedir_texto_no_vacio("Ingrese fecha (DD/MM/AAAA): ")
+    fecha = solicitar_y_verificar_fecha()
     categoria = pedir_texto_no_vacio("Ingrese categoría: ")
     descripcion = pedir_texto_no_vacio("Ingrese descripción: ")
 
@@ -206,6 +247,7 @@ def menu_gastos(matrizG, encabezadoG):
         opc = input("Seleccione una opción: ").strip()
 
         if opc == "1":
+            matrizG = obtener_matriz(gastos)
             mostrar_matriz(matrizG, encabezadoG)
         elif opc == "2":
             consultar_gasto()
