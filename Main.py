@@ -47,23 +47,7 @@ encabezadosP = ["Presupuestos", "Monto", "Fecha", "Categoria", "Descripcion"]
 
 # CREACION Y LLENADO DINÁMICO DE MATRICES
 
-def obtener_matriz_gastos(lista):
-    matriz = []
-
-    for col in range(len(lista[0])):
-        fila = [
-            lista[0][col],
-            lista[1][col],
-            lista[2][col],
-            lista[3][col],
-            lista[4][col],
-            "Activo" if lista[5][col] else "Inactivo"
-        ]
-
-        matriz.append(fila)
-    return matriz
-
-def obtener_matriz_presupuestos(lista):
+def obtener_matriz(lista):
     matriz = []
 
     for col in range(len(lista[0])):
@@ -112,22 +96,48 @@ def mostrar_matriz(matriz, encabezados):
 
 # INGRESO Y VALIDACIÓN DE DATOS
 def pedir_monto(mensaje):
-    while True:
-        try:
-            monto = float(input(mensaje))
-            if monto <= 0:
-                print("El monto debe ser un número mayor a cero.")
+    dato_invalido = True
+    while dato_invalido:
+        numero_valido = True
+        monto = input(mensaje)
+        puntos_encontrados = 0
+        if monto != "":
+            for caracter in monto:
+                if caracter == "." or caracter == ",":
+                   puntos_encontrados += 1
+                if caracter == ".":
+                    monto_limpio += "."
+                if caracter == ",":
+                   monto_limpio += ","
+                elif caracter < "0" or caracter > "9":
+                    numero_valido = False
+            if puntos_encontrados > 1:
+                numero_valido = False
+            if numero_valido:
+                monto_final = float(monto_limpio)
+                if monto_final > 0:
+                    dato_invalido = False
+                    return monto_final
+                else: 
+                    print("El monto debe ser un número mayor a cero.")
             else:
-                return monto
-        except ValueError:
-            print("Entrada inválida. Debe ingresar un número válido.")
-
+                print("Error: el formato introducido no es un numero valido")
+        else:
+            print("El campo no puede estar vacío.")
+# Modificacion para buen uso de buena practica con logica sin necesidad de .strip o algun comando dentro de python
 def pedir_texto_no_vacio(mensaje):
-    while True:
-        texto = input(mensaje).strip()
-        if texto:
-            return texto
-        print("Este campo no puede estar vacío.")
+    text = False
+    while not text:
+        texto = input(mensaje)
+        if texto != "":
+            for caracter in texto:
+                if caracter != " ":
+                    texto += caracter
+                text = True
+                print("DEBUG [INFO]: Se ingresó el texto: " + texto)
+                return texto
+        else:
+            print("[AVISO]: Este campo no puede estar vacío.")
 
 def pedir_opcional(mensaje, valor_actual):
     nuevo_valor = input(f"{mensaje} [{valor_actual}]: ").strip()
@@ -186,7 +196,8 @@ def consultar_gasto():
         for idx in coincidencias:
             est = "Activo" if EstadoG[idx] else "Inactivo"
             matriz_res.append([idx + 1, NombreG[idx], MontoG[idx], FechaG[idx], CategoriaG[idx], DescripcionG[idx], est])
-        mostrar_matriz(encabezados, matriz_res)
+        mostrar_matriz(matriz_res, encabezados)
+        input("Presione ENTER para continuar...")
 
 def modificar_gasto():
     print("\n--- [U] MODIFICAR GASTO ---")
@@ -268,6 +279,12 @@ def eliminar_gasto():
     else:
         print("Operación cancelada.\n")
 
+def mostrar_gastos():
+    print("\n=================== MATRIZ DE GASTOS ===================")
+    matriz_g = obtener_matriz(gastos)
+    mostrar_matriz(matriz_g, encabezadosG)
+    print()
+    input("Presione ENTER para continuar...")
 # -----------------------------------------------------------------------------------
 # CRUD: PRESUPUESTOS
 # -----------------------------------------------------------------------------------
@@ -401,23 +418,15 @@ def eliminar_presupuesto():
     else:
         print("Operación cancelada.\n")
 
+def mostrar_presupuestos():
+    print("\n=================== MATRIZ DE PRESUPUESTOS ===================")
+    matriz_p = obtener_matriz(presupuestos)
+    mostrar_matriz(matriz_p, encabezadosP)
+    print()
+    input("Presione ENTER para continuar...")
 # -----------------------------------------------------------------------------------
 # MENÚS DE NAVEGACIÓN
 # -----------------------------------------------------------------------------------
-def ver_tablas_completas():
-    encabezadosG = ["Gastos", "Monto", "Fecha", "Categoria", "Descripcion", "Estado"]
-    encabezadosP = ["Presupuestos", "Monto Límite", "Fecha", "Categoria", "Descripcion", "Estado"]
-
-    print("\n=================== MATRIZ DE GASTOS ===================")
-    matriz_g = obtener_matriz_gastos()
-    mostrar_matriz(encabezadosG, matriz_g)
-    print()
-
-    print("================ MATRIZ DE PRESUPUESTOS ================")
-    matriz_p = obtener_matriz_presupuestos()
-    mostrar_matriz(encabezadosP, matriz_p)
-    print()
-
 def menu_gastos(matrizG, encabezadoG):
     menu = 1
     while menu == 1:
@@ -434,7 +443,7 @@ def menu_gastos(matrizG, encabezadoG):
         opc = input("Seleccione una opción: ").strip()
 
         if opc == "1":
-            mostrar_matriz(matrizG, encabezadoG)
+            mostrar_gastos()
         elif opc == "2":
             consultar_gasto()
         elif opc == "3":
@@ -465,6 +474,7 @@ def menu_presupuestos(matrizP, encabezadoP):
 
         if opc == "1":
             mostrar_matriz(matrizP, encabezadoP)
+            input("\nPresione ENTER para continuar...")
         elif opc == "2":
             consultar_presupuesto()
         elif opc == "3":
@@ -496,7 +506,8 @@ def menu_principal(matrizG, encabezadoG, matrizP, encabezadoP):
         elif opcion == "2":
             menu_presupuestos(matrizP, encabezadoP)
         elif opcion == "3":
-            ver_tablas_completas()
+            mostrar_gastos()
+            mostrar_presupuestos()
         elif opcion == "0":
             print("¡Gracias por utilizar el sistema! Hasta luego.")
             menu = 0
@@ -505,8 +516,8 @@ def menu_principal(matrizG, encabezadoG, matrizP, encabezadoP):
 
 if __name__ == "__main__":
 
-    matrizG = obtener_matriz_gastos(gastos)
-    matrizP = obtener_matriz_presupuestos(presupuestos)
+    matrizG = obtener_matriz(gastos)
+    matrizP = obtener_matriz(presupuestos)
 
     menu_principal(matrizG, encabezadosG, matrizP, encabezadosP)
 
