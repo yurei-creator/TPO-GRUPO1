@@ -155,7 +155,7 @@ def solicitar_y_verificar_fecha():
     #pedir y verificar el año
     anio_valido = False
     while not anio_valido:
-        anio = int(input("Ingresa el año (ej. 2026): "))
+        anio = int(input("Ingresa el año: "))
         
         # verificar si el año es bisiesto
         es_bisiesto = (anio % 4 == 0 and (anio % 100 != 0 or anio % 400 == 0))
