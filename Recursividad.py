@@ -135,41 +135,7 @@ def pedir_monto(mensaje):
                 print("Error: el formato introducido no es un número válido.")
         else:
             print("El campo no puede estar vacío.")
-def pedir_monto_int(mensaje):
-    dato_invalido = True
-    while dato_invalido:
-        numero_valido = True
-        monto = input(mensaje)
-        puntos_encontrados = 0
-        monto_limpio = ""
-        
-        if monto != "":
-            for caracter in monto:
-                if caracter == "." or caracter == ",":
-                    puntos_encontrados += 1
-                    monto_limpio += "."
-                elif caracter >= "0" and caracter <= "9":
-                    monto_limpio += caracter
-                else:
-                    numero_valido = False
-            
-            if puntos_encontrados > 1:
-                numero_valido = False
-                
-            if monto_limpio == ".":
-                numero_valido = False
 
-            if numero_valido:
-                monto_final = float(monto_limpio)
-                if monto_final > 0 and monto_final.is_integer():
-                    dato_invalido = False
-                    return int(monto_final)
-                else: 
-                    print("El monto debe ser un número entero mayor a cero.")
-            else:
-                print("Error: el formato introducido no es un número válido.")
-        else:
-            print("El campo no puede estar vacío.")
 def pedir_monto_opcional(mensaje, valor_actual):
     while True:
         monto = input(mensaje + f" [${valor_actual}]: ")
@@ -383,7 +349,7 @@ def modificar_gasto():
     DescripcionG[idx] = pedir_opcional("Nueva descripción", DescripcionG[idx])
 
     estado_actual = "Activo" if EstadoG[idx] else "Inactivo"
-    cambiar_est = input(f"¿Desea cambiar el estado actual ({estado_actual})? (s/n): ").strip().lower()
+    cambiar_est = pedir_texto_no_vacio(f"¿Desea cambiar el estado actual ({estado_actual})? (s/n): ").lower()
     if cambiar_est == 's':
         EstadoG[idx] = not EstadoG[idx]
         nuevo_est = "Activo" if EstadoG[idx] else "Inactivo"
@@ -395,6 +361,35 @@ def modificar_gasto():
     print()
     input("Presione ENTER para continuar...")
 
+def eliminar_gasto():
+    print("\n--- [D] DAR DE BAJA LÓGICA GASTO ---")
+
+    opc = pedir_texto_no_vacio("Ingrese el número del gasto a modificar: ")
+    while opc != "0" and (not opc.isdigit() or int(opc) < 1 or int(opc) > len(NombreG)):
+        print("Número de gasto inválido. Intente nuevamente.")
+        opc = pedir_texto_no_vacio("Ingrese el número del gasto a modificar: ")
+    if opc == "0":
+        print("Operación cancelada. No se realizaron cambios.")
+        return
+    idx = int(opc) - 1
+
+    if not EstadoG[idx]:
+        print(f"El gasto '{NombreG[idx]}' ya se encuentra en estado INACTIVO.")
+        reactivar = pedir_texto_no_vacio("¿Desea reactivarlo? (s/n): ").lower()
+        if reactivar == 's':
+            EstadoG[idx] = True
+            print(f"¡Gasto '{NombreG[idx]}' reactivado (Activo) correctamente!\n")
+        else:
+            print("Operación cancelada.\n")
+        return
+
+    confirmacion = pedir_texto_no_vacio(f"¿Está seguro de dar de baja el gasto '{NombreG[idx]}' de ${MontoG[idx]}? (s/n): ").lower()
+    if confirmacion == 's':
+        EstadoG[idx] = False
+        print(f"¡Gasto '{NombreG[idx]}' dado de baja correctamente (Estado: Inactivo)!\n")
+    else:
+        print("Operación cancelada.\n")
+    input("Presione ENTER para continuar...")
 
 def menu_gastos(matrizG, encabezadoG):
     menu = 1
