@@ -94,6 +94,7 @@ def mostrar_matriz(matriz, encabezados):
             print(valor + espacios + "  ", end="")  
         print()
     print()  # Línea en blanco después de la matriz
+    input("Presione ENTER para continuar...")
 # INGRESO Y VALIDACIÓN DE DATOS
 def pedir_monto(mensaje):
     dato_invalido = True
