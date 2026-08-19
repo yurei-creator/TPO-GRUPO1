@@ -169,16 +169,25 @@ def solicitar_y_verificar_fecha():
 
     return f"{dia}/{mes}/{anio}"
 def pedir_texto_no_vacio(mensaje):
+    texto_sin_espacios = ""
     text = False
     while not text:
         texto = input(mensaje)
         if texto != "":
-            for caracter in texto:
-                if caracter != " ":
-                    texto += caracter
-                text = True
-                print("DEBUG [INFO]: Se ingresó el texto: " + texto)
-                return texto
+            for caracter in range(len(texto)):
+                if texto[caracter] != " ":
+                    texto_sin_espacios += texto[caracter]
+            print("DEBUG [INFO]: Se ingresó el texto: " + texto_sin_espacios)
+            return texto_sin_espacios
+        else:
+            print("[AVISO]: Este campo no puede estar vacío.")
+def pedir_texto_no_vacio_con_espacios(mensaje):
+    text = False
+    while not text:
+        texto = input(mensaje)
+        if texto != "":
+            print("DEBUG [INFO]: Se ingresó el texto: " + texto)
+            return texto
         else:
             print("[AVISO]: Este campo no puede estar vacío.")
 
@@ -218,11 +227,11 @@ def consultar_gasto():
 
 def agregar_gasto():
     print("\n--- [C] AGREGAR NUEVO GASTO ---")
-    nombre = pedir_texto_no_vacio("Ingrese nombre del gasto: ")
+    nombre = pedir_texto_no_vacio_con_espacios("Ingrese nombre del gasto: ")
     monto = pedir_monto("Ingrese monto: ")
     fecha = solicitar_y_verificar_fecha()
-    categoria = pedir_texto_no_vacio("Ingrese categoría: ")
-    descripcion = pedir_texto_no_vacio("Ingrese descripción: ")
+    categoria = pedir_texto_no_vacio_con_espacios("Ingrese categoría: ")
+    descripcion = pedir_texto_no_vacio_con_espacios("Ingrese descripción: ")
 
     NombreG.append(nombre)
     MontoG.append(monto)
@@ -245,7 +254,7 @@ def menu_gastos(matrizG, encabezadoG):
         print("5. Dar de baja lógica un gasto")
         print("0. Volver al menú principal")
         print("========================================")
-        opc = input("Seleccione una opción: ").strip()
+        opc = pedir_texto_no_vacio("Seleccione una opción: ")
 
         if opc == "1":
             matrizG = obtener_matriz(gastos)
@@ -275,7 +284,7 @@ def menu_principal(matrizG, encabezadoG, matrizP, encabezadoP):
         print("3. Ver Tablas Completas (Matrices)")
         print("0. Salir")
         print("========================================")
-        opcion = input("Seleccione una opción: ").strip()
+        opcion = pedir_texto_no_vacio("Seleccione una opción: ")
 
         if opcion == "1":
             menu_gastos(matrizG, encabezadoG)
