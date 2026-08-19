@@ -76,10 +76,12 @@ def mostrar_matriz(matriz, encabezados):
     for col in range(columnas):
         ancho = len(encabezados[col])
         for fila in range(filas):
-            valor = str(matriz[fila][col])
-            if len(valor) > ancho:
-                ancho = len(valor)
-        anchos.append(ancho)
+            estado = matriz[fila][-1]
+            if estado == "ACTIVO" or estado == "Activo":
+                valor = str(matriz[fila][col])
+                if len(valor) > ancho:
+                    ancho = len(valor)
+            anchos.append(ancho)
 
     for col in range(columnas):
         titulo = encabezados[col]
@@ -88,11 +90,13 @@ def mostrar_matriz(matriz, encabezados):
     print()
 
     for fila in range(filas):
-        for col in range(columnas):
-            valor = str(matriz[fila][col])
-            espacios = " " * (anchos[col] - len(valor))
-            print(valor + espacios + "  ", end="")  
-        print()
+        estado = matriz[fila][-1]
+        if estado == "ACTIVO" or estado == "Activo":
+            for col in range(columnas):
+                valor = str(matriz[fila][col])
+                espacios = " " * (anchos[col] - len(valor))
+                print(valor + espacios + "  ", end="")  
+            print()
     print()  # Línea en blanco después de la matriz
     input("Presione ENTER para continuar...")
 # INGRESO Y VALIDACIÓN DE DATOS
@@ -131,6 +135,38 @@ def pedir_monto(mensaje):
                 print("Error: el formato introducido no es un número válido.")
         else:
             print("El campo no puede estar vacío.")
+def pedir_monto_opcional(mensaje, valor_actual):
+    while True:
+        monto = input(mensaje + f" [${valor_actual}]: ")
+        if monto == "":
+            return valor_actual
+        puntos_encontrados = 0
+        monto_limpio = ""
+        numero_valido = True
+        
+        for caracter in monto:
+            if caracter == "." or caracter == ",":
+                puntos_encontrados += 1
+                monto_limpio += "."
+            elif caracter >= "0" and caracter <= "9":
+                monto_limpio += caracter
+            else:
+                numero_valido = False
+        
+        if puntos_encontrados > 1:
+            numero_valido = False
+            
+        if monto_limpio == ".":
+            numero_valido = False
+
+        if numero_valido:
+            monto_final = float(monto_limpio)
+            if monto_final > 0:
+                return monto_final
+            else: 
+                print("El monto debe ser un número mayor a cero.")
+        else:
+            print("Error: el formato introducido no es un número válido.")
 def solicitar_y_verificar_fecha():
     #pedir y verificar el dia
     dia = 0
@@ -191,6 +227,45 @@ def pedir_texto_no_vacio_con_espacios(mensaje):
         else:
             print("[AVISO]: Este campo no puede estar vacío.")
 
+def pedir_monto_opcional(mensaje, valor_actual):
+    while True:
+        monto = input(mensaje)
+        if monto == "":
+            return valor_actual
+        puntos_encontrados = 0
+        monto_limpio = ""
+        numero_valido = True
+        
+        for caracter in monto:
+            if caracter == "." or caracter == ",":
+                puntos_encontrados += 1
+                monto_limpio += "."
+            elif caracter >= "0" and caracter <= "9":
+                monto_limpio += caracter
+            else:
+                numero_valido = False
+        
+        if puntos_encontrados > 1:
+            numero_valido = False
+            
+        if monto_limpio == ".":
+            numero_valido = False
+
+        if numero_valido:
+            monto_final = float(monto_limpio)
+            if monto_final > 0:
+                return monto_final
+            else: 
+                print("El monto debe ser un número mayor a cero.")
+        else:
+            print("Error: el formato introducido no es un número válido.")
+
+def pedir_opcional(mensaje, valor_actual):
+    nuevo_valor = input(mensaje + f" [{valor_actual}]: ")
+    if nuevo_valor == "":
+        return valor_actual
+    return nuevo_valor
+
 def consultar_gasto():
     print("\n--- [R] CONSULTAR / BUSCAR GASTOS ---")
     if not NombreG:
@@ -240,6 +315,42 @@ def agregar_gasto():
     DescripcionG.append(descripcion)
     EstadoG.append(True)
     print("¡Gasto agregado exitosamente (Estado: Activo)!\n")
+
+def modificar_gasto():
+    print("\n--- [U] MODIFICAR GASTO ---")
+
+
+    opc = pedir_texto_no_vacio("Ingrese el número del gasto a modificar: ")
+    while opc != "0" and (not opc.isdigit() or int(opc) < 1 or int(opc) > len(NombreG)):
+        print("Número de gasto inválido. Intente nuevamente.")
+        opc = pedir_texto_no_vacio("Ingrese el número del gasto a modificar: ")
+    if opc == "0":
+        print("Operación cancelada. No se realizaron cambios.")
+        return
+    idx = int(opc) - 1
+    print(f"\nModificando gasto #{opc} (Presione ENTER para conservar el valor actual):")
+    NombreG[idx] = pedir_opcional("Nuevo nombre", NombreG[idx])
+    
+    nuevo_monto = pedir_monto_opcional("Nuevo monto (actual: ${}): ".format(MontoG[idx]), MontoG[idx])
+    if nuevo_monto != "":
+        MontoG[idx] = nuevo_monto
+    FechaG[idx] = pedir_opcional("Nueva fecha (DD/MM/AAAA)", FechaG[idx])
+    CategoriaG[idx] = pedir_opcional("Nueva categoría", CategoriaG[idx])
+    DescripcionG[idx] = pedir_opcional("Nueva descripción", DescripcionG[idx])
+
+    estado_actual = "Activo" if EstadoG[idx] else "Inactivo"
+    cambiar_est = input(f"¿Desea cambiar el estado actual ({estado_actual})? (s/n): ").strip().lower()
+    if cambiar_est == 's':
+        EstadoG[idx] = not EstadoG[idx]
+        nuevo_est = "Activo" if EstadoG[idx] else "Inactivo"
+        print(f"Estado cambiado a: {nuevo_est}")
+    elif cambiar_est == 'n':
+        print("Estado no modificado.")
+
+    print("¡Gasto actualizado exitosamente!\n")
+    print()
+    input("Presione ENTER para continuar...")
+
 
 def menu_gastos(matrizG, encabezadoG):
     menu = 1
@@ -291,7 +402,8 @@ def menu_principal(matrizG, encabezadoG, matrizP, encabezadoP):
         elif opcion == "2":
             menu_presupuestos(matrizP, encabezadoP)
         elif opcion == "3":
-            ver_tablas_completas()
+            mostrar_matriz(matrizG, encabezadoG)
+            mostrar_matriz(matrizP, encabezadoP)
         elif opcion == "0":
             print("¡Gracias por utilizar el sistema! Hasta luego.")
             menu = 0
