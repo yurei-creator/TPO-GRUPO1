@@ -319,7 +319,6 @@ def consultar_gasto():
             est = "Activo" if EstadoG[idx] else "Inactivo"
             matriz_res.append([idx + 1, NombreG[idx], MontoG[idx], FechaG[idx], CategoriaG[idx], DescripcionG[idx], est])
         mostrar_matriz(matriz_res,encabezados)
-        input("Presione ENTER para continuar...")
 
 def agregar_gasto():
     print("\n--- [C] AGREGAR NUEVO GASTO ---")
@@ -460,7 +459,7 @@ def consultar_presupuesto():
             est = "Activo" if EstadoP[idx] else "Inactivo"
             matriz_res.append([idx + 1, NombreP[idx], MontoP[idx], FechaP[idx], CategoriaP[idx], DescripcionP[idx], est])
         mostrar_matriz(matriz_res,encabezados)
-        input("Presione ENTER para continuar...")
+
 
 def modificar_presupuesto():
     print("\n--- [U] MODIFICAR PRESUPUESTO ---")
