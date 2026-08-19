@@ -135,6 +135,41 @@ def pedir_monto(mensaje):
                 print("Error: el formato introducido no es un número válido.")
         else:
             print("El campo no puede estar vacío.")
+def pedir_monto_int(mensaje):
+    dato_invalido = True
+    while dato_invalido:
+        numero_valido = True
+        monto = input(mensaje)
+        puntos_encontrados = 0
+        monto_limpio = ""
+        
+        if monto != "":
+            for caracter in monto:
+                if caracter == "." or caracter == ",":
+                    puntos_encontrados += 1
+                    monto_limpio += "."
+                elif caracter >= "0" and caracter <= "9":
+                    monto_limpio += caracter
+                else:
+                    numero_valido = False
+            
+            if puntos_encontrados > 1:
+                numero_valido = False
+                
+            if monto_limpio == ".":
+                numero_valido = False
+
+            if numero_valido:
+                monto_final = float(monto_limpio)
+                if monto_final > 0 and monto_final.is_integer():
+                    dato_invalido = False
+                    return int(monto_final)
+                else: 
+                    print("El monto debe ser un número entero mayor a cero.")
+            else:
+                print("Error: el formato introducido no es un número válido.")
+        else:
+            print("El campo no puede estar vacío.")
 def pedir_monto_opcional(mensaje, valor_actual):
     while True:
         monto = input(mensaje + f" [${valor_actual}]: ")
@@ -277,7 +312,15 @@ def consultar_gasto():
     coincidencias = []
     print(f"DEBUG [INFO]: Se ingresó el término de búsqueda: {busqueda_str}")
     # Búsqueda por número de fila (1..N)
-    if busqueda_str.isdigit():
+    numero = False
+    if busqueda_str != "":
+        for caracter in busqueda_str:
+            if caracter >= "0" and caracter <= "9":
+                numero = True
+            elif caracter in ["abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", " ", ".", ","]:
+                numero = False
+                
+    if numero:
         num = int(busqueda_str)
         if 1 <= num <= len(NombreG):
             coincidencias.append(num - 1)
@@ -315,6 +358,7 @@ def agregar_gasto():
     DescripcionG.append(descripcion)
     EstadoG.append(True)
     print("¡Gasto agregado exitosamente (Estado: Activo)!\n")
+    input("Presione ENTER para continuar...")
 
 def modificar_gasto():
     print("\n--- [U] MODIFICAR GASTO ---")
