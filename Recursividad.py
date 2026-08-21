@@ -199,8 +199,7 @@ def solicitar_y_verificar_fecha():
         es_bisiesto = (anio % 4 == 0 and (anio % 100 != 0 or anio % 400 == 0))
 
         if dia == 29 and mes == 2 and not es_bisiesto:
-            print("Error: El año no es bisiesto, por lo que febrero no tiene 29 días.")
-            print("Por favor, ingresá otro año válido:")
+            print("Error: El año no es bisiesto, por lo que febrero no tiene 29 días.\nPor favor, ingresá otro año válido:")
         else:
             anio_valido = True
 
@@ -532,12 +531,8 @@ def menu_gastos(matrizG, encabezadoG):
         print("\n========================================")
         print("         GESTIÓN DE GASTOS              ")
         print("========================================")
-        print("1. Mostrar gastos")
-        print("2. Consultar / Buscar gasto")
-        print("3. Agregar nuevo gasto (Crear)")
-        print("4. Modificar un gasto (Actualizar)")
-        print("5. Dar de baja lógica un gasto")
-        print("0. Volver al menú principal")
+        print("1. Mostrar gastos\n2. Consultar / Buscar gasto\n3. Agregar nuevo gasto (Crear)")
+        print("4. Modificar un gasto (Actualizar)\n5. Dar de baja lógica un gasto\n0. Volver al menú principal")
         print("========================================")
         opc = pedir_texto_no_vacio("Seleccione una opción: ")
 
@@ -564,12 +559,8 @@ def menu_presupuestos(matrizP, encabezadoP):
         print("\n========================================")
         print("       GESTIÓN DE PRESUPUESTOS          ")
         print("========================================")
-        print("1. Mostrar matriz")
-        print("2. Consultar / Buscar presupuesto")
-        print("3. Agregar nuevo presupuesto (Crear)")
-        print("4. Modificar un presupuesto (Actualizar)")
-        print("5. Dar de baja lógica un presupuesto")
-        print("0. Volver al menú principal")
+        print("1. Mostrar matriz\n2. Consultar / Buscar presupuesto\n3. Agregar nuevo presupuesto (Crear)")
+        print("4. Modificar un presupuesto (Actualizar)\n5. Dar de baja lógica un presupuesto\n0. Volver al menú principal")
         print("========================================")
         opc = input("Seleccione una opción: ").strip()
 
@@ -595,10 +586,8 @@ def menu_principal(matrizG, encabezadoG, matrizP, encabezadoP):
         print("\n========================================")
         print("    SISTEMA DE GESTIÓN FINANCIERA       ")
         print("========================================")
-        print("1. Gestión de Gastos (CRUD)")
-        print("2. Gestión de Presupuestos (CRUD)")
-        print("3. Ver Tablas Completas (Matrices)")
-        print("0. Salir")
+        print("1. Gestión de Gastos (CRUD)\n2. Gestión de Presupuestos (CRUD)")
+        print("3. Ver Tablas Completas (Matrices)\n0. Salir")
         print("========================================")
         opcion = pedir_texto_no_vacio("Seleccione una opción: ")
 
