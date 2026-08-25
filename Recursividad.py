@@ -1,571 +1,796 @@
-#--------------------------LISTAS GASTOS--------------------------------------------#
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
 
+console = Console()
+# Categorías
+Id_Categoria = ["1", "2", "3", "4", "5"]
+NombreC = ["Alimentos", "Transporte", "Ocio", "Salud", "Educación"]
+DescripcionC = [
+    "Categoria de alimentos",
+    "Categoria de transporte",
+    "Categoria de ocio",
+    "Categoria de salud",
+    "Categoria de educación",
+]
+EstadoC = ["Activo", "Activo", "Activo", "Activo", "Activo"]
+categoria = [Id_Categoria, NombreC, DescripcionC, EstadoC]
+encabezadosC = ["Id_Categoria", "Nombre", "Descripcion"]
+
+# Presupuestos
+Id_Presupuesto = ["1", "2", "3", "4", "5"]
+Periodo_Presupuesto = [
+    "01/08/2026-10/08/2026",
+    "02/08/2026-12/08/2026",
+    "03/08/2026-13/08/2026",
+    "04/08/2026-14/08/2026",
+    "05/08/2026-15/08/2026",
+]
+Monto_limite = ["120.0", "45.0", "25.0", "58.0", "80.0"]
+Id_CategoriaP = ["1", "2", "3", "4", "5"]
+EstadoP = ["Activo", "Activo", "Activo", "Activo", "Activo"]
+presupuestos = [Id_Presupuesto, Periodo_Presupuesto, Monto_limite, Id_CategoriaP, EstadoP]
+encabezadosP = ["Id_Presupuesto", "Periodo", "Monto Limite", "Id_Categoria"]
+
+# Gastos
 NombreG = ["Supermercado", "Gasolina", "Cine", "Farmacia", "Curso online"]
-
-MontoG = [120, 45, 25, 15.50, 80]
-
+Id_Gasto = ["1", "2", "3", "4", "5"]
 FechaG = ["01/08/2026", "02/08/2026", "03/08/2026", "04/08/2026", "05/08/2026"]
-
-CategoriaG = ["Alimentos", "Transporte", "Ocio", "Salud", "Educación"]
-
+MontoG = ["100.0", "40.0", "20.0", "50.0", "70.0"]
 DescripcionG = [
-    "Compra mensual de viveres", 
-    "Tanque lleno del auto", 
-    "Entradas y palomitas", 
-    "Medicamentos para la gripe", 
-    "Inscripción a taller de Excel"
+    "Compra de alimentos",
+    "Llenado de tanque",
+    "Entrada de cine",
+    "Compra de medicamentos",
+    "Pago de curso online",
 ]
+Id_CatGasto = ["1", "2", "3", "4", "5"]
+Id_PresGasto = ["1", "2", "3", "4", "5"]
+EstadoG = ["Activo", "Activo", "Activo", "Activo", "Activo"]
+gastos = [Id_Gasto, NombreG, FechaG, MontoG, DescripcionG, Id_CatGasto, Id_PresGasto, EstadoG]
+encabezadosG = ["Id_Gasto", "Nombre", "Fecha", "Monto", "Descripcion", "Id_Categoria", "Id_Presupuesto"]
 
-EstadoG = [True, True, True, True, True]
+## ===================
+## FUNCIONES RICH
+## ===================
 
-gastos = [NombreG,MontoG,FechaG, CategoriaG, DescripcionG, EstadoG]
+## FUNCIONES RICH
 
-#--------------------------LISTAS PRESUPUESTOS--------------------------------------------#
-NombreP = ["Limite Alimentos", "Limite Transporte", "Limite Ocio", "Limite Salud", "Limite Educación"]
 
-MontoP = [400, 150, 100, 80, 120]
+def mostrar_mensaje(texto, tipo="info"):
+    estilos = {
+        "info": ("cyan", "INFORMACIÓN"),
+        "exito": ("green", "ÉXITO"),
+        "alerta": ("yellow", "ADVERTENCIA"),
+        "error": ("red", "ERROR"),
+    }
+    color, titulo = estilos.get(tipo, ("white", "MENSAJE"))
+    panel = Panel(
+        f"[{color}]{texto}[/{color}]",
+        title=f"[bold {color}]{titulo}[/bold {color}]",
+        border_style=color,
+        expand=False,
+    )
+    console.print(panel)
 
-FechaP = ["01/08/2026", "01/08/2026", "01/08/2026", "01/08/2026", "01/08/2026"]
+def mostrar_menu(titulo, opciones):
+    tabla_menu = Table(
+        title=f"[bold cyan]{titulo}[/bold cyan]",
+        show_header=True,
+        header_style="bold magenta",
+        border_style="bright_blue",
+    )
+    tabla_menu.add_column("Opción", justify="center", style="bold yellow")
+    tabla_menu.add_column("Descripción", justify="left", style="white")
 
-CategoriaP = ["Alimentos", "Transporte", "Ocio", "Salud", "Educación"]
+    for i in range(len(opciones)):
+        numero_opcion = str(i + 1)
+        nombre_opcion = opciones[i]
+        tabla_menu.add_row(numero_opcion, nombre_opcion)
 
-DescripcionP = [
-    "Presupuesto maximo del mes", 
-    "Estimado para pasajes y gasolina", 
-    "Dinero para salidas y diversion", 
-    "Reservas para emergencias medicas", 
-    "Libros y materiales de estudio"
-]
+    tabla_menu.add_row("0", "Salir")
 
-EstadoP = [True, True, True, True, True]
+    console.print()
+    console.print(tabla_menu)
+    console.print()
 
-presupuestos = [NombreP, MontoP, FechaP, CategoriaP, DescripcionP, EstadoP]
+def renderizar_tabla(encabezados, filas, titulo):
+    if not filas:
+        console.print(f"[yellow]No hay registros activos para {titulo.lower()}.[/yellow]")
+        return
 
-# Encabezados
-encabezadosG = ["Gastos", "Monto", "Fecha", "Categoria", "Descripcion"]
-encabezadosP = ["Presupuestos", "Monto", "Fecha", "Categoria", "Descripcion"]
+    tabla = Table(
+        title=f"[bold cyan]{titulo}[/bold cyan]",
+        header_style="bold magenta",
+        border_style="bright_blue",
+    )
 
-# CREACION Y LLENADO DINÁMICO DE MATRICES
+    for enc in encabezados:
+        tabla.add_column(enc, justify="left", style="white")
 
+    for fila in filas:
+        tabla.add_row(*fila)
+
+    console.print()
+    console.print(tabla)
+    console.print()
+
+## FUNCIONES DE VALIDACION
+
+def pedir_monto(mensaje):
+    monto_valido = False
+    resultado = 0.0
+    while not monto_valido:
+        entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] ").strip()
+        if len(entrada) == 0:
+            mostrar_mensaje("El campo no puede estar vacío.", "error")
+        else:
+            entrada_normalizada = entrada.replace(",", ".")
+            partes = entrada_normalizada.split(".")
+            es_num = False
+            if len(partes) == 1 and partes[0].isdigit():
+                es_num = True
+            elif len(partes) == 2 and (partes[0].isdigit() or partes[0] == "") and partes[1].isdigit():
+                if not (partes[0] == "" and len(partes[1]) == 0):
+                    es_num = True
+            if es_num:
+                valor = float(entrada_normalizada)
+                if valor > 0:
+                    resultado = valor
+                    monto_valido = True
+                else:
+                    mostrar_mensaje("El monto debe ser un número mayor a cero.", "alerta")
+            else:
+                mostrar_mensaje("Error: el formato introducido no es un número válido.", "error")
+    return resultado
+
+
+def pedir_monto_opcional(mensaje, valor_actual):
+    monto_valido = False
+    resultado = float(valor_actual)
+    while not monto_valido:
+        entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] [yellow][${valor_actual}][/yellow]: ").strip()
+        if len(entrada) == 0:
+            monto_valido = True
+        else:
+            entrada_normalizada = entrada.replace(",", ".")
+            partes = entrada_normalizada.split(".")
+            es_num = False
+            if len(partes) == 1 and partes[0].isdigit():
+                es_num = True
+            elif len(partes) == 2 and (partes[0].isdigit() or partes[0] == "") and partes[1].isdigit():
+                if not (partes[0] == "" and len(partes[1]) == 0):
+                    es_num = True
+            if es_num:
+                valor = float(entrada_normalizada)
+                if valor > 0:
+                    resultado = valor
+                    monto_valido = True
+                else:
+                    mostrar_mensaje("El monto debe ser un número mayor a cero.", "alerta")
+            else:
+                mostrar_mensaje("Error: el formato introducido no es un número válido.", "error")
+    return resultado
+
+
+def solicitar_y_verificar_fecha():
+    fecha_valida = False
+    resultado_fecha = ""
+    while not fecha_valida:
+        entrada = console.input("[bold cyan]Ingresa la fecha (DD/MM/AAAA):[/bold cyan] ").strip()
+        partes = entrada.split("/")
+        if len(partes) == 3 and partes[0].isdigit() and partes[1].isdigit() and partes[2].isdigit():
+            dia = int(partes[0])
+            mes = int(partes[1])
+            anio = int(partes[2])
+            es_bisiesto = anio % 4 == 0 and (anio % 100 != 0 or anio % 400 == 0)
+            dias_por_mes = [31, 29 if es_bisiesto else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+            if 1 <= mes <= 12 and 1 <= dia <= dias_por_mes[mes - 1] and anio > 0:
+                resultado_fecha = f"{dia:02d}/{mes:02d}/{anio:04d}"
+                fecha_valida = True
+            else:
+                mostrar_mensaje("Fecha inválida en el calendario.", "error")
+        else:
+            mostrar_mensaje("Formato incorrecto. Use DD/MM/AAAA.", "error")
+    return resultado_fecha
+
+
+def pedir_texto_no_vacio(mensaje):
+    texto_valido = False
+    resultado = ""
+    while not texto_valido:
+        entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] ").strip()
+        if len(entrada) > 0:
+            resultado = entrada
+            texto_valido = True
+        else:
+            mostrar_mensaje("Este campo no puede estar vacío.", "error")
+    return resultado
+
+
+def pedir_opcional(mensaje, valor_actual):
+    entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] [yellow][{valor_actual}][/yellow]: ").strip()
+    resultado = valor_actual
+    if len(entrada) > 0:
+        resultado = entrada
+    return resultado
+
+
+def pedir_id_existente(mensaje, lista_ids, lista_estados):
+    id_valido = False
+    resultado_id = ""
+    while not id_valido:
+        entrada = pedir_texto_no_vacio(mensaje)
+        encontrado = False
+        for i in range(len(lista_ids)):
+            if lista_ids[i] == entrada and str(lista_estados[i]).upper() == "ACTIVO":
+                encontrado = True
+        if encontrado:
+            resultado_id = entrada
+            id_valido = True
+        else:
+            mostrar_mensaje("El ID ingresado no existe o no está activo.", "error")
+    return resultado_id
+
+def obtener_nombre_categoria(id_cat):
+    for i in range(len(Id_Categoria)):
+        if Id_Categoria[i] == str(id_cat):
+            return NombreC[i]
+    return "Sin Categoría"
+
+
+def obtener_periodo_presupuesto(id_pres):
+    for i in range(len(Id_Presupuesto)):
+        if Id_Presupuesto[i] == str(id_pres):
+            return Periodo_Presupuesto[i]
+    return "Sin Presupuesto"
+
+def seleccionar_categoria():
+    console.print("\n[bold cyan]Seleccione una Categoría:[/bold cyan]")
+    activas_idx = []
+    for i in range(len(NombreC)):
+        if str(EstadoC[i]).upper() == "ACTIVO":
+            activas_idx.append(i)
+            console.print(f"  [yellow]{len(activas_idx)}[/yellow]. {NombreC[i]} ({DescripcionC[i]})")
+    
+    valido = False
+    id_seleccionado = ""
+    while not valido:
+        opc = pedir_texto_no_vacio("Ingrese el número de la categoría: ")
+        if opc.isdigit():
+            num = int(opc)
+            if 1 <= num <= len(activas_idx):
+                idx_real = activas_idx[num - 1]
+                id_seleccionado = Id_Categoria[idx_real]
+                valido = True
+            else:
+                mostrar_mensaje("Número fuera de rango.", "error")
+        else:
+            mostrar_mensaje("Debe ingresar un número.", "error")
+    return id_seleccionado
+
+
+def seleccionar_presupuesto():
+    console.print("\n[bold cyan]Seleccione un Presupuesto:[/bold cyan]")
+    activas_idx = []
+    for i in range(len(Periodo_Presupuesto)):
+        if str(EstadoP[i]).upper() == "ACTIVO":
+            activas_idx.append(i)
+            cat_nom = obtener_nombre_categoria(Id_CategoriaP[i])
+            console.print(f"  [yellow]{len(activas_idx)}[/yellow]. {cat_nom} | Período: {Periodo_Presupuesto[i]} (Límite: ${Monto_limite[i]})")
+    
+    valido = False
+    id_seleccionado = ""
+    while not valido:
+        opc = pedir_texto_no_vacio("Ingrese el número del presupuesto: ")
+        if opc.isdigit():
+            num = int(opc)
+            if 1 <= num <= len(activas_idx):
+                idx_real = activas_idx[num - 1]
+                id_seleccionado = Id_Presupuesto[idx_real]
+                valido = True
+            else:
+                mostrar_mensaje("Número fuera de rango.", "error")
+        else:
+            mostrar_mensaje("Debe ingresar un número.", "error")
+    return id_seleccionado
+
+# ====================
+## FUNCIONES MATRICES
+# ====================
 def obtener_matriz(lista):
     matriz = []
-
-    for col in range(len(lista[0])):
-        fila = [
-            lista[0][col],
-            lista[1][col],
-            lista[2][col],
-            lista[3][col],
-            lista[4][col],
-            "Activo" if lista[5][col] else "Inactivo"
-        ]
-
+    total_filas = len(lista[0])
+    total_columnas = len(lista)
+    for col in range(total_filas):
+        fila = []
+        for fil in range(total_columnas):
+            fila.append(lista[fil][col])
         matriz.append(fila)
     return matriz
 
 # MOSTRAR MATRICES
-def mostrar_matriz(matriz, encabezados):
+def mostrar_matriz(matriz, encabezados, titulo_tabla):
     if not matriz:
-        print("No hay datos cargados.")
+        mostrar_mensaje("No hay datos cargados.", tipo="error")
         return
 
-    filas = len(matriz)
-    columnas = len(encabezados)
-    anchos = []
+    filas_activas = [fila for fila in matriz if str(fila[-1]).upper() == "ACTIVO"]
 
-    for col in range(columnas):
-        ancho = len(encabezados[col])
-        for fila in range(filas):
-            estado = matriz[fila][-1]
-            if estado == "ACTIVO" or estado == "Activo":
-                valor = str(matriz[fila][col])
-                if len(valor) > ancho:
-                    ancho = len(valor)
-            anchos.append(ancho)
+    if not filas_activas:
+        mostrar_mensaje("No hay registros activos para mostrar.", tipo="alerta")
+        return
 
-    for col in range(columnas):
-        titulo = encabezados[col]
-        espacios = " " * (anchos[col] - len(titulo))
-        print(titulo + espacios + "  ", end="")
-    print()
+    cant_encabezados = len(encabezados)
+    cant_columnas_datos = len(matriz[0]) - 1
+    total_columnas = (
+        cant_encabezados
+        if cant_encabezados < cant_columnas_datos
+        else cant_columnas_datos
+    )
 
-    for fila in range(filas):
-        estado = matriz[fila][-1]
-        if estado == "ACTIVO" or estado == "Activo":
-            for col in range(columnas):
-                valor = str(matriz[fila][col])
-                espacios = " " * (anchos[col] - len(valor))
-                print(valor + espacios + "  ", end="")  
-            print()
-    print()  # Línea en blanco después de la matriz
-    input("Presione ENTER para continuar...")
-# INGRESO Y VALIDACIÓN DE DATOS
-def pedir_monto(mensaje):
-    dato_invalido = True
-    while dato_invalido:
-        numero_valido = True
-        monto = input(mensaje)
-        puntos_encontrados = 0
-        monto_limpio = ""
-        
-        if monto != "":
-            for caracter in monto:
-                if caracter == "." or caracter == ",":
-                    puntos_encontrados += 1
-                    monto_limpio += "."
-                elif caracter >= "0" and caracter <= "9":
-                    monto_limpio += caracter
-                else:
-                    numero_valido = False
-            
-            if puntos_encontrados > 1:
-                numero_valido = False
-                
-            if monto_limpio == ".":
-                numero_valido = False
+    tabla = Table(
+        title=f"[bold cyan]{titulo_tabla}[/bold cyan]",
+        header_style="bold magenta",
+        border_style="bright_blue",
+    )
 
-            if numero_valido:
-                monto_final = float(monto_limpio)
-                if monto_final > 0:
-                    dato_invalido = False
-                    return monto_final
-                else: 
-                    print("El monto debe ser un número mayor a cero.")
-            else:
-                print("Error: el formato introducido no es un número válido.")
-        else:
-            print("El campo no puede estar vacío.")
+    for i in range(total_columnas):
+        tabla.add_column(encabezados[i], justify="left", style="white")
 
-def pedir_monto_opcional(mensaje, valor_actual):
-    while True:
-        monto = input(mensaje + f" [${valor_actual}]: ")
-        if monto == "":
-            return valor_actual
-        puntos_encontrados = 0
-        monto_limpio = ""
-        numero_valido = True
-        
-        for caracter in monto:
-            if caracter == "." or caracter == ",":
-                puntos_encontrados += 1
-                monto_limpio += "."
-            elif caracter >= "0" and caracter <= "9":
-                monto_limpio += caracter
-            else:
-                numero_valido = False
-        
-        if puntos_encontrados > 1:
-            numero_valido = False
-            
-        if monto_limpio == ".":
-            numero_valido = False
+    for fila in filas_activas:
+        valores = [str(fila[i]) for i in range(total_columnas)]
+        tabla.add_row(*valores)
 
-        if numero_valido:
-            monto_final = float(monto_limpio)
-            if monto_final > 0:
-                return monto_final
-            else: 
-                print("El monto debe ser un número mayor a cero.")
-        else:
-            print("Error: el formato introducido no es un número válido.")
-def solicitar_y_verificar_fecha():
-    #pedir y verificar el dia
-    dia = 0
-    while dia < 1 or dia > 31:
-        dia = int(input("Ingresa el día: "))
-        if dia < 1 or dia > 31:
-            print("Error: El día debe estar entre 1 y 31. Por favor, ingrese un valor válido.")
+    console.print()
+    console.print(tabla)
+    console.print()
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
 
-    #pedir y verificar el mes
-    mes_valido = False
-    while not mes_valido:
-        mes = int(input("Ingresa el mes: "))
-        
-        if mes < 1 or mes > 12:
-            print("Error: El mes debe estar entre 1 y 12. Por favor, ingrese un valor válido.")
-        elif dia == 31 and mes in [4, 6, 9, 11]:
-            print("Error: El mes ingresado solo tiene 30 días. Por favor, ingrese un valor válido.")
-        elif dia >= 30 and mes == 2:
-            print("Error: Febrero nunca puede tener 30 o 31 días. Por favor, ingrese un valor válido.")
-        else:
-            mes_valido = True
 
-    #pedir y verificar el año
-    anio_valido = False
-    while not anio_valido:
-        anio = int(input("Ingresa el año: "))
-        
-        # verificar si el año es bisiesto
-        es_bisiesto = (anio % 4 == 0 and (anio % 100 != 0 or anio % 400 == 0))
+def mostrar_categorias():
+    encabezados = ["Categoría", "Descripción"]
+    filas = []
+    for i in range(len(NombreC)):
+        if str(EstadoC[i]).upper() == "ACTIVO":
+            filas.append([NombreC[i], DescripcionC[i]])
+    renderizar_tabla(encabezados, filas, "Listado de Categorías")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
 
-        if dia == 29 and mes == 2 and not es_bisiesto:
-            print("Error: El año no es bisiesto, por lo que febrero no tiene 29 días.\nPor favor, ingresá otro año válido:")
-        else:
-            anio_valido = True
-
-    return f"{dia}/{mes}/{anio}"
-def pedir_texto_no_vacio(mensaje):
-    texto_sin_espacios = ""
-    text = False
-    while not text:
-        texto = input(mensaje)
-        if texto != "":
-            for caracter in range(len(texto)):
-                if texto[caracter] != " ":
-                    texto_sin_espacios += texto[caracter]
-            print("DEBUG [INFO]: Se ingresó el texto: " + texto_sin_espacios)
-            return texto_sin_espacios
-        else:
-            print("[AVISO]: Este campo no puede estar vacío.")
-def pedir_texto_no_vacio_con_espacios(mensaje):
-    text = False
-    while not text:
-        texto = input(mensaje)
-        if texto != "":
-            print("DEBUG [INFO]: Se ingresó el texto: " + texto)
-            return texto
-        else:
-            print("[AVISO]: Este campo no puede estar vacío.")
-
-def pedir_monto_opcional(mensaje, valor_actual):
-    while True:
-        monto = input(mensaje)
-        if monto == "":
-            return valor_actual
-        puntos_encontrados = 0
-        monto_limpio = ""
-        numero_valido = True
-        
-        for caracter in monto:
-            if caracter == "." or caracter == ",":
-                puntos_encontrados += 1
-                monto_limpio += "."
-            elif caracter >= "0" and caracter <= "9":
-                monto_limpio += caracter
-            else:
-                numero_valido = False
-        
-        if puntos_encontrados > 1:
-            numero_valido = False
-            
-        if monto_limpio == ".":
-            numero_valido = False
-
-        if numero_valido:
-            monto_final = float(monto_limpio)
-            if monto_final > 0:
-                return monto_final
-            else: 
-                print("El monto debe ser un número mayor a cero.")
-        else:
-            print("Error: el formato introducido no es un número válido.")
-
-def pedir_opcional(mensaje, valor_actual):
-    nuevo_valor = input(mensaje + f" [{valor_actual}]: ")
-    if nuevo_valor == "":
-        return valor_actual
-    return nuevo_valor
 
 def mostrar_presupuestos():
-    print("\n=================== MATRIZ DE PRESUPUESTOS ===================")
-    matriz_p = obtener_matriz(presupuestos)
-    mostrar_matriz(matriz_p, encabezadosP)
-    print()
+    encabezados = ["Período", "Categoría Asignada", "Monto Límite"]
+    filas = []
+    for i in range(len(Periodo_Presupuesto)):
+        if str(EstadoP[i]).upper() == "ACTIVO":
+            nombre_cat = obtener_nombre_categoria(Id_CategoriaP[i])
+            monto_fmt = f"${float(Monto_limite[i]):.2f}"
+            filas.append([Periodo_Presupuesto[i], nombre_cat, monto_fmt])
+    renderizar_tabla(encabezados, filas, "Listado de Presupuestos")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
+
 
 def mostrar_gastos():
-    print("\n=================== MATRIZ DE GASTOS ===================")
-    matriz_g = obtener_matriz(gastos)
-    mostrar_matriz(matriz_g, encabezadosG)
-    print()
-
-def consultar_gasto():
-    print("\n--- [R] CONSULTAR / BUSCAR GASTOS ---")
-    if not NombreG:
-        print("No hay gastos para consultar.")
-        return
-
-    busqueda_str = pedir_texto_no_vacio("Ingrese término de búsqueda (nombre, categoría o N° de fila): ")
-    busqueda_lower = busqueda_str.lower()
-    coincidencias = []
-    print(f"DEBUG [INFO]: Se ingresó el término de búsqueda: {busqueda_str}")
-    # Búsqueda por número de fila (1..N)
-    numero = False
-    if busqueda_str != "":
-        for caracter in busqueda_str:
-            if caracter >= "0" and caracter <= "9":
-                numero = True
-            elif caracter in ["abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", " ", ".", ","]:
-                numero = False
-                
-    if numero:
-        num = int(busqueda_str)
-        if 1 <= num <= len(NombreG):
-            coincidencias.append(num - 1)
-    
-    # Búsqueda por texto (nombre o categoría)
+    encabezados = ["Gasto", "Fecha", "Monto", "Descripción", "Categoría", "Período Asignado"]
+    filas = []
     for i in range(len(NombreG)):
-        if busqueda_lower in NombreG[i].lower() or busqueda_lower in CategoriaG[i].lower():
-            if i not in coincidencias:
-                coincidencias.append(i)
-    print(f"DEBUG [INFO]: Se encontraron {len(coincidencias)} coincidencia(s) para el término '{busqueda_str}'.")
+        if str(EstadoG[i]).upper() == "ACTIVO":
+            nombre_cat = obtener_nombre_categoria(Id_CatGasto[i])
+            periodo_pres = obtener_periodo_presupuesto(Id_PresGasto[i])
+            monto_fmt = f"${float(MontoG[i]):.2f}"
+            filas.append([
+                NombreG[i],
+                FechaG[i],
+                monto_fmt,
+                DescripcionG[i],
+                nombre_cat,
+                periodo_pres
+            ])
+    renderizar_tabla(encabezados, filas, "Control General de Gastos")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
+
+# =================
+# SISTEMA DE CRUDS
+# =================
+## CRUD CATEGORIAS
+
+def agregar_categoria():
+    console.print("\n[bold green]--- [C] AGREGAR NUEVA CATEGORÍA ---[/bold green]")
+    nuevo_id = str(len(Id_Categoria) + 1)
+    nombre = pedir_texto_no_vacio("Ingrese nombre de la categoría: ")
+    descripcion = pedir_texto_no_vacio("Ingrese descripción: ")
+
+    Id_Categoria.append(nuevo_id)
+    NombreC.append(nombre)
+    DescripcionC.append(descripcion)
+    EstadoC.append("Activo")
+    mostrar_mensaje(f"Categoría '{nombre}' agregada con ID: {nuevo_id}", "exito")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
+
+
+def consultar_categoria():
+    console.print("\n[bold yellow]--- [R] CONSULTAR / BUSCAR CATEGORÍAS ---[/bold yellow]")
+    if not Id_Categoria:
+        mostrar_mensaje("No hay categorías registradas.", "error")
+        return
+
+    busqueda = pedir_texto_no_vacio("Ingrese término de búsqueda (ID o Nombre): ").lower()
+    coincidencias = []
+
+    for i in range(len(Id_Categoria)):
+        if busqueda == Id_Categoria[i].lower() or busqueda in NombreC[i].lower():
+            coincidencias.append(i)
+
     if not coincidencias:
-        print("No se encontraron gastos que coincidan con la búsqueda.")
+        mostrar_mensaje("No se encontraron coincidencias.", "alerta")
     else:
-        print(f"\nSe encontraron {len(coincidencias)} resultado(s):")
-        encabezados = ["#", "Gasto", "Monto", "Fecha", "Categoría", "Descripción", "Estado"]
-        matriz_res = []
+        tabla = Table(title=f"Resultados para '{busqueda}'", header_style="bold magenta")
+        for enc in encabezadosC:
+            tabla.add_column(enc)
+        tabla.add_column("Estado")
+
         for idx in coincidencias:
-            est = "Activo" if EstadoG[idx] else "Inactivo"
-            matriz_res.append([idx + 1, NombreG[idx], MontoG[idx], FechaG[idx], CategoriaG[idx], DescripcionG[idx], est])
-        mostrar_matriz(matriz_res,encabezados)
-
-def agregar_gasto():
-    print("\n--- [C] AGREGAR NUEVO GASTO ---")
-    nombre = pedir_texto_no_vacio_con_espacios("Ingrese nombre del gasto: ")
-    monto = pedir_monto("Ingrese monto: ")
-    fecha = solicitar_y_verificar_fecha()
-    categoria = pedir_texto_no_vacio_con_espacios("Ingrese categoría: ")
-    descripcion = pedir_texto_no_vacio_con_espacios("Ingrese descripción: ")
-
-    NombreG.append(nombre)
-    MontoG.append(monto)
-    FechaG.append(fecha)
-    CategoriaG.append(categoria)
-    DescripcionG.append(descripcion)
-    EstadoG.append(True)
-    print("¡Gasto agregado exitosamente (Estado: Activo)!\n")
-    input("Presione ENTER para continuar...")
-
-def modificar_gasto():
-    print("\n--- [U] MODIFICAR GASTO ---")
+            tabla.add_row(Id_Categoria[idx], NombreC[idx], DescripcionC[idx], EstadoC[idx])
+        console.print(tabla)
+        console.input("[dim]Presione ENTER para continuar...[/dim]")
 
 
-    opc = pedir_texto_no_vacio("Ingrese el número del gasto a modificar: ")
-    while opc != "0" and (not opc.isdigit() or int(opc) < 1 or int(opc) > len(NombreG)):
-        print("Número de gasto inválido. Intente nuevamente.")
-        opc = pedir_texto_no_vacio("Ingrese el número del gasto a modificar: ")
-    if opc == "0":
-        print("Operación cancelada. No se realizaron cambios.")
-        return
-    idx = int(opc) - 1
-    print(f"\nModificando gasto #{opc} (Presione ENTER para conservar el valor actual):")
-    NombreG[idx] = pedir_opcional("Nuevo nombre", NombreG[idx])
-    
-    nuevo_monto = pedir_monto_opcional("Nuevo monto (actual: ${}): ".format(MontoG[idx]), MontoG[idx])
-    if nuevo_monto != "":
-        MontoG[idx] = nuevo_monto
-    FechaG[idx] = pedir_opcional("Nueva fecha (DD/MM/AAAA)", FechaG[idx])
-    CategoriaG[idx] = pedir_opcional("Nueva categoría", CategoriaG[idx])
-    DescripcionG[idx] = pedir_opcional("Nueva descripción", DescripcionG[idx])
-
-    estado_actual = "Activo" if EstadoG[idx] else "Inactivo"
-    cambiar_est = pedir_texto_no_vacio(f"¿Desea cambiar el estado actual ({estado_actual})? (s/n): ").lower()
-    if cambiar_est == 's':
-        EstadoG[idx] = not EstadoG[idx]
-        nuevo_est = "Activo" if EstadoG[idx] else "Inactivo"
-        print(f"Estado cambiado a: {nuevo_est}")
-    elif cambiar_est == 'n':
-        print("Estado no modificado.")
-
-    print("¡Gasto actualizado exitosamente!\n")
-    print()
-    input("Presione ENTER para continuar...")
-
-def eliminar_gasto():
-    print("\n--- [D] DAR DE BAJA LÓGICA GASTO ---")
-
-    opc = pedir_texto_no_vacio("Ingrese el número del gasto a modificar: ")
-    while opc != "0" and (not opc.isdigit() or int(opc) < 1 or int(opc) > len(NombreG)):
-        print("Número de gasto inválido. Intente nuevamente.")
-        opc = pedir_texto_no_vacio("Ingrese el número del gasto a modificar: ")
-    if opc == "0":
-        print("Operación cancelada. No se realizaron cambios.")
-        return
-    idx = int(opc) - 1
-
-    if not EstadoG[idx]:
-        print(f"El gasto '{NombreG[idx]}' ya se encuentra en estado INACTIVO.")
-        reactivar = pedir_texto_no_vacio("¿Desea reactivarlo? (s/n): ").lower()
-        if reactivar == 's':
-            EstadoG[idx] = True
-            print(f"¡Gasto '{NombreG[idx]}' reactivado (Activo) correctamente!\n")
-        else:
-            print("Operación cancelada.\n")
+def modificar_categoria():
+    console.print("\n[bold blue]--- [U] MODIFICAR CATEGORÍA ---[/bold blue]")
+    id_cat = pedir_texto_no_vacio("Ingrese el ID de la categoría a modificar (0 para cancelar): ")
+    if id_cat == "0":
         return
 
-    confirmacion = pedir_texto_no_vacio(f"¿Está seguro de dar de baja el gasto '{NombreG[idx]}' de ${MontoG[idx]}? (s/n): ").lower()
-    if confirmacion == 's':
-        EstadoG[idx] = False
-        print(f"¡Gasto '{NombreG[idx]}' dado de baja correctamente (Estado: Inactivo)!\n")
-    else:
-        print("Operación cancelada.\n")
-    input("Presione ENTER para continuar...")
+    idx = -1
+    for i in range(len(Id_Categoria)):
+        if Id_Categoria[i] == id_cat:
+            idx = i
+
+    if idx == -1:
+        mostrar_mensaje("ID no encontrado.", "error")
+        return
+
+    NombreC[idx] = pedir_opcional("Nuevo nombre", NombreC[idx])
+    DescripcionC[idx] = pedir_opcional("Nueva descripción", DescripcionC[idx])
+
+    cambiar_est = pedir_texto_no_vacio(f"¿Cambiar estado actual ({EstadoC[idx]})? (s/n): ").lower()
+    if cambiar_est == "s":
+        EstadoC[idx] = "Inactivo" if EstadoC[idx] == "Activo" else "Activo"
+        mostrar_mensaje(f"Estado cambiado a: {EstadoC[idx]}", "info")
+
+    mostrar_mensaje("Categoría actualizada exitosamente.", "exito")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
+
+
+def eliminar_categoria():
+    console.print("\n[bold red]--- [D] BAJA LÓGICA DE CATEGORÍA ---[/bold red]")
+    id_cat = pedir_texto_no_vacio("Ingrese el ID de la categoría a dar de baja (0 para cancelar): ")
+    if id_cat == "0":
+        return
+
+    idx = -1
+    for i in range(len(Id_Categoria)):
+        if Id_Categoria[i] == id_cat:
+            idx = i
+
+    if idx == -1:
+        mostrar_mensaje("ID no encontrado.", "error")
+        return
+
+    if EstadoC[idx] == "Inactivo":
+        reactivar = pedir_texto_no_vacio("Ya está inactiva. ¿Desea reactivarla? (s/n): ").lower()
+        if reactivar == "s":
+            EstadoC[idx] = "Activo"
+            mostrar_mensaje("Categoría reactivada.", "exito")
+        return
+
+    confirmar = pedir_texto_no_vacio(f"¿Dar de baja la categoría '{NombreC[idx]}'? (s/n): ").lower()
+    if confirmar == "s":
+        EstadoC[idx] = "Inactivo"
+        mostrar_mensaje("Categoría dada de baja correctamente.", "exito")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
+
+## CRUD PRESUPUESTOS
 
 def agregar_presupuesto():
-    print("\n--- [C] AGREGAR NUEVO PRESUPUESTO ---")
-    nombre = pedir_texto_no_vacio_con_espacios("Ingrese nombre del presupuesto: ")
-    monto = pedir_monto("Ingrese monto límite: ")
-    fecha = solicitar_y_verificar_fecha()
-    categoria = pedir_texto_no_vacio_con_espacios("Ingrese categoría: ")
-    descripcion = pedir_texto_no_vacio_con_espacios("Ingrese descripción: ")
+    console.print("\n[bold green]--- [C] AGREGAR NUEVO PRESUPUESTO ---[/bold green]")
+    nuevo_id = str(len(Id_Presupuesto) + 1)
+    console.print("[dim]Definición de período:[/dim]")
+    console.print("Fecha de Inicio:")
+    f_inicio = solicitar_y_verificar_fecha()
+    console.print("Fecha de Fin:")
+    f_fin = solicitar_y_verificar_fecha()
+    periodo = f"{f_inicio}-{f_fin}"
 
-    NombreP.append(nombre)
-    MontoP.append(monto)
-    FechaP.append(fecha)
-    CategoriaP.append(categoria)
-    DescripcionP.append(descripcion)
-    EstadoP.append(True)
-    print("¡Presupuesto agregado exitosamente (Estado: Activo)!\n")
-    input("Presione ENTER para continuar...")
+    monto = str(pedir_monto("Ingrese monto límite: "))
+    id_cat = pedir_id_existente("Ingrese ID de la categoría asociada: ", Id_Categoria, EstadoC)
+
+    Id_Presupuesto.append(nuevo_id)
+    Periodo_Presupuesto.append(periodo)
+    Monto_limite.append(monto)
+    Id_CategoriaP.append(id_cat)
+    EstadoP.append("Activo")
+
+    mostrar_mensaje(f"Presupuesto agregado con ID: {nuevo_id}", "exito")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
+
 
 def consultar_presupuesto():
-    print("\n--- [R] CONSULTAR / BUSCAR PRESUPUESTOS ---")
-    if not NombreP:
-        print("No hay presupuestos para consultar.")
+    console.print("\n[bold yellow]--- [R] CONSULTAR / BUSCAR PRESUPUESTO ---[/bold yellow]")
+    if not Id_Presupuesto:
+        mostrar_mensaje("No hay presupuestos registrados.", "error")
         return
 
-    busqueda_str = pedir_texto_no_vacio("Ingrese término de búsqueda (nombre, categoría o N° de fila): ")
-    busqueda_lower = busqueda_str.lower()
+    busqueda = pedir_texto_no_vacio("Ingrese término de búsqueda (ID, Periodo o ID Categoría): ").lower()
     coincidencias = []
-    print(f"DEBUG [INFO]: Se ingresó el término de búsqueda: {busqueda_str}")
-    # Búsqueda por número de fila (1..N)
-    numero = False
-    if busqueda_str != "":
-        for caracter in busqueda_str:
-            if caracter >= "0" and caracter <= "9":
-                numero = True
-            elif caracter in ["abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", " ", ".", ","]:
-                numero = False
-                
-    if numero:
-        num = int(busqueda_str)
-        if 1 <= num <= len(NombreP):
-            coincidencias.append(num - 1)
-    
-    # Búsqueda por texto (nombre o categoría)
-    for i in range(len(NombreP)):
-        if busqueda_lower in NombreP[i].lower() or busqueda_lower in CategoriaP[i].lower():
-            if i not in coincidencias:
-                coincidencias.append(i)
-    print(f"DEBUG [INFO]: Se encontraron {len(coincidencias)} coincidencia(s) para el término '{busqueda_str}'.")
+
+    for i in range(len(Id_Presupuesto)):
+        if (busqueda == Id_Presupuesto[i].lower()
+            or busqueda in Periodo_Presupuesto[i].lower()
+            or busqueda == Id_CategoriaP[i].lower()):
+            coincidencias.append(i)
+
     if not coincidencias:
-        print("No se encontraron presupuestos que coincidan con la búsqueda.")
+        mostrar_mensaje("No se encontraron coincidencias.", "alerta")
     else:
-        print(f"\nSe encontraron {len(coincidencias)} resultado(s):")
-        encabezados = ["#", "Presupuesto", "Monto", "Fecha", "Categoría", "Descripción", "Estado"]
-        matriz_res = []
+        tabla = Table(title=f"Resultados para '{busqueda}'", header_style="bold magenta")
+        for enc in encabezadosP:
+            tabla.add_column(enc)
+        tabla.add_column("Estado")
+
         for idx in coincidencias:
-            est = "Activo" if EstadoP[idx] else "Inactivo"
-            matriz_res.append([idx + 1, NombreP[idx], MontoP[idx], FechaP[idx], CategoriaP[idx], DescripcionP[idx], est])
-        mostrar_matriz(matriz_res,encabezados)
+            tabla.add_row(
+                Id_Presupuesto[idx],
+                Periodo_Presupuesto[idx],
+                Monto_limite[idx],
+                Id_CategoriaP[idx],
+                EstadoP[idx],
+            )
+        console.print(tabla)
+        console.input("[dim]Presione ENTER para continuar...[/dim]")
 
 
 def modificar_presupuesto():
-    print("\n--- [U] MODIFICAR PRESUPUESTO ---")
-
-
-    opc = pedir_texto_no_vacio("Ingrese el número del presupuesto a modificar: ")
-    while opc != "0" and (not opc.isdigit() or int(opc) < 1 or int(opc) > len(NombreP)):
-        print("Número de presupuesto inválido. Intente nuevamente.")
-        opc = pedir_texto_no_vacio("Ingrese el número del presupuesto a modificar: ")
-    if opc == "0":
-        print("Operación cancelada. No se realizaron cambios.")
+    console.print("\n[bold blue]--- [U] MODIFICAR PRESUPUESTO ---[/bold blue]")
+    id_p = pedir_texto_no_vacio("Ingrese el ID del presupuesto a modificar (0 para cancelar): ")
+    if id_p == "0":
         return
-    idx = int(opc) - 1
-    print(f"\nModificando presupuesto #{opc} (Presione ENTER para conservar el valor actual):")
-    NombreP[idx] = pedir_opcional("Nuevo nombre", NombreP[idx])
 
-    nuevo_monto = pedir_monto_opcional("Nuevo monto (actual: ${}): ".format(MontoP[idx]), MontoP[idx])
-    if nuevo_monto != "":
-        MontoP[idx] = nuevo_monto
-    FechaP[idx] = pedir_opcional("Nueva fecha (DD/MM/AAAA)", FechaP[idx])
-    CategoriaP[idx] = pedir_opcional("Nueva categoría", CategoriaP[idx])
-    DescripcionP[idx] = pedir_opcional("Nueva descripción", DescripcionP[idx])
+    idx = -1
+    for i in range(len(Id_Presupuesto)):
+        if Id_Presupuesto[i] == id_p:
+            idx = i
 
-    estado_actual = "Activo" if EstadoP[idx] else "Inactivo"
-    cambiar_est = pedir_texto_no_vacio(f"¿Desea cambiar el estado actual ({estado_actual})? (s/n): ").lower()
-    if cambiar_est == 's':
-        EstadoP[idx] = not EstadoP[idx]
-        nuevo_est = "Activo" if EstadoP[idx] else "Inactivo"
-        print(f"Estado cambiado a: {nuevo_est}")
-    elif cambiar_est == 'n':
-        print("Estado no modificado.")
+    if idx == -1:
+        mostrar_mensaje("ID no encontrado.", "error")
+        return
 
-    print("¡Presupuesto actualizado exitosamente!\n")
-    print()
-    input("Presione ENTER para continuar...")
+    Periodo_Presupuesto[idx] = pedir_opcional("Nuevo periodo (DD/MM/AAAA-DD/MM/AAAA)", Periodo_Presupuesto[idx])
+    Monto_limite[idx] = str(pedir_monto_opcional("Nuevo monto límite", Monto_limite[idx]))
+    Id_CategoriaP[idx] = pedir_opcional("Nuevo ID Categoría", Id_CategoriaP[idx])
+
+    cambiar_est = pedir_texto_no_vacio(f"¿Cambiar estado actual ({EstadoP[idx]})? (s/n): ").lower()
+    if cambiar_est == "s":
+        EstadoP[idx] = "Inactivo" if EstadoP[idx] == "Activo" else "Activo"
+        mostrar_mensaje(f"Estado cambiado a: {EstadoP[idx]}", "info")
+
+    mostrar_mensaje("Presupuesto actualizado exitosamente.", "exito")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
+
 
 def eliminar_presupuesto():
-    print("\n--- [D] DAR DE BAJA LÓGICA PRESUPUESTO ---")
-
-    opc = pedir_texto_no_vacio("Ingrese el número del presupuesto a dar de baja: ")
-    while opc != "0" and (not opc.isdigit() or int(opc) < 1 or int(opc) > len(NombreP)):
-        print("Número de presupuesto inválido. Intente nuevamente.")
-        opc = pedir_texto_no_vacio("Ingrese el número del presupuesto a dar de baja: ")
-    if opc == "0":
-        print("Operación cancelada. No se realizaron cambios.")
-        return
-    idx = int(opc) - 1
-
-    if not EstadoP[idx]:
-        print(f"El presupuesto '{NombreP[idx]}' ya se encuentra en estado INACTIVO.")
-        reactivar = pedir_texto_no_vacio("¿Desea reactivarlo? (s/n): ").lower()
-        if reactivar == 's':
-            EstadoP[idx] = True
-            print(f"¡Presupuesto '{NombreP[idx]}' reactivado (Activo) correctamente!\n")
-        else:
-            print("Operación cancelada.\n")
+    console.print("\n[bold red]--- [D] BAJA LÓGICA DE PRESUPUESTO ---[/bold red]")
+    id_p = pedir_texto_no_vacio("Ingrese el ID del presupuesto a dar de baja (0 para cancelar): ")
+    if id_p == "0":
         return
 
-    confirmacion = pedir_texto_no_vacio(f"¿Está seguro de dar de baja el presupuesto '{NombreP[idx]}' de ${MontoP[idx]}? (s/n): ").lower()
-    if confirmacion == 's':
-        EstadoP[idx] = False
-        print(f"¡Presupuesto '{NombreP[idx]}' dado de baja correctamente (Estado: Inactivo)!\n")
+    idx = -1
+    for i in range(len(Id_Presupuesto)):
+        if Id_Presupuesto[i] == id_p:
+            idx = i
+
+    if idx == -1:
+        mostrar_mensaje("ID no encontrado.", "error")
+        return
+
+    if EstadoP[idx] == "Inactivo":
+        reactivar = pedir_texto_no_vacio("Ya está inactivo. ¿Desea reactivarlo? (s/n): ").lower()
+        if reactivar == "s":
+            EstadoP[idx] = "Activo"
+            mostrar_mensaje("Presupuesto reactivado.", "exito")
+        return
+
+    confirmar = pedir_texto_no_vacio(f"¿Dar de baja el presupuesto ID '{Id_Presupuesto[idx]}'? (s/n): ").lower()
+    if confirmar == "s":
+        EstadoP[idx] = "Inactivo"
+        mostrar_mensaje("Presupuesto dado de baja correctamente.", "exito")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
+
+## CRUD GASTOS
+
+def agregar_gasto():
+    console.print("\n[bold green]--- [C] AGREGAR NUEVO GASTO ---[/bold green]")
+    nuevo_id = str(len(Id_Gasto) + 1)
+    nombre = pedir_texto_no_vacio("Ingrese nombre del gasto (ej: Supermercado): ")
+    fecha = solicitar_y_verificar_fecha()
+    monto = str(pedir_monto("Ingrese monto del gasto: "))
+    descripcion = pedir_texto_no_vacio("Ingrese descripción del gasto: ")
+
+    console.print("\n[dim]Categorías activas:[/dim]")
+    mostrar_matriz(obtener_matriz(categoria), encabezadosC, "Categorías Disponibles")
+    id_cat = seleccionar_categoria()
+
+    console.print("\n[dim]Presupuestos activos:[/dim]")
+    mostrar_matriz(obtener_matriz(presupuestos), encabezadosP, "Presupuestos Disponibles")
+    id_pres = seleccionar_presupuesto()                                                    
+
+    # Inserción sincronizada en todas las listas
+    Id_Gasto.append(nuevo_id)
+    NombreG.append(nombre)
+    FechaG.append(fecha)
+    MontoG.append(monto)
+    DescripcionG.append(descripcion)
+    Id_CatGasto.append(id_cat)
+    Id_PresGasto.append(id_pres)
+    EstadoG.append("Activo")
+
+    mostrar_mensaje(f"Gasto '{nombre}' registrado con ID: {nuevo_id}", "exito")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
+
+
+def consultar_gasto():
+    console.print("\n[bold yellow]--- [R] CONSULTAR / BUSCAR GASTOS ---[/bold yellow]")
+    if not NombreG:
+        mostrar_mensaje("No hay gastos registrados.", "error")
+        return
+
+    busqueda = pedir_texto_no_vacio("Ingrese término de búsqueda (nombre, categoría, descripción o fecha): ").lower()
+    coincidencias = []
+
+    for i in range(len(NombreG)):
+        nombre_cat = obtener_nombre_categoria(Id_CatGasto[i]).lower()
+        campos = [NombreG[i].lower(), FechaG[i].lower(), DescripcionG[i].lower(), nombre_cat]
+        
+        coincide = False
+        for campo in campos:
+            if busqueda in campo:
+                coincide = True
+        if coincide:
+            coincidencias.append(i)
+
+    if not coincidencias:
+        mostrar_mensaje("No se encontraron gastos que coincidan.", "alerta")
     else:
-        print("Operación cancelada.\n")
-    input("Presione ENTER para continuar...")
+        tabla = Table(title=f"Resultados para '{busqueda}'", header_style="bold magenta", border_style="bright_blue")
+        encabezados = ["Gasto", "Fecha", "Monto", "Descripción", "Categoría", "Presupuesto", "Estado"]
+        for enc in encabezados:
+            tabla.add_column(enc)
 
-def menu_gastos(matrizG, encabezadoG):
-    menu = 1
-    while menu == 1:
-        print("\n========================================")
-        print("         GESTIÓN DE GASTOS              ")
-        print("========================================")
-        print("1. Mostrar gastos\n2. Consultar / Buscar gasto\n3. Agregar nuevo gasto (Crear)")
-        print("4. Modificar un gasto (Actualizar)\n5. Dar de baja lógica un gasto\n0. Volver al menú principal")
-        print("========================================")
+        for idx in coincidencias:
+            nombre_cat = obtener_nombre_categoria(Id_CatGasto[idx])
+            periodo_pres = obtener_periodo_presupuesto(Id_PresGasto[idx])
+            tabla.add_row(
+                NombreG[idx],
+                FechaG[idx],
+                f"${float(MontoG[idx]):.2f}",
+                DescripcionG[idx],
+                nombre_cat,
+                periodo_pres,
+                EstadoG[idx]
+            )
+        console.print(tabla)
+        console.input("[dim]Presione ENTER para continuar...[/dim]")
+
+def modificar_gasto():
+    console.print("\n[bold blue]--- [U] MODIFICAR GASTO ---[/bold blue]")
+    id_g = pedir_texto_no_vacio("Ingrese el ID del gasto a modificar (0 para cancelar): ")
+    if id_g == "0":
+        return
+
+    idx = -1
+    for i in range(len(Id_Gasto)):
+        if Id_Gasto[i] == id_g:
+            idx = i
+
+    if idx == -1:
+        mostrar_mensaje("ID no encontrado.", "error")
+        return
+
+    NombreG[idx] = pedir_opcional("Nuevo nombre", NombreG[idx])
+    FechaG[idx] = pedir_opcional("Nueva fecha (DD/MM/AAAA)", FechaG[idx])
+    MontoG[idx] = str(pedir_monto_opcional("Nuevo monto", MontoG[idx]))
+    DescripcionG[idx] = pedir_opcional("Nueva descripción", DescripcionG[idx])
+    
+    # Modificación opcional con validación de existencia si se desea cambiar
+    cambiar_cat = pedir_texto_no_vacio("¿Desea cambiar la categoría? (s/n): ").lower()
+    if cambiar_cat == "s":
+        Id_CatGasto[idx] = pedir_id_existente("Nuevo ID Categoría: ", Id_Categoria, EstadoC)
+
+    cambiar_pres = pedir_texto_no_vacio("¿Desea cambiar el presupuesto? (s/n): ").lower()
+    if cambiar_pres == "s":
+        Id_PresGasto[idx] = pedir_id_existente("Nuevo ID Presupuesto: ", Id_Presupuesto, EstadoP)
+
+    cambiar_est = pedir_texto_no_vacio(f"¿Cambiar estado actual ({EstadoG[idx]})? (s/n): ").lower()
+    if cambiar_est == "s":
+        EstadoG[idx] = "Inactivo" if EstadoG[idx] == "Activo" else "Activo"
+        mostrar_mensaje(f"Estado cambiado a: {EstadoG[idx]}", "info")
+
+    mostrar_mensaje("Gasto actualizado exitosamente.", "exito")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
+
+def eliminar_gasto():
+    console.print("\n[bold red]--- [D] BAJA LÓGICA DE GASTO ---[/bold red]")
+    id_g = pedir_texto_no_vacio("Ingrese el ID del gasto a dar de baja (0 para cancelar): ")
+    if id_g == "0":
+        return
+
+    idx = -1
+    for i in range(len(Id_Gasto)):
+        if Id_Gasto[i] == id_g:
+            idx = i
+
+    if idx == -1:
+        mostrar_mensaje("ID no encontrado.", "error")
+        return
+
+    if EstadoG[idx] == "Inactivo":
+        reactivar = pedir_texto_no_vacio("Ya está inactivo. ¿Desea reactivarlo? (s/n): ").lower()
+        if reactivar == "s":
+            EstadoG[idx] = "Activo"
+            mostrar_mensaje("Gasto reactivado.", "exito")
+        return
+
+    confirmar = pedir_texto_no_vacio(f"¿Dar de baja el gasto ID '{Id_Gasto[idx]}'? (s/n): ").lower()
+    if confirmar == "s":
+        EstadoG[idx] = "Inactivo"
+        mostrar_mensaje("Gasto dado de baja correctamente.", "exito")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
+
+# SISTEMA DE MENUS
+
+def menu_categorias():
+    activo = True
+    opciones = [
+        "Mostrar categorías",
+        "Consultar / Buscar categoría",
+        "Agregar categoría",
+        "Modificar categoría",
+        "Baja lógica de categoría",
+    ]
+    while activo:
+        mostrar_menu("GESTIÓN DE CATEGORÍAS", opciones)
         opc = pedir_texto_no_vacio("Seleccione una opción: ")
 
         if opc == "1":
-            matrizG = obtener_matriz(gastos)
-            mostrar_gastos()
+            mostrar_categorias()
         elif opc == "2":
-            consultar_gasto()
+            consultar_categoria()
         elif opc == "3":
-            agregar_gasto()
+            agregar_categoria()
         elif opc == "4":
-            modificar_gasto()
+            modificar_categoria()
         elif opc == "5":
-            eliminar_gasto()
+            eliminar_categoria()
         elif opc == "0":
-            menu = 0
+            activo = False
         else:
-            print("Opción no válida. Intente nuevamente.")
+            mostrar_mensaje("Opción no válida.", "error")
 
 
-def menu_presupuestos(matrizP, encabezadoP):
-    menu = 1
-    while menu == 1:
-        print("\n========================================")
-        print("       GESTIÓN DE PRESUPUESTOS          ")
-        print("========================================")
-        print("1. Mostrar matriz\n2. Consultar / Buscar presupuesto\n3. Agregar nuevo presupuesto (Crear)")
-        print("4. Modificar un presupuesto (Actualizar)\n5. Dar de baja lógica un presupuesto\n0. Volver al menú principal")
-        print("========================================")
-        opc = input("Seleccione una opción: ").strip()
+def menu_presupuestos():
+    activo = True
+    opciones = [
+        "Mostrar presupuestos",
+        "Consultar / Buscar presupuesto",
+        "Agregar presupuesto",
+        "Modificar presupuesto",
+        "Baja lógica de presupuesto",
+    ]
+    while activo:
+        mostrar_menu("GESTIÓN DE PRESUPUESTOS", opciones)
+        opc = pedir_texto_no_vacio("Seleccione una opción: ")
 
         if opc == "1":
-            obtener_matriz(presupuestos)
             mostrar_presupuestos()
         elif opc == "2":
             consultar_presupuesto()
@@ -576,39 +801,68 @@ def menu_presupuestos(matrizP, encabezadoP):
         elif opc == "5":
             eliminar_presupuesto()
         elif opc == "0":
-            menu = 0
+            activo = False
         else:
-            print("Opción no válida. Intente nuevamente.")
+            mostrar_mensaje("Opción no válida.", "error")
 
-def menu_principal(matrizG, encabezadoG, matrizP, encabezadoP):
-    menu = 1
-    while menu == 1:
-        print("\n========================================")
-        print("    SISTEMA DE GESTIÓN FINANCIERA       ")
-        print("========================================")
-        print("1. Gestión de Gastos (CRUD)\n2. Gestión de Presupuestos (CRUD)")
-        print("3. Ver Tablas Completas (Matrices)\n0. Salir")
-        print("========================================")
+
+def menu_gastos():
+    activo = True
+    opciones = [
+        "Mostrar gastos",
+        "Consultar / Buscar gasto",
+        "Agregar gasto",
+        "Modificar gasto",
+        "Baja lógica de gasto",
+    ]
+    while activo:
+        mostrar_menu("GESTIÓN DE GASTOS", opciones)
+        opc = pedir_texto_no_vacio("Seleccione una opción: ")
+
+        if opc == "1":
+            mostrar_gastos()
+        elif opc == "2":
+            consultar_gasto()
+        elif opc == "3":
+            agregar_gasto()
+        elif opc == "4":
+            modificar_gasto()
+        elif opc == "5":
+            eliminar_gasto()
+        elif opc == "0":
+            activo = False
+        else:
+            mostrar_mensaje("Opción no válida.", "error")
+
+
+def menu_principal():
+    ejecutando = True
+    opciones = [
+        "Gestión de Gastos (CRUD)",
+        "Gestión de Presupuestos (CRUD)",
+        "Gestión de Categorías (CRUD)",
+        "Ver Todas las Tablas",
+    ]
+    while ejecutando:
+        mostrar_menu("SISTEMA DE GESTION FINANCIERA",opciones)
         opcion = pedir_texto_no_vacio("Seleccione una opción: ")
 
         if opcion == "1":
-            menu_gastos(matrizG, encabezadoG)
+            menu_gastos()
         elif opcion == "2":
-            menu_presupuestos(matrizP, encabezadoP)
+            menu_presupuestos()
         elif opcion == "3":
-            obtener_matriz(gastos)
-            obtener_matriz(presupuestos)
-            mostrar_gastos()
+            menu_categorias()
+        elif opcion == "4":
+            mostrar_categorias()
             mostrar_presupuestos()
+            mostrar_gastos()
         elif opcion == "0":
-            print("¡Gracias por utilizar el sistema! Hasta luego.")
-            menu = 0
+            mostrar_mensaje("¡Gracias por utilizar el sistema! Hasta luego.", "info")
+            ejecutando = False
         else:
-            print("Opción no válida. Por favor, intente nuevamente.\n")
+            mostrar_mensaje("Opción no válida. Intente nuevamente.", "error")
+
 
 if __name__ == "__main__":
-
-    matrizG = obtener_matriz(gastos)
-    matrizP = obtener_matriz(presupuestos)
-
-    menu_principal(matrizG, encabezadosG, matrizP, encabezadosP)
+    menu_principal()
