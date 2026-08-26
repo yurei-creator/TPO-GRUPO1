@@ -503,7 +503,7 @@ def agregar_presupuesto():
     periodo = f"{f_inicio}-{f_fin}"
 
     monto = str(pedir_monto("Ingrese monto límite: "))
-    id_cat = pedir_id_existente("Ingrese ID de la categoría asociada: ", Id_Categoria, EstadoC)
+    id_cat = seleccionar_categoria()
 
     Id_Presupuesto.append(nuevo_id)
     Periodo_Presupuesto.append(periodo)
@@ -617,11 +617,9 @@ def agregar_gasto():
     descripcion = pedir_texto_no_vacio("Ingrese descripción del gasto: ")
 
     console.print("\n[dim]Categorías activas:[/dim]")
-    mostrar_matriz(obtener_matriz(categoria), encabezadosC, "Categorías Disponibles")
     id_cat = seleccionar_categoria()
 
     console.print("\n[dim]Presupuestos activos:[/dim]")
-    mostrar_matriz(obtener_matriz(presupuestos), encabezadosP, "Presupuestos Disponibles")
     id_pres = seleccionar_presupuesto()                                                    
 
     # Inserción sincronizada en todas las listas
