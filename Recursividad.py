@@ -401,7 +401,7 @@ def mostrar_gastos():
         if str(EstadoG[i]).upper() == "ACTIVO":
             nombre_cat = obtener_nombre_categoria(Id_CatGasto[i])
             periodo_pres = obtener_periodo_presupuesto(Id_PresGasto[i])
-            monto_fmt = f"${float(MontoG[i]):.2f}"
+            monto_fmt = f"$USD {float(MontoG[i]):,.2f}"
             filas.append([
                 NombreG[i],
                 FechaG[i],
