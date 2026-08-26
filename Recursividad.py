@@ -269,6 +269,30 @@ def seleccionar_categoria():
             mostrar_mensaje("Debe ingresar un número.", "error")
     return id_seleccionado
 
+def seleccionar_gasto():
+    console.print("\n[bold cyan]Seleccione un Gasto:[/bold cyan]")
+    activas_idx = []
+    for i in range(len(NombreG)):
+        if str(EstadoC[i]).upper() == "ACTIVO":
+            activas_idx.append(i)
+            console.print(f"  [yellow]{len(activas_idx)}[/yellow]. {NombreG[i]} ({DescripcionG[i]})")
+    
+    valido = False
+    id_seleccionado = ""
+    while not valido:
+        opc = pedir_texto_no_vacio("Ingrese el número de la categoría: ")
+        if opc.isdigit():
+            num = int(opc)
+            if 1 <= num <= len(activas_idx):
+                idx_real = activas_idx[num - 1]
+                id_seleccionado = Id_Gasto[idx_real]
+                valido = True
+            else:
+                mostrar_mensaje("Número fuera de rango.", "error")
+        else:
+            mostrar_mensaje("Debe ingresar un número.", "error")
+    return id_seleccionado
+
 
 def seleccionar_presupuesto():
     console.print("\n[bold cyan]Seleccione un Presupuesto:[/bold cyan]")
@@ -437,7 +461,7 @@ def consultar_categoria():
 
 def modificar_categoria():
     console.print("\n[bold blue]--- [U] MODIFICAR CATEGORÍA ---[/bold blue]")
-    id_cat = pedir_texto_no_vacio("Ingrese el ID de la categoría a modificar (0 para cancelar): ")
+    id_cat = seleccionar_categoria()
     if id_cat == "0":
         return
 
@@ -464,7 +488,7 @@ def modificar_categoria():
 
 def eliminar_categoria():
     console.print("\n[bold red]--- [D] BAJA LÓGICA DE CATEGORÍA ---[/bold red]")
-    id_cat = pedir_texto_no_vacio("Ingrese el ID de la categoría a dar de baja (0 para cancelar): ")
+    id_cat = seleccionar_categoria()
     if id_cat == "0":
         return
 
@@ -552,7 +576,7 @@ def consultar_presupuesto():
 
 def modificar_presupuesto():
     console.print("\n[bold blue]--- [U] MODIFICAR PRESUPUESTO ---[/bold blue]")
-    id_p = pedir_texto_no_vacio("Ingrese el ID del presupuesto a modificar (0 para cancelar): ")
+    id_p = seleccionar_presupuesto()
     if id_p == "0":
         return
 
@@ -580,7 +604,7 @@ def modificar_presupuesto():
 
 def eliminar_presupuesto():
     console.print("\n[bold red]--- [D] BAJA LÓGICA DE PRESUPUESTO ---[/bold red]")
-    id_p = pedir_texto_no_vacio("Ingrese el ID del presupuesto a dar de baja (0 para cancelar): ")
+    id_p = seleccionar_presupuesto()
     if id_p == "0":
         return
 
@@ -622,7 +646,6 @@ def agregar_gasto():
     console.print("\n[dim]Presupuestos activos:[/dim]")
     id_pres = seleccionar_presupuesto()                                                    
 
-    # Inserción sincronizada en todas las listas
     Id_Gasto.append(nuevo_id)
     NombreG.append(nombre)
     FechaG.append(fecha)
@@ -681,7 +704,7 @@ def consultar_gasto():
 
 def modificar_gasto():
     console.print("\n[bold blue]--- [U] MODIFICAR GASTO ---[/bold blue]")
-    id_g = pedir_texto_no_vacio("Ingrese el ID del gasto a modificar (0 para cancelar): ")
+    id_g = seleccionar_gasto()
     if id_g == "0":
         return
 
@@ -698,15 +721,14 @@ def modificar_gasto():
     FechaG[idx] = pedir_opcional("Nueva fecha (DD/MM/AAAA)", FechaG[idx])
     MontoG[idx] = str(pedir_monto_opcional("Nuevo monto", MontoG[idx]))
     DescripcionG[idx] = pedir_opcional("Nueva descripción", DescripcionG[idx])
-    
-    # Modificación opcional con validación de existencia si se desea cambiar
+
     cambiar_cat = pedir_texto_no_vacio("¿Desea cambiar la categoría? (s/n): ").lower()
     if cambiar_cat == "s":
-        Id_CatGasto[idx] = pedir_id_existente("Nuevo ID Categoría: ", Id_Categoria, EstadoC)
+        Id_CatGasto[idx] = seleccionar_categoria()
 
     cambiar_pres = pedir_texto_no_vacio("¿Desea cambiar el presupuesto? (s/n): ").lower()
     if cambiar_pres == "s":
-        Id_PresGasto[idx] = pedir_id_existente("Nuevo ID Presupuesto: ", Id_Presupuesto, EstadoP)
+        Id_PresGasto[idx] = seleccionar_presupuesto()
 
     cambiar_est = pedir_texto_no_vacio(f"¿Cambiar estado actual ({EstadoG[idx]})? (s/n): ").lower()
     if cambiar_est == "s":
