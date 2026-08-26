@@ -740,7 +740,7 @@ def modificar_gasto():
 
 def eliminar_gasto():
     console.print("\n[bold red]--- [D] BAJA LÓGICA DE GASTO ---[/bold red]")
-    id_g = pedir_texto_no_vacio("Ingrese el ID del gasto a dar de baja (0 para cancelar): ")
+    id_g = seleccionar_gasto()
     if id_g == "0":
         return
 
