@@ -1,0 +1,158 @@
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from functools import reduce
+
+console = Console()
+
+
+'''Login'''
+def login(n1):
+    info=n1
+    usuario=input("Por favor ingrese su nombre de usuario:\n")
+    clave=input("Por favor, ingrese su contraseña:\n")
+    while usuario != info[0] or clave != info[1]:
+        print("Error, usuario y/o clave incorrecta.")
+        usuario=input("Por favor ingrese su nombre de usuario:\n")
+        clave=input("Por favor, ingrese su contraseña:\n")
+
+
+
+'''Creación de matrices'''
+
+def matriz(n1):
+    ordenar=[]
+    cont=0
+    while cont < len(n1):
+        ordenar.append([])
+        cont=cont+1
+    return ordenar
+
+
+'''Añadir valores a las listas de la matriz'''
+
+def agregado(n1):
+    datos=n1
+    listas=matriz(datos[0])
+    cont1=0
+    while cont1 < len(listas):
+        cont2=0
+        while cont2 < len(listas):
+            listas[cont1].append(datos[cont2][cont1])
+            cont2= cont2 + 1 
+        cont1= cont1 + 1
+    return listas
+
+
+'''Metodos de Ordenamientos en Lambda'''
+
+def ordenamientos(n1):
+    matrices=n1
+    opcion=int(input("Por favor ingrese una opcion de orden:\nNombre(0).\nFecha(1).\nMonto(2).\nDescripción(3).\nPeriodo(4).\n:"))
+    while opcion < 0 or opcion > 4:
+        print("error, numero invalido")
+        opcion=int(input("Por favor ingrese una opcion de orden:\nNombre(0).\nFecha(1).\nMonto(2).\nDescripción(3).\nPeriodo(4).\n:"))
+    metodo=int(input("Por favor, ingrese 0 si quiere el orden de mayor a menor.\ningrese 1 si quiere el orden de menor a mayor.\n:"))
+    while metodo < 0 or metodo > 1:
+        print("error, numero invalido")
+        metodo=int(input("Por favor, ingrese 0 si quiere el orden de mayor a menor.\ningrese 1 si quiere el orden de menor a mayor.\n:"))
+    if metodo==0:
+        orden_matrices=sorted(matrices, key=lambda dato: dato[opcion])
+    else:orden_matrices=sorted(matrices, key=lambda dato: dato[opcion],reverse=True)
+    return orden_matrices
+
+
+
+'''Sumatoria de los Montos'''
+
+def totaldegasto(n1):
+    costes=n1
+    nominal=reduce(lambda x, y: x + y, costes)
+    return nominal
+
+''' Porcentajes del area.'''
+
+'''def estadistica(n1):
+    nombres_montos=n1[0]
+    monto_total=totaldegasto(n1[1])'''
+
+    
+
+
+
+
+
+'''Datos de login'''
+nombre="san"
+contrasena="1234"
+clave_login=(nombre,contrasena)
+
+
+'''Datos'''
+
+# Categorías
+Id_Categoria = ["1", "2", "3", "4", "5"]
+NombreC = ["Alimentos", "Transporte", "Ocio", "Salud", "Educación"]
+DescripcionC = [
+    "Categoria de alimentos",
+    "Categoria de transporte",
+    "Categoria de ocio",
+    "Categoria de salud",
+    "Categoria de educación",
+]
+EstadoC = ["Activo", "Activo", "Activo", "Activo", "Activo"]
+categoria = [Id_Categoria, NombreC, DescripcionC, EstadoC]
+encabezadosC = ["Id_Categoria", "Nombre", "Descripcion"]
+
+# Presupuestos
+Id_Presupuesto = ["1", "2", "3", "4", "5"]
+Periodo_Presupuesto = [
+    "01/08/2026-10/08/2026",
+    "02/08/2026-12/08/2026",
+    "03/08/2026-13/08/2026",
+    "04/08/2026-14/08/2026",
+    "05/08/2026-15/08/2026",
+]
+Monto_limite = [120.0, 45.0, 25.0, 58.0, 80.0]
+Id_CategoriaP = ["1", "2", "3", "4", "5"]
+EstadoP = ["Activo", "Activo", "Activo", "Activo", "Activo"]
+presupuestos = [Id_Presupuesto, Periodo_Presupuesto, Monto_limite, Id_CategoriaP, EstadoP]
+encabezadosP = ["Id_Presupuesto", "Periodo", "Monto Limite", "Id_Categoria"]
+
+# Gastos
+NombreG = ["Supermercado", "Gasolina", "Cine", "Farmacia", "Curso online"]
+Id_Gasto = ["1", "2", "3", "4", "5"]
+FechaG = ["01/08/2026", "02/08/2026", "03/08/2026", "04/08/2026", "05/08/2026"]
+MontoG = [100.0, 40.0, 20.0, 50.0, 70.0]
+DescripcionG = [
+    "Compra de alimentos",
+    "Llenado de tanque",
+    "Entrada de cine",
+    "Compra de medicamentos",
+    "Pago de curso online",
+]
+Id_CatGasto = ["1", "2", "3", "4", "5"]
+Id_PresGasto = ["1", "2", "3", "4", "5"]
+EstadoG = ["Activo", "Activo", "Activo", "Activo", "Activo"]
+gastos = [ NombreG, FechaG, MontoG, DescripcionG, Periodo_Presupuesto]
+encabezadosG = ["Id_Gasto", "Nombre", "Fecha", "Monto", "Descripcion", "Id_Categoria", "Id_Presupuesto"]
+
+
+
+
+'''Programa Principal'''
+login(clave_login)
+creacion=matriz(Id_Categoria)
+valores=agregado(gastos)
+orden=ordenamientos(valores)
+print(creacion)
+print()
+print(valores)
+print()
+print(orden)
+print()
+print(totaldegasto(MontoG))
+
+
+
+
