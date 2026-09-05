@@ -1,20 +1,25 @@
-
-from Backup import (
-    Table,
-    console,
-    mostrar_mensaje,
-    pedir_texto_no_vacio,
+from Func.Func_Rich import (
+    console, 
+    mostrar_mensaje, 
+    Table
+)
+from Func.Func_Matriz import (
     mostrar_categorias,
+    mostrar_presupuestos,
+    mostrar_gastos
+)
+from Func.Func_Val import (
+    pedir_texto_no_vacio,
+)
+from Backup import (
     consultar_categoria,
     agregar_categoria,
     modificar_categoria,
     eliminar_categoria,
-    mostrar_presupuestos,
     consultar_presupuesto,
     agregar_presupuesto,
     modificar_presupuesto,
     eliminar_presupuesto,
-    mostrar_gastos,
     consultar_gasto,
     agregar_gasto,
     modificar_gasto,
