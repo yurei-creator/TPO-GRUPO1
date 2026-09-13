@@ -8,7 +8,7 @@ from Func.Func_Matriz import (
     mostrar_presupuestos,
     mostrar_gastos
 )
-from Func.Func_Val import (
+from Func.Func_val import (
     pedir_texto_no_vacio,
 )
 from Backup import (

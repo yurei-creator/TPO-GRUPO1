@@ -1,11 +1,10 @@
-from Func_Rich import console, mostrar_mensaje, renderizar_tabla, Table
-from Func_Val import obtener_nombre_categoria, obtener_periodo_presupuesto
+from .Func_Rich import console, mostrar_mensaje, renderizar_tabla, Table
+from .Func_val import obtener_nombre_categoria, obtener_periodo_presupuesto
 
-from datosprincipales import (
-    NombreC, EstadoC, DescripcionC, 
-    Periodo_Presupuesto, EstadoP, Id_CategoriaP, Monto_limite, 
-    NombreG, EstadoG, Id_CatGasto, Id_PresGasto, MontoG, FechaG, DescripcionG
-)
+from Datos.Datos import *
+
+#buenas practicas, etc.
+#Pq hardcodeamos los encabezados? xD
 
 def obtener_matriz(lista):
     matriz = []
@@ -59,7 +58,7 @@ def mostrar_categorias():
     encabezados = ["Categoría", "Descripción"]
     filas = []
     for i in range(len(NombreC)):
-        if str(EstadoC[i]).upper() == "ACTIVO":
+        if str(EstadoG[i]).upper() == "ACTIVO":
             filas.append([NombreC[i], DescripcionC[i]])
     renderizar_tabla(encabezados, filas, "Listado de Categorías")
     console.input("[dim]Presione ENTER para continuar...[/dim]")
@@ -91,5 +90,6 @@ def mostrar_gastos():
                 nombre_cat,
                 periodo_pres
             ])
+    print(gastos)       
     renderizar_tabla(encabezados, filas, "Control General de Gastos")
     console.input("[dim]Presione ENTER para continuar...[/dim]")
