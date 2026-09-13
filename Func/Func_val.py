@@ -1,6 +1,8 @@
-from Func_Rich import console, mostrar_mensaje
+from .Func_Rich import console, mostrar_mensaje
 
-from datosprincipales import (
+# revisar que importamos y que no de los datos, importen la lista de listas envez de individualmente todo
+
+from Datos.Datos import (
     Id_Categoria, NombreC, DescripcionC, EstadoC, 
     Id_Gasto, NombreG, DescripcionG, EstadoG, 
     Id_Presupuesto, Periodo_Presupuesto, Monto_limite, Id_CategoriaP, EstadoP

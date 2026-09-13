@@ -48,6 +48,7 @@ DescripcionG = [
     "Compra de medicamentos",
     "Pago de curso online",
 ]
+# ??? pq  creamos 90 listas de IDS si se suponen los ID vienen de las otras tablas
 Id_CatGasto = ["1", "2", "3", "4", "5"]
 Id_PresGasto = ["1", "2", "3", "4", "5"]
 EstadoG = ["Activo", "Activo", "Activo", "Activo", "Activo"]
