@@ -50,18 +50,43 @@ def listar_usuarios():
     for u in usuarios:
         print(f"ID: {u['id']} | User: {u['user']} | Rol: {u['rol']} | Permisos: {list(u['permisos'])}")
 
+# crea usuario nuevo pidiendo datos y seteando permisos segun el rol
+def registrar_usuario():
+    print("\n--- nuevo usuario ---")
+    nuevo_id = usuarios[-1]["id"] + 1 if len(usuarios) > 0 else 1
+    
+    username = input("ingrese nombre de usuario: ")
+    # validamos que no este repetido
+    if [u for u in usuarios if u["user"] == username]:
+        print("ese usuario ya existe")
+        return
+
+    password = input("ingrese contraseña (min 6 letras 1 mayuscula y numeros): ")
+    while not validar_password(password):
+        print("clave invalida no cumple requisitos")
+        password = input("ingrese otra contraseña valida: ")
+    print("roles disponibles: 1. admin  2. editor  3. lector")
+    opc = input("elija rol (1/2/3): ")
+    
+    if opc == "1":
+        rol = "administrador"
+        permisos = {"gastos", "categorias", "presupuestos", "reportes", "usuarios"}
+    elif opc == "2":
+        rol = "editor"
+        permisos = {"gastos", "categorias", "presupuestos"}
+    else:
+        rol = "lector"
+        permisos = {"reportes"}
+
+    nuevo = {
+        "id": nuevo_id,
+        "user": username,
+        "pass": password,
+        "rol": rol,
+        "permisos": permisos
+    }
+    usuarios.append(nuevo)
+    print("usuario registrado con exito")
+
+registrar_usuario()
 listar_usuarios()
-Valida = validar_password("1234") # da false porque no tiene mayuscula y es menor a 6 caracteres
-print(Valida)
-Valida = validar_password("123456") # da false porque no tiene mayuscula
-print(Valida)
-Valida = validar_password("123456A") # da true porque tiene mayuscula y es mayor a 6 caracteres
-print(Valida)
-Valida = validar_password("hola_mundo") # da false porque no tiene mayuscula ni numeros
-print(Valida)
-Valida = validar_password("Hola_mundo") # da false porque no tiene numeros
-print(Valida)
-Valida = validar_password("Hola_mundo1") # da true porque tiene mayuscula y numeros
-print(Valida)
-Valida = validar_password(usuarios[0]["pass"]) # da true porque cumple con los criterios
-print(Valida)
