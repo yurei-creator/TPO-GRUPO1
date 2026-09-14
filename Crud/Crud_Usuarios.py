@@ -1,5 +1,12 @@
 import re
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
 
+console = Console()
+
+# lista fija de todos los permisos que maneja el sistema
+PERMISOS_DISPONIBLES = ["gastos", "categorias", "presupuestos", "reportes", "usuarios"]
 
 # diccionario con los permisos por defecto de cada rol
 roles_permisos = {
@@ -7,8 +14,8 @@ roles_permisos = {
     "editor": {"gastos", "categorias", "presupuestos"},
     "lector": {"reportes"}
 }
+
 # lista principal de usuarios guardados
-# los permisos son sets para manejar quien entra a donde
 usuarios = [
     {
         "id": 1,
@@ -33,57 +40,76 @@ usuarios = [
     }
 ]
 
+# funcion auxiliar para mostrar carteles con estilo panel de rich
+def mostrar_mensaje(texto, tipo="info"):
+    estilos = {
+        "info": ("cyan", "INFORMACIÓN"),
+        "exito": ("green", "ÉXITO"),
+        "alerta": ("yellow", "ADVERTENCIA"),
+        "error": ("red", "ERROR")
+    }
+    color, titulo = estilos.get(tipo, ("white", "MENSAJE"))
+    panel = Panel(
+        f"[{color}]{texto}[/{color}]",
+        title=f"[bold {color}]{titulo}[/bold {color}]",
+        border_style=color,
+        expand=False
+    )
+    console.print(panel)
+
 # valida que la clave tenga al menos 6 caracteres una mayuscula y numeros
 def validar_password(password):
-    # primero me fijo el largo
     if len(password) < 6:
         return False
-    
-    # busco si tiene alguna mayuscula entre la A y la Z
     tiene_mayuscula = re.search("[A-Z]", password)
-    
-    # busco si tiene algun numero del 0 al 9
     tiene_numero = re.search("[0-9]", password)
-    
-    # si tiene ambas cosas devuelve True sino False
     if tiene_mayuscula and tiene_numero:
         return True
-    else:
-        return False
+    return False
 
-# muestra todos los users cargados
+# muestra todos los usuarios en una tabla rich
 def listar_usuarios():
-    print("\n--- lista de usuarios del sistema ---")
+    tabla = Table(title="[bold cyan]Listado de Usuarios Registrados[/bold cyan]", header_style="bold magenta", border_style="bright_blue")
+    tabla.add_column("ID", justify="center", style="bold yellow")
+    tabla.add_column("Usuario", justify="left", style="white")
+    tabla.add_column("Rol", justify="left", style="cyan")
+    tabla.add_column("Permisos Asignados", justify="left", style="green")
+
     for u in usuarios:
-        print(f"ID: {u['id']} | User: {u['user']} | Rol: {u['rol']} | Permisos: {list(u['permisos'])}")
+        permisos_texto = ", ".join(sorted(list(u["permisos"])))
+        tabla.add_row(str(u["id"]), u["user"], u["rol"], permisos_texto)
+
+    console.print()
+    console.print(tabla)
+    console.print()
 
 # crea usuario nuevo pidiendo datos y seteando permisos segun el rol
 def registrar_usuario():
-    print("\n--- nuevo usuario ---")
+    console.print("\n[bold green]--- REGISTRO DE NUEVO USUARIO ---[/bold green]")
     nuevo_id = usuarios[-1]["id"] + 1 if len(usuarios) > 0 else 1
     
-    username = input("ingrese nombre de usuario: ")
-    # validamos que no este repetido
+    username = console.input("[bold cyan]Ingrese nombre de usuario:[/bold cyan] ").strip()
     if [u for u in usuarios if u["user"] == username]:
-        print("ese usuario ya existe")
+        mostrar_mensaje("El nombre de usuario ingresado ya existe.", "error")
         return
 
-    password = input("ingrese contraseña (min 6 letras 1 mayuscula y numeros): ")
+    password = console.input("[bold cyan]Ingrese contraseña (mínimo 6 caracteres, 1 mayúscula y números):[/bold cyan] ").strip()
     while not validar_password(password):
-        print("clave invalida no cumple requisitos")
-        password = input("ingrese otra contraseña valida: ")
-    print("roles disponibles: 1. admin  2. editor  3. lector")
-    opc = input("elija rol (1/2/3): ")
+        mostrar_mensaje("La contraseña no cumple con los requisitos mínimos de seguridad.", "alerta")
+        password = console.input("[bold cyan]Ingrese una contraseña válida:[/bold cyan] ").strip()
+
+    console.print("\n[dim]Roles disponibles: 1. Administrador | 2. Editor | 3. Lector[/dim]")
+    opc = console.input("[bold cyan]Seleccione el rol (1/2/3):[/bold cyan] ").strip()
     
     if opc == "1":
         rol = "administrador"
-        permisos = {"gastos", "categorias", "presupuestos", "reportes", "usuarios"}
+        permisos = roles_permisos["administrador"].copy()
     elif opc == "2":
         rol = "editor"
-        permisos = {"gastos", "categorias", "presupuestos"}
+        permisos = roles_permisos["editor"].copy()
     else:
         rol = "lector"
-        permisos = {"reportes"}
+        permisos = roles_permisos["lector"].copy()
 
     nuevo = {
         "id": nuevo_id,
@@ -93,28 +119,41 @@ def registrar_usuario():
         "permisos": permisos
     }
     usuarios.append(nuevo)
-    print("usuario registrado con exito")
+    mostrar_mensaje(f"Usuario '{username}' registrado exitosamente con ID {nuevo_id}.", "exito")
 
 # funcion para chequear si el usuario puede entrar a una opcion usando sets
 def verificar_permiso(usuario, permiso_requerido):
-    # meto el permiso en un set chiquito y uso issubset
     permiso_a_revisar = {permiso_requerido}
     if permiso_a_revisar.issubset(usuario["permisos"]):
         return True
     return False
 
+# funcion para mostrar los permisos que existen en el sistema
+def mostrar_permisos_disponibles():
+    tabla_permisos = Table(title="[bold yellow]Permisos Disponibles del Sistema[/bold yellow]", border_style="yellow")
+    tabla_permisos.add_column("Módulo", justify="left", style="white")
+    tabla_permisos.add_column("Descripción de Acceso", justify="left", style="dim")
+    
+    tabla_permisos.add_row("gastos", "Acceso completo a la gestión de gastos")
+    tabla_permisos.add_row("categorias", "Acceso completo a la gestión de categorías")
+    tabla_permisos.add_row("presupuestos", "Acceso completo a la gestión de presupuestos")
+    tabla_permisos.add_row("reportes", "Acceso a reportes, tablas generales y estadísticas")
+    tabla_permisos.add_row("usuarios", "Administración de cuentas y permisos de acceso")
+    
+    console.print(tabla_permisos)
+
 # funcion para modificar permisos a un usuario o a todo un rol
 def modificar_permisos():
-    print("\n--- MODIFICAR PERMISOS ---")
-    print("1. modificar permisos a un usuario")
-    print("2. modificar permisos a un rol completo")
-    tipo = input("elija opcion: ")
+    console.print("\n[bold blue]--- ADMINISTRACIÓN DE PERMISOS ---[/bold blue]")
+    console.print("1. Modificar permisos de un usuario específico")
+    console.print("2. Modificar permisos globales de un rol")
+    tipo = console.input("[bold cyan]Seleccione una opción:[/bold cyan] ").strip()
 
     if tipo == "1":
         listar_usuarios()
-        id_ingresado = input("\ningrese id del usuario: ")
+        id_ingresado = console.input("[bold cyan]Ingrese el ID del usuario a modificar:[/bold cyan] ").strip()
         if not id_ingresado.isdigit():
-            print("el id tiene que ser un numero")
+            mostrar_mensaje("El ID ingresado debe ser un valor numérico.", "error")
             return
         id_buscar = int(id_ingresado)
 
@@ -125,98 +164,95 @@ def modificar_permisos():
                 break
 
         if not usuario_encontrado:
-            print("no se encontro ese usuario")
+            mostrar_mensaje("No se encontró ningún usuario con el ID especificado.", "error")
             return
 
-        print(f"permisos actuales de {usuario_encontrado['user']}: {usuario_encontrado['permisos']}")
-        print("1. agregar permisos  2. quitar permisos")
-        accion = input("elija que hacer: ")
+        permisos_actuales = ", ".join(sorted(list(usuario_encontrado["permisos"])))
+        console.print(f"\n[bold]Usuario:[/bold] [yellow]{usuario_encontrado['user']}[/yellow]")
+        console.print(f"[bold]Permisos actuales:[/bold] [green]{permisos_actuales}[/green]\n")
+        
+        # mostramos la tabla de permisos disponibles
+        mostrar_permisos_disponibles()
 
-        print("ingrese permisos separados por espacio (ej: gastos reportes):")
-        entrada_permisos = input("permisos: ")
-        # paso las palabras escritas a un set
+        console.print("\n[dim]Acciones: 1. Agregar permisos | 2. Quitar permisos[/dim]")
+        accion = console.input("[bold cyan]Seleccione acción (1/2):[/bold cyan] ").strip()
+
+        entrada_permisos = console.input("[bold cyan]Ingrese los permisos separados por espacio:[/bold cyan] ").strip().lower()
         nuevos_permisos = set(entrada_permisos.split())
 
         if accion == "1":
-            # uso union de sets para sumarle los permisos nuevos
             usuario_encontrado["permisos"] = usuario_encontrado["permisos"] | nuevos_permisos
-            print("permisos agregados joya")
+            mostrar_mensaje("Permisos agregados exitosamente al usuario.", "exito")
         elif accion == "2":
-            # uso resta de sets para sacarle los permisos
             usuario_encontrado["permisos"] = usuario_encontrado["permisos"] - nuevos_permisos
-            print("permisos quitados joya")
+            mostrar_mensaje("Permisos revocados exitosamente del usuario.", "exito")
         else:
-            print("opcion no valida")
+            mostrar_mensaje("Opción de acción no válida.", "error")
 
     elif tipo == "2":
-        print("\nroles disponibles: administrador, editor, lector")
-        rol = input("ingrese el nombre del rol a cambiar: ").lower()
+        console.print("\n[dim]Roles configurables: administrador | editor | lector[/dim]")
+        rol = console.input("[bold cyan]Ingrese el nombre del rol a configurar:[/bold cyan] ").strip().lower()
 
         if rol not in roles_permisos:
-            print("ese rol no existe")
+            mostrar_mensaje("El rol ingresado no existe en el sistema.", "error")
             return
 
-        print(f"permisos actuales del rol {rol}: {roles_permisos[rol]}")
-        print("1. agregar permisos  2. quitar permisos")
-        accion = input("elija que hacer: ")
+        permisos_rol = ", ".join(sorted(list(roles_permisos[rol])))
+        console.print(f"\n[bold]Rol seleccionado:[/bold] [yellow]{rol}[/yellow]")
+        console.print(f"[bold]Permisos actuales del rol:[/bold] [green]{permisos_rol}[/green]\n")
+        
+        # mostramos la tabla de permisos disponibles
+        mostrar_permisos_disponibles()
 
-        print("ingrese permisos separados por espacio (ej: gastos reportes):")
-        entrada_permisos = input("permisos: ")
+        console.print("\n[dim]Acciones: 1. Agregar permisos | 2. Quitar permisos[/dim]")
+        accion = console.input("[bold cyan]Seleccione acción (1/2):[/bold cyan] ").strip()
+
+        entrada_permisos = console.input("[bold cyan]Ingrese los permisos separados por espacio:[/bold cyan] ").strip().lower()
         set_cambios = set(entrada_permisos.split())
 
         if accion == "1":
-            # union al rol
             roles_permisos[rol] = roles_permisos[rol] | set_cambios
-            print(f"permisos agregados al rol {rol}")
+            mostrar_mensaje(f"Permisos agregados correctamente al rol '{rol}'.", "exito")
         elif accion == "2":
-            # resta al rol
             roles_permisos[rol] = roles_permisos[rol] - set_cambios
-            print(f"permisos quitados al rol {rol}")
+            mostrar_mensaje(f"Permisos revocados correctamente del rol '{rol}'.", "exito")
         else:
-            print("opcion no valida")
+            mostrar_mensaje("Opción no válida.", "error")
             return
 
-        # preguntamos si quiere que los usuarios con ese rol se actualicen tambien
-        actualizar = input("queres actualizar a todos los usuarios que tienen este rol? (s/n): ")
+        actualizar = console.input("\n[bold cyan]¿Desea sincronizar estos permisos en los usuarios existentes con este rol? (s/n):[/bold cyan] ").strip().lower()
         if actualizar == "s":
             for u in usuarios:
                 if u["rol"] == rol:
                     u["permisos"] = roles_permisos[rol].copy()
-            print("usuarios actualizados con el nuevo rol")
+            mostrar_mensaje("Todos los usuarios con dicho rol fueron actualizados.", "info")
 
     else:
-        print("opcion no valida")
+        mostrar_mensaje("Opción no válida seleccionada.", "error")
 
 # funcion de login con 3 intentos devolviendo el diccionario del user o vacio si falla
 def login():
-    print("\n=== LOGIN AL SISTEMA ===")
+    console.print("\n[bold cyan]====================================================[/bold cyan]")
+    console.print("[bold cyan]       ACCESO AL SISTEMA DE GESTION DE GASTOS      [/bold cyan]")
+    console.print("[bold cyan]====================================================[/bold cyan]")
     intentos = 0
     max_intentos = 3
     
-    # doy 3 oportunidades antes de bloquear
     while intentos < max_intentos:
-        user = input("usuario: ")
-        clave = input("clave: ")
+        user = console.input("[bold]Usuario:[/bold] ").strip()
+        clave = console.input("[bold]Contraseña:[/bold] ").strip()
         
-        # busco si existe el user y la contra coincide
         for u in usuarios:
             if u["user"] == user and u["pass"] == clave:
-                print(f"\nbienvenido {u['user']} ingresaste como {u['rol']}")
+                mostrar_mensaje(f"Bienvenido, {u['user']}. Sesión iniciada como {u['rol'].capitalize()}.", "exito")
                 return u
         
         intentos = intentos + 1
         restantes = max_intentos - intentos
-        print(f"datos incorrectos le quedan {restantes} intentos")
+        if restantes > 0:
+            mostrar_mensaje(f"Credenciales incorrectas. Intentos restantes: {restantes}.", "alerta")
     
-    # si llega aca es porque fallo los 3 intentos
-    print("\nsistema bloqueado por muchos intentos fallidos")
-    return False
+    mostrar_mensaje("Acceso bloqueado por alcanzar el límite máximo de intentos fallidos.", "error")
+    return {}
 
-
-# bloque de prueba
-usuario_actual = login()
-# si el diccionario tiene datos entro bien
-if usuario_actual:
-    print(f"sesion iniciada correctamente con: {usuario_actual['user']}")
-else:
-    print("no se pudo iniciar sesion")
+login()
