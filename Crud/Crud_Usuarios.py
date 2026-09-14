@@ -1,5 +1,12 @@
 import re
 
+
+# diccionario con los permisos por defecto de cada rol
+roles_permisos = {
+    "administrador": {"gastos", "categorias", "presupuestos", "reportes", "usuarios"},
+    "editor": {"gastos", "categorias", "presupuestos"},
+    "lector": {"reportes"}
+}
 # lista principal de usuarios guardados
 # los permisos son sets para manejar quien entra a donde
 usuarios = [
@@ -88,56 +95,101 @@ def registrar_usuario():
     usuarios.append(nuevo)
     print("usuario registrado con exito")
 
-# funcion para chequear si el usuario puede hacer x cosa usando sets
+# funcion para chequear si el usuario puede entrar a una opcion usando sets
 def verificar_permiso(usuario, permiso_requerido):
-    # uso issubset para ver si el permiso esta dentro del set del usuario
+    # meto el permiso en un set chiquito y uso issubset
     permiso_a_revisar = {permiso_requerido}
-    return True if permiso_a_revisar.issubset(usuario["permisos"]) else False
+    if permiso_a_revisar.issubset(usuario["permisos"]):
+        return True
+    return False
 
-# agrega o quita permisos usando operaciones de conjuntos como union y resta
+# funcion para modificar permisos a un usuario o a todo un rol
 def modificar_permisos():
-    listar_usuarios()
-    id_buscar = int(input("\ningrese id del usuario a cambiar permisos: "))
-    
-    usuario_encontrado = None
-    for u in usuarios:
-        if u["id"] == id_buscar:
-            usuario_encontrado = u
-            break
-            
-    if not usuario_encontrado:
-        print("no se encontro ese usuario")
-        return
+    print("\n--- MODIFICAR PERMISOS ---")
+    print("1. modificar permisos a un usuario")
+    print("2. modificar permisos a un rol completo")
+    tipo = input("elija opcion: ")
 
-    print(f"permisos actuales de {usuario_encontrado['user']}: {usuario_encontrado['permisos']}")
-    print("1. agregar permiso  2. quitar permiso")
-    accion = input("elija opcion: ")
-    
-    permiso = input("ingrese nombre de la seccion (gastos/categorias/presupuestos/reportes/usuarios): ")
-    set_permiso = {permiso}
-    
-    if accion == "1":
-        # uso union para sumar el permiso
-        usuario_encontrado["permisos"] = usuario_encontrado["permisos"] | set_permiso
-        print("permiso agregado")
-    elif accion == "2":
-        # uso resta de conjuntos para sacar el permiso
-        usuario_encontrado["permisos"] = usuario_encontrado["permisos"] - set_permiso
-        print("permiso quitado")
+    if tipo == "1":
+        listar_usuarios()
+        id_ingresado = input("\ningrese id del usuario: ")
+        if not id_ingresado.isdigit():
+            print("el id tiene que ser un numero")
+            return
+        id_buscar = int(id_ingresado)
+
+        usuario_encontrado = None
+        for u in usuarios:
+            if u["id"] == id_buscar:
+                usuario_encontrado = u
+                break
+
+        if not usuario_encontrado:
+            print("no se encontro ese usuario")
+            return
+
+        print(f"permisos actuales de {usuario_encontrado['user']}: {usuario_encontrado['permisos']}")
+        print("1. agregar permisos  2. quitar permisos")
+        accion = input("elija que hacer: ")
+
+        print("ingrese permisos separados por espacio (ej: gastos reportes):")
+        entrada_permisos = input("permisos: ")
+        # paso las palabras escritas a un set
+        nuevos_permisos = set(entrada_permisos.split())
+
+        if accion == "1":
+            # uso union de sets para sumarle los permisos nuevos
+            usuario_encontrado["permisos"] = usuario_encontrado["permisos"] | nuevos_permisos
+            print("permisos agregados joya")
+        elif accion == "2":
+            # uso resta de sets para sacarle los permisos
+            usuario_encontrado["permisos"] = usuario_encontrado["permisos"] - nuevos_permisos
+            print("permisos quitados joya")
+        else:
+            print("opcion no valida")
+
+    elif tipo == "2":
+        print("\nroles disponibles: administrador, editor, lector")
+        rol = input("ingrese el nombre del rol a cambiar: ").lower()
+
+        if rol not in roles_permisos:
+            print("ese rol no existe")
+            return
+
+        print(f"permisos actuales del rol {rol}: {roles_permisos[rol]}")
+        print("1. agregar permisos  2. quitar permisos")
+        accion = input("elija que hacer: ")
+
+        print("ingrese permisos separados por espacio (ej: gastos reportes):")
+        entrada_permisos = input("permisos: ")
+        set_cambios = set(entrada_permisos.split())
+
+        if accion == "1":
+            # union al rol
+            roles_permisos[rol] = roles_permisos[rol] | set_cambios
+            print(f"permisos agregados al rol {rol}")
+        elif accion == "2":
+            # resta al rol
+            roles_permisos[rol] = roles_permisos[rol] - set_cambios
+            print(f"permisos quitados al rol {rol}")
+        else:
+            print("opcion no valida")
+            return
+
+        # preguntamos si quiere que los usuarios con ese rol se actualicen tambien
+        actualizar = input("queres actualizar a todos los usuarios que tienen este rol? (s/n): ")
+        if actualizar == "s":
+            for u in usuarios:
+                if u["rol"] == rol:
+                    u["permisos"] = roles_permisos[rol].copy()
+            print("usuarios actualizados con el nuevo rol")
+
     else:
         print("opcion no valida")
-
-usuario_actual = usuarios[1]
-print(f"usuario actual: {usuario_actual['user']} con rol {usuario_actual['rol']} y permisos {usuario_actual['permisos']}") 
-
-tiene_gastos = verificar_permiso(usuario_actual, "gastos")
-# deberia dar true porque editor tiene permisos a gastos
-print(f"tiene permiso a gastos?: {tiene_gastos}")
-tiene_admin = verificar_permiso(usuario_actual, "usuarios")
-print(f"tiene permiso a usuarios?: {tiene_admin}")  # deberia dar false porque editor no tiene permisos a usuarios
-
-print("\n--- modificando permisos ---")
-# probamos agregarle o sacarle permisos al usuario actual
+usuario_actual = usuarios[0]  # admin
+print("--- test permiso individual ---")
+print(f" {usuario_actual['user']} tiene gastos?:", verificar_permiso(usuario_actual, "gastos"))
+print(f" {usuario_actual['user']} tiene usuarios?:", verificar_permiso(usuario_actual, "usuarios"))
+print("\n--- probando modificar permisos ---")
 modificar_permisos()
-# mostramos como quedo despues de la modificacion
-print(f"Los Permisos de {usuario_actual['user']} son: {usuario_actual['permisos']}")
+listar_usuarios()
