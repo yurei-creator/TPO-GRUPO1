@@ -186,10 +186,37 @@ def modificar_permisos():
 
     else:
         print("opcion no valida")
-usuario_actual = usuarios[0]  # admin
-print("--- test permiso individual ---")
-print(f" {usuario_actual['user']} tiene gastos?:", verificar_permiso(usuario_actual, "gastos"))
-print(f" {usuario_actual['user']} tiene usuarios?:", verificar_permiso(usuario_actual, "usuarios"))
-print("\n--- probando modificar permisos ---")
-modificar_permisos()
-listar_usuarios()
+
+# funcion de login con 3 intentos devolviendo el diccionario del user o vacio si falla
+def login():
+    print("\n=== LOGIN AL SISTEMA ===")
+    intentos = 0
+    max_intentos = 3
+    
+    # doy 3 oportunidades antes de bloquear
+    while intentos < max_intentos:
+        user = input("usuario: ")
+        clave = input("clave: ")
+        
+        # busco si existe el user y la contra coincide
+        for u in usuarios:
+            if u["user"] == user and u["pass"] == clave:
+                print(f"\nbienvenido {u['user']} ingresaste como {u['rol']}")
+                return u
+        
+        intentos = intentos + 1
+        restantes = max_intentos - intentos
+        print(f"datos incorrectos le quedan {restantes} intentos")
+    
+    # si llega aca es porque fallo los 3 intentos
+    print("\nsistema bloqueado por muchos intentos fallidos")
+    return False
+
+
+# bloque de prueba
+usuario_actual = login()
+# si el diccionario tiene datos entro bien
+if usuario_actual:
+    print(f"sesion iniciada correctamente con: {usuario_actual['user']}")
+else:
+    print("no se pudo iniciar sesion")
