@@ -2,7 +2,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from functools import reduce
-from datosprincipales import (
+from Datos.Datos import (
     clave_login,
     Id_Categoria,
     gastos,
