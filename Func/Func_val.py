@@ -5,7 +5,7 @@ from .Func_Rich import console, mostrar_mensaje
 from Datos.Datos import (
     Id_Categoria, NombreC, DescripcionC, EstadoC, 
     Id_Gasto, NombreG, DescripcionG, EstadoG, 
-    Id_Presupuesto, Periodo_Presupuesto, Monto_limite, Id_CategoriaP, EstadoP
+    Id_Presupuesto, Periodo_Presupuesto, Monto_limite, EstadoP
 )
 
 def pedir_monto(mensaje):
