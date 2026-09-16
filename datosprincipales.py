@@ -51,8 +51,9 @@ DescripcionG = [
 Id_CatGasto = ["1", "2", "3", "4", "5"]
 Id_PresGasto = ["1", "2", "3", "4", "5"]
 EstadoG = ["Activo", "Activo", "Activo", "Activo", "Activo"]
-gastos = [ NombreG, FechaG, MontoG, DescripcionG, Periodo_Presupuesto]
+gastos = [ NombreG, FechaG, MontoG, DescripcionG, Periodo_Presupuesto, DescripcionC]
 encabezadosG = ["Id_Gasto", "Nombre", "Fecha", "Monto", "Descripcion", "Id_Categoria", "Id_Presupuesto"]
 
 '''datos de porcentaje'''
 datos_porcentaje=[NombreG,MontoG]
+datos_infla= { "valores":[MontoG] }
