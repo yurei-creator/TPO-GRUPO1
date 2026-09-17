@@ -205,6 +205,7 @@ def seleccionar_presupuesto():
             mostrar_mensaje("Debe ingresar un número.", "error")
     return id_seleccionado
 
+# Filtrar por fechas
 def fecha_a_numero(fecha_str):
     dia, mes, anio = fecha_str.split("/")
     return int(anio + mes + dia)
@@ -227,6 +228,7 @@ def filtrar_por_fechas(gastos_lista, fecha_inicio, fecha_fin):
     else:
         return resultado_resto
 
+#Filtrar por nombre de categoría
 def filtrar_por_nombre_categoria(gastos_lista, nombre_buscado):
     if not gastos_lista:
         return []
