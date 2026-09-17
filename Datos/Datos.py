@@ -5,10 +5,11 @@ clave_login=(nombre,contrasena)
 
 
 
-'''Datos'''
-
+'''Datos
 # Categorías
+#testing
 Id_Categoria = ["1", "2", "3", "4", "5"]
+
 NombreC = ["Alimentos", "Transporte", "Ocio", "Salud", "Educación"]
 DescripcionC = [
     "Categoria de alimentos",
@@ -19,7 +20,17 @@ DescripcionC = [
 ]
 EstadoC = ["Activo", "Activo", "Activo", "Activo", "Activo"]
 categoria = [Id_Categoria, NombreC, DescripcionC, EstadoC]
-encabezadosC = ["Id_Categoria", "Nombre", "Descripcion"]
+encabezadosC = ["Id_Categoria", "Nombre", "Descripcion", "Estado"]
+'''
+Id_Categoria = ["1", "2", "3"]
+NombreC = ["Alimentos", "Transporte", "Ocio"]
+DescripcionC = [
+    "Categoria de alimentos",
+    "Categoria de transporte",
+    "Categoria de ocio"]
+EstadoC = ["Activo", "Activo", "Activo"]
+categoria = [Id_Categoria, NombreC, DescripcionC, EstadoC]
+encabezadosC = ["ID", "Nombre", "Descripcion", "Estado"]
 
 # Presupuestos
 Id_Presupuesto = ["1", "2", "3", "4", "5"]
@@ -31,10 +42,11 @@ Periodo_Presupuesto = [
     "05/08/2026-15/08/2026",
 ]
 Monto_limite = [120.0, 45.0, 25.0, 58.0, 80.0]
-Id_CategoriaP = ["1", "2", "3", "4", "5"]
+
+Cat_fk = ["2", "3", "1", "2", "1"]
 EstadoP = ["Activo", "Activo", "Activo", "Activo", "Activo"]
-presupuestos = [Id_Presupuesto, Periodo_Presupuesto, Monto_limite, Id_CategoriaP, EstadoP]
-encabezadosP = ["Id_Presupuesto", "Periodo", "Monto Limite", "Id_Categoria"]
+presupuestos = [Id_Presupuesto, Cat_fk, Monto_limite, Periodo_Presupuesto, EstadoP]
+encabezadosP = ["Id_Presupuesto", "ID-Cat-Nombre", "Periodo", "Monto Limite", "Estado"]
 
 # Gastos
 NombreG = ["Supermercado", "Gasolina", "Cine", "Farmacia", "Curso online"]
@@ -51,8 +63,8 @@ DescripcionG = [
 # ??? pq  creamos 90 listas de IDS si se suponen los ID vienen de las otras tablas
 Id_CatGasto = ["1", "2", "3", "4", "5"]
 Id_PresGasto = ["1", "2", "3", "4", "5"]
-EstadoG = ["Activo", "Activo", "Activo", "Activo", "Activo"]
-gastos = [ NombreG, FechaG, MontoG, DescripcionG, Periodo_Presupuesto]
+EstadoG = [True, True, True, True, True]
+gastos = [ NombreG, FechaG, MontoG, DescripcionG, Periodo_Presupuesto, EstadoG]
 encabezadosG = ["Id_Gasto", "Nombre", "Fecha", "Monto", "Descripcion", "Id_Categoria", "Id_Presupuesto"]
 
 '''datos de porcentaje'''

@@ -1,7 +1,7 @@
 from Func.Auxiliares import *
-from Func.Func_Matriz import *
+from Func.Func_Matriz import mostrar_matriz
 #villereada para resolver y que funcione (fixear las funciones y el paasaje de datos)
-from Datos.Datos import gastos
+from Datos.Datos import *
 
 # Hacer buenas practicas
 # Fixear las funciones 
@@ -45,7 +45,7 @@ def consultar_gasto():
         for idx in coincidencias:
             est = "Activo" if EstadoG[idx] else "Inactivo"
             matriz_res.append([idx + 1, NombreG[idx], MontoG[idx], FechaG[idx], NombreC[idx], DescripcionG[idx], est])
-        mostrar_matriz(matriz_res,encabezados)
+        mostrar_matriz(matriz_res,encabezados,"GASTOS ENCONTRADOS")
 
 def agregar_gasto():
     print("\n--- [C] AGREGAR NUEVO GASTO ---")
@@ -122,6 +122,12 @@ def eliminar_gasto():
         if reactivar == 's':
             EstadoG[idx] = True
             print(f"¡Gasto '{NombreG[idx]}' reactivado (Activo) correctamente!\n")
+            print(gastos[0][2], EstadoG[2])
         else:
             print("Operación cancelada.\n")
+        return
+    else:
+        EstadoG[idx] = False
+        print(f"El gasto '{NombreG[idx]}' fue dado de baja.")
+
         return
