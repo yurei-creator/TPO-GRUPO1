@@ -10,7 +10,7 @@ from Func.Func_Matriz import (
     obtener_matriz
 )
 from Func.Func_val import (
-    pedir_texto_no_vacio,
+    pedir_opcion_menu,
 )
 from Crud.Crud_Cat import (
     consultar_categoria,
@@ -18,6 +18,7 @@ from Crud.Crud_Cat import (
     modificar_categoria,
     eliminar_categoria,
 )
+from Crud.Crud_Usuarios import verificar_permiso
 
 from Crud.Crud_Gast import *
 
@@ -57,7 +58,7 @@ def menu_categorias(matriz,encabezado):
     ]
     while activo:
         mostrar_menu("GESTIÓN DE CATEGORÍAS", opciones)
-        opc = pedir_texto_no_vacio("Seleccione una opción: ")
+        opc = pedir_opcion_menu("Seleccione una opción:", ["0","1","2","3","4","5"])
 
         if opc == "1":
             mostrar_categorias(matriz,encabezado)
@@ -86,7 +87,7 @@ def menu_presupuestos(matrizP,encabezadoP,matrizG):
     ]
     while activo:
         mostrar_menu("GESTIÓN DE PRESUPUESTOS", opciones)
-        opc = pedir_texto_no_vacio("Seleccione una opción: ")
+        opc = pedir_opcion_menu("Seleccione una opción:", ["0","1","2","3","4","5"])
 
         if opc == "1":
             mostrar_presupuestos(matrizP,encabezadoP,matrizG)
@@ -115,7 +116,7 @@ def menu_gastos():
     ]
     while activo:
         mostrar_menu("GESTIÓN DE GASTOS", opciones)
-        opc = pedir_texto_no_vacio("Seleccione una opción: ")
+        opc = pedir_opcion_menu("Seleccione una opción:", ["0","1","2","3","4","5"])
 
         if opc == "1":
             mostrar_gastos()
@@ -133,36 +134,50 @@ def menu_gastos():
             mostrar_mensaje("Opción no válida.", "error")
 
 
-def menu_principal(categoria,presupuestos,gastos,encabezadoC,encabezadoP,encabezadoG):
+def menu_principal(usuario,categoria,presupuestos,gastos,encabezadoC,encabezadoP,encabezadoG):
     ejecutando = True
-    opciones = [
-        "Gestión de Gastos (CRUD)",
-        "Gestión de Presupuestos (CRUD)",
-        "Gestión de Categorías (CRUD)",
-        "Ver Todas las Tablas",
-    ]
 
-    matriz_gastos = obtener_matriz(gastos)
     matriz_presupuestos = obtener_matriz(presupuestos)
     matriz_categorias = obtener_matriz(categoria)
-    
+
+    modulos = [
+        ("gastos", "Gestión de Gastos (CRUD)"),
+        ("presupuestos", "Gestión de Presupuestos (CRUD)"),
+        ("categorias", "Gestión de Categorías (CRUD)"),
+        ("reportes", "Ver Todas las Tablas"),
+    ]
 
     while ejecutando:
-        mostrar_menu("SISTEMA DE GESTION FINANCIERA", opciones)
-        opcion = pedir_texto_no_vacio("Seleccione una opción: ")
+        disponibles = []
+        for i in range(len(modulos)):
+            permiso, texto = modulos[i]
+            if verificar_permiso(usuario, permiso):
+                disponibles.append((permiso, texto))
 
-        if opcion == "1":
-            menu_gastos(matriz_gastos,encabezadoG)
-        elif opcion == "2":
-            menu_presupuestos(matriz_presupuestos,encabezadoP,matriz_categorias)
-        elif opcion == "3":
-            menu_categorias(matriz_categorias,encabezadoC)
-        elif opcion == "4":
-            mostrar_categorias(matriz_categorias,encabezadoC)
-            mostrar_presupuestos(matriz_presupuestos,encabezadoP)
-            mostrar_gastos(matriz_gastos,encabezadoG)
-        elif opcion == "0":
+        opciones_texto = [d[1] for d in disponibles]
+        mostrar_menu("SISTEMA DE GESTION FINANCIERA", opciones_texto)
+
+        opciones_validas = ["0"]
+        for i in range(len(disponibles)):
+            opciones_validas.append(str(i + 1))
+
+        opcion = pedir_opcion_menu("Seleccione una opción:", opciones_validas)
+
+        if opcion == "0":
             mostrar_mensaje("¡Gracias por utilizar el sistema! Hasta luego.", "info")
             ejecutando = False
         else:
-            mostrar_mensaje("Opción no válida. Intente nuevamente.", "error")
+            indice = int(opcion) - 1
+            permiso_elegido = disponibles[indice][0]
+            if permiso_elegido == "gastos":
+                matriz_gastos = obtener_matriz(gastos)
+                menu_gastos(matriz_gastos,encabezadoG)
+            elif permiso_elegido == "presupuestos":
+                menu_presupuestos(matriz_presupuestos,encabezadoP,matriz_categorias)
+            elif permiso_elegido == "categorias":
+                menu_categorias(matriz_categorias,encabezadoC)
+            elif permiso_elegido == "reportes":
+                matriz_gastos = obtener_matriz(gastos)
+                mostrar_categorias(matriz_categorias,encabezadoC)
+                mostrar_presupuestos(matriz_presupuestos,encabezadoP)
+                mostrar_gastos(matriz_gastos,encabezadoG)

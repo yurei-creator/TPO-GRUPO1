@@ -1,3 +1,5 @@
+import re
+
 from .Func_Rich import console, mostrar_mensaje
 
 from Datos.Datos import *
@@ -5,8 +7,7 @@ from Datos.Datos import *
 # revisar que importamos y que no de los datos, importen la lista de listas envez de individualmente todo
 
 from Datos.Datos import (
-    Id_Categoria, NombreC, DescripcionC, EstadoC, 
-    Id_Gasto, NombreG, DescripcionG, EstadoG, 
+    Id_Categoria, NombreC, DescripcionC, EstadoC,
     Id_Presupuesto, Periodo_Presupuesto, Monto_limite, EstadoP
 )
 
@@ -96,6 +97,14 @@ def pedir_texto_no_vacio(mensaje):
         else:
             mostrar_mensaje("Este campo no puede estar vacío.", "error")
     return resultado
+
+def pedir_opcion_menu(mensaje, opciones_validas):
+    patron = r'^[0-9]+$'
+    while True:
+        entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] ").strip()
+        if re.match(patron, entrada) and entrada in opciones_validas:
+            return entrada
+        mostrar_mensaje("Opción inválida. Ingrese uno de los números del menú.", "error")
 
 def pedir_opcional(mensaje, valor_actual):
     entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] [yellow][{valor_actual}][/yellow]: ").strip()
