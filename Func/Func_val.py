@@ -186,7 +186,7 @@ def seleccionar_presupuesto():
     for i in range(len(Periodo_Presupuesto)):
         if str(EstadoP[i]).upper() == "ACTIVO":
             activas_idx.append(i)
-            cat_nom = obtener_nombre_categoria(Id_CategoriaP[i])
+            cat_nom = obtener_nombre_categoria(Id_Categoria[i])
             console.print(f"  [yellow]{len(activas_idx)}[/yellow]. {cat_nom} | Período: {Periodo_Presupuesto[i]} (Límite: ${Monto_limite[i]})")
     
     valido = False
