@@ -49,23 +49,53 @@ presupuestos = [Id_Presupuesto, Cat_fk, Monto_limite, Periodo_Presupuesto, Estad
 encabezadosP = ["Id_Presupuesto", "ID-Cat-Nombre", "Periodo", "Monto Limite", "Estado"]
 
 # Gastos
-NombreG = ["Supermercado", "Gasolina", "Cine", "Farmacia", "Curso online"]
-Id_Gasto = ["1", "2", "3", "4", "5"]
-FechaG = ["01/08/2026", "02/08/2026", "03/08/2026", "04/08/2026", "05/08/2026"]
-MontoG = [100.0, 40.0, 20.0, 50.0, 70.0]
-DescripcionG = [
-    "Compra de alimentos",
-    "Llenado de tanque",
-    "Entrada de cine",
-    "Compra de medicamentos",
-    "Pago de curso online",
+encabezadosG = ["Id_Gasto", "Nombre", "Fecha", "Monto", "Descripcion", "Estado"]
+
+gastos = [
+    {
+        "id_gasto": "1",
+        "nombre": "Supermercado",
+        "fecha": "01/08/2026",
+        "monto": 100.0,
+        "descripcion": "Compra de alimentos",
+        "estado": True
+    },
+    {
+        "id_gasto": "2",
+        "nombre": "Gasolina",
+        "fecha": "02/08/2026",
+        "monto": 40.0,
+        "descripcion": "Llenado de tanque",
+        "estado": True
+    },
+    {
+        "id_gasto": "3",
+        "nombre": "Cine",
+        "fecha": "03/08/2026",
+        "monto": 20.0,
+        "descripcion": "Entrada de cine",
+        "estado": True
+    },
+    {
+        "id_gasto": "4",
+        "nombre": "Farmacia",
+        "fecha": "04/08/2026",
+        "monto": 50.0,
+        "descripcion": "Compra de medicamentos",
+        "estado": True
+    },
+    {
+        "id_gasto": "5",
+        "nombre": "Curso online",
+        "fecha": "05/08/2026",
+        "monto": 70.0,
+        "descripcion": "Pago de curso online",
+        "estado": True
+    }
 ]
-# ??? pq  creamos 90 listas de IDS si se suponen los ID vienen de las otras tablas
-Id_CatGasto = ["1", "2", "3", "4", "5"]
-Id_PresGasto = ["1", "2", "3", "4", "5"]
-EstadoG = [True, True, True, True, True]
-gastos = [ NombreG, FechaG, MontoG, DescripcionG, Periodo_Presupuesto, EstadoG]
-encabezadosG = ["Id_Gasto", "Nombre", "Fecha", "Monto", "Descripcion", "Id_Categoria", "Id_Presupuesto"]
 
 '''datos de porcentaje'''
-datos_porcentaje=[NombreG,MontoG]
+datos_porcentaje = [
+    [g["nombre"] for g in gastos], 
+    [g["monto"] for g in gastos]
+]

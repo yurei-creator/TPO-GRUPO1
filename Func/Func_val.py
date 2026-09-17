@@ -1,5 +1,7 @@
 from .Func_Rich import console, mostrar_mensaje
 
+from Datos.Datos import *
+
 # revisar que importamos y que no de los datos, importen la lista de listas envez de individualmente todo
 
 from Datos.Datos import (
@@ -202,3 +204,44 @@ def seleccionar_presupuesto():
         else:
             mostrar_mensaje("Debe ingresar un número.", "error")
     return id_seleccionado
+
+# Filtrar por fechas
+def fecha_a_numero(fecha_str):
+    dia, mes, anio = fecha_str.split("/")
+    return int(anio + mes + dia)
+
+def filtrar_por_fechas(gastos_lista, fecha_inicio, fecha_fin):
+    if not gastos_lista:
+        return []
+
+    gasto_actual = gastos_lista[0]
+    resto_lista = gastos_lista[1:]
+
+    fecha_gasto_num = fecha_a_numero(gasto_actual["fecha"])
+    inicio_num = fecha_a_numero(fecha_inicio)
+    fin_num = fecha_a_numero(fecha_fin)
+
+    resultado_resto = filtrar_por_fechas(resto_lista, fecha_inicio, fecha_fin)
+
+    if inicio_num <= fecha_gasto_num <= fin_num:
+        return [gasto_actual] + resultado_resto
+    else:
+        return resultado_resto
+
+#Filtrar por nombre de categoría
+def filtrar_por_nombre_categoria(gastos_lista, nombre_buscado):
+    if not gastos_lista:
+        return []
+
+    gasto_actual = gastos_lista[0]
+    resto_lista = gastos_lista[1:]
+
+    resultado_resto = filtrar_por_nombre_categoria(resto_lista, nombre_buscado)
+
+    categoria_gasto = str(gasto_actual.get("categoria", "")).lower()
+    busqueda = str(nombre_buscado).lower()
+
+    if busqueda in categoria_gasto:
+        return [gasto_actual] + resultado_resto
+    else:
+        return resultado_resto
