@@ -40,3 +40,24 @@ def renderizar_tabla(encabezados, filas, titulo):
     console.print()
     console.print(tabla)
     console.print()
+
+def mostrar_menu(titulo, opciones):
+    tabla_menu = Table(
+        title=f"[bold cyan]{titulo}[/bold cyan]",
+        show_header=True,
+        header_style="bold magenta",
+        border_style="bright_blue",
+    )
+    tabla_menu.add_column("Opción", justify="center", style="bold yellow")
+    tabla_menu.add_column("Descripción", justify="left", style="white")
+
+    for i in range(len(opciones)):
+        numero_opcion = str(i + 1)
+        nombre_opcion = opciones[i]
+        tabla_menu.add_row(numero_opcion, nombre_opcion)
+
+    tabla_menu.add_row("0", "Salir")
+
+    console.print()
+    console.print(tabla_menu)
+    console.print()

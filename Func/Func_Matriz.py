@@ -1,12 +1,16 @@
-from Func_Rich import console, mostrar_mensaje, renderizar_tabla, Table
-from Func_Val import obtener_nombre_categoria, obtener_periodo_presupuesto
+from .Func_Rich import console, mostrar_mensaje, renderizar_tabla, Table
+from .Func_val import obtener_nombre_categoria, obtener_periodo_presupuesto
+from .Auxiliares import obtener_nombre_categoria as Auxiliar_nombre
 
-from datosprincipales import (
-    NombreC, EstadoC, DescripcionC, 
-    Periodo_Presupuesto, EstadoP, Id_CategoriaP, Monto_limite, 
-    NombreG, EstadoG, Id_CatGasto, Id_PresGasto, MontoG, FechaG, DescripcionG
-)
+from Datos.Datos import *
 
+#buenas practicas, etc.
+#Pq hardcodeamos los encabezados? xD
+
+
+# M.Categoria = [[[ID],[NOMBRE],[DESCRIPCION],[ESTADO]]]
+# M.Presupuesto = [[[ID pk], [ID CAT FK], [MONTOLIMITE], [PERIODO], [ESTADO]]]
+presupuestos = [Id_Presupuesto, Id_Categoria, Monto_limite,Periodo_Presupuesto, EstadoP]
 def obtener_matriz(lista):
     matriz = []
     total_filas = len(lista[0])
@@ -55,31 +59,34 @@ def mostrar_matriz(matriz, encabezados, titulo_tabla):
     console.print()
     console.input("[dim]Presione ENTER para continuar...[/dim]")
 
-def mostrar_categorias():
-    encabezados = ["Categoría", "Descripción"]
-    filas = []
-    for i in range(len(NombreC)):
-        if str(EstadoC[i]).upper() == "ACTIVO":
-            filas.append([NombreC[i], DescripcionC[i]])
-    renderizar_tabla(encabezados, filas, "Listado de Categorías")
+def mostrar_categorias(matriz, encabezados):
+    # Deberiamos poner un filtro de Activo/Inactivo aca? No creo, como ve el usuario si existen categorias inactivas
+    #filas = []
+    #for i in range(len(matriz)):
+    #    if str(matriz[i][3]).upper() == "ACTIVO":
+    #
+    #         filas.append([matriz[i][0], matriz[i][1], matriz[i][2], matriz[i][3]])
+    #
+    renderizar_tabla(encabezados, matriz, "Listado de Categorías")
+
     console.input("[dim]Presione ENTER para continuar...[/dim]")
 
-def mostrar_presupuestos():
-    encabezados = ["Período", "Categoría Asignada", "Monto Límite"]
+def mostrar_presupuestos(matriz,encabezados,matriz_categoria):
     filas = []
-    for i in range(len(Periodo_Presupuesto)):
-        if str(EstadoP[i]).upper() == "ACTIVO":
-            nombre_cat = obtener_nombre_categoria(Id_CategoriaP[i])
-            monto_fmt = f"${float(Monto_limite[i]):.2f}"
-            filas.append([Periodo_Presupuesto[i], nombre_cat, monto_fmt])
+    for i in range(len(matriz)):
+        if str(matriz[i][4]).upper() == "ACTIVO":
+            nombre_cat = obtener_nombre_categoria(matriz[i][1])
+            
+            monto_fmt = f"${float(matriz[i][2]):.2f}"
+            filas.append([matriz[i][0],matriz[i][1], nombre_cat, monto_fmt, matriz[i][4]])
     renderizar_tabla(encabezados, filas, "Listado de Presupuestos")
     console.input("[dim]Presione ENTER para continuar...[/dim]")
 
 def mostrar_gastos():
-    encabezados = ["Gasto", "Fecha", "Monto", "Descripción", "Categoría", "Período Asignado"]
+    encabezados = ["Gasto", "Fecha", "Monto", "Descripción", "Categoría", "Período Asignado", "Estado"]
     filas = []
     for i in range(len(NombreG)):
-        if str(EstadoG[i]).upper() == "ACTIVO":
+        if EstadoG[i] == True:
             nombre_cat = obtener_nombre_categoria(Id_CatGasto[i])
             periodo_pres = obtener_periodo_presupuesto(Id_PresGasto[i])
             monto_fmt = f"$USD {float(MontoG[i]):,.2f}"
@@ -89,7 +96,9 @@ def mostrar_gastos():
                 monto_fmt,
                 DescripcionG[i],
                 nombre_cat,
-                periodo_pres
+                periodo_pres,
+                "Activo"
             ])
+    print(gastos)       
     renderizar_tabla(encabezados, filas, "Control General de Gastos")
     console.input("[dim]Presione ENTER para continuar...[/dim]")
