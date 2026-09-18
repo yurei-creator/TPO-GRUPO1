@@ -35,7 +35,7 @@ def renderizar_tabla(encabezados, filas, titulo):
         tabla.add_column(enc, justify="left", style="white")
 
     for fila in filas:
-        tabla.add_row(*fila)
+        tabla.add_row(*[str(x) for x in fila])
 
     console.print()
     console.print(tabla)
@@ -56,7 +56,7 @@ def mostrar_menu(titulo, opciones):
         nombre_opcion = opciones[i]
         tabla_menu.add_row(numero_opcion, nombre_opcion)
 
-    tabla_menu.add_row("0", "Salir")
+    tabla_menu.add_row("0", "Volver al menú anterior / Salir")
 
     console.print()
     console.print(tabla_menu)

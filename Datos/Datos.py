@@ -1,101 +1,84 @@
-'''Datos de login'''
-nombre="san"
-contrasena="1234"
-clave_login=(nombre,contrasena)
+# Datos iniciales del Sistema de Control de Gastos Personales y Familiares
+# Modelado canónico en matrices bidimensionales (listas de listas por fila)
 
-
-
-'''Datos
-# Categorías
-#testing
-Id_Categoria = ["1", "2", "3", "4", "5"]
-
-NombreC = ["Alimentos", "Transporte", "Ocio", "Salud", "Educación"]
-DescripcionC = [
-    "Categoria de alimentos",
-    "Categoria de transporte",
-    "Categoria de ocio",
-    "Categoria de salud",
-    "Categoria de educación",
-]
-EstadoC = ["Activo", "Activo", "Activo", "Activo", "Activo"]
-categoria = [Id_Categoria, NombreC, DescripcionC, EstadoC]
-encabezadosC = ["Id_Categoria", "Nombre", "Descripcion", "Estado"]
-'''
-Id_Categoria = ["1", "2", "3"]
-NombreC = ["Alimentos", "Transporte", "Ocio"]
-DescripcionC = [
-    "Categoria de alimentos",
-    "Categoria de transporte",
-    "Categoria de ocio"]
-EstadoC = ["Activo", "Activo", "Activo"]
-categoria = [Id_Categoria, NombreC, DescripcionC, EstadoC]
+# Encabezados de entidades
 encabezadosC = ["ID", "Nombre", "Descripcion", "Estado"]
+encabezadosP = ["ID", "ID_Categoria", "Periodo", "Monto Limite", "Estado"]
+encabezadosG = ["ID", "Fecha", "Monto", "ID_Categoria", "Descripcion", "Estado"]
 
-# Presupuestos
-Id_Presupuesto = ["1", "2", "3", "4", "5"]
-Periodo_Presupuesto = [
-    "01/08/2026-10/08/2026",
-    "02/08/2026-12/08/2026",
-    "03/08/2026-13/08/2026",
-    "04/08/2026-14/08/2026",
-    "05/08/2026-15/08/2026",
+# -------------------------------------------------------------------------
+# Entidad: Categorías
+# Fila: [ID, Nombre, Descripción, Estado]
+# -------------------------------------------------------------------------
+categoria = [
+    ["1", "Alimentos", "Gastos de supermercado, carnicería y verdulería", "Activo"],
+    ["2", "Transporte", "Combustible, pasajes y mantenimiento vehicular", "Activo"],
+    ["3", "Ocio", "Salidas, cine, restaurantes y recreación", "Activo"],
+    ["4", "Salud", "Farmacia, consultas médicas y medicamentos", "Activo"],
+    ["5", "Educación", "Cursos, libros y materiales de estudio", "Activo"],
 ]
-Monto_limite = [120.0, 45.0, 25.0, 58.0, 80.0]
 
-Cat_fk = ["2", "3", "1", "2", "1"]
-EstadoP = ["Activo", "Activo", "Activo", "Activo", "Activo"]
-presupuestos = [Id_Presupuesto, Cat_fk, Monto_limite, Periodo_Presupuesto, EstadoP]
-encabezadosP = ["Id_Presupuesto", "ID-Cat-Nombre", "Periodo", "Monto Limite", "Estado"]
+# -------------------------------------------------------------------------
+# Entidad: Presupuestos
+# Fila: [ID, ID_Categoria, Período, Monto Límite, Estado]
+# -------------------------------------------------------------------------
+presupuestos = [
+    ["1", "1", "01/08/2026-31/08/2026", 50000.0, "Activo"],
+    ["2", "2", "01/08/2026-31/08/2026", 20000.0, "Activo"],
+    ["3", "3", "01/08/2026-31/08/2026", 15000.0, "Activo"],
+    ["4", "4", "01/08/2026-31/08/2026", 10000.0, "Activo"],
+    ["5", "5", "01/08/2026-31/08/2026", 12000.0, "Activo"],
+]
 
-# Gastos
-encabezadosG = ["Id_Gasto", "Nombre", "Fecha", "Monto", "Descripcion", "Estado"]
-
+# -------------------------------------------------------------------------
+# Entidad: Gastos (Entidad de Unión)
+# Fila: [ID, Fecha, Monto, ID_Categoria, Descripción, Estado]
+# -------------------------------------------------------------------------
 gastos = [
-    {
-        "id_gasto": "1",
-        "nombre": "Supermercado",
-        "fecha": "01/08/2026",
-        "monto": 100.0,
-        "descripcion": "Compra de alimentos",
-        "estado": True
-    },
-    {
-        "id_gasto": "2",
-        "nombre": "Gasolina",
-        "fecha": "02/08/2026",
-        "monto": 40.0,
-        "descripcion": "Llenado de tanque",
-        "estado": True
-    },
-    {
-        "id_gasto": "3",
-        "nombre": "Cine",
-        "fecha": "03/08/2026",
-        "monto": 20.0,
-        "descripcion": "Entrada de cine",
-        "estado": True
-    },
-    {
-        "id_gasto": "4",
-        "nombre": "Farmacia",
-        "fecha": "04/08/2026",
-        "monto": 50.0,
-        "descripcion": "Compra de medicamentos",
-        "estado": True
-    },
-    {
-        "id_gasto": "5",
-        "nombre": "Curso online",
-        "fecha": "05/08/2026",
-        "monto": 70.0,
-        "descripcion": "Pago de curso online",
-        "estado": True
-    }
+    ["1", "01/08/2026", 12500.0, "1", "Supermercado compra semanal", "Activo"],
+    ["2", "02/08/2026", 4500.0, "2", "Carga de combustible", "Activo"],
+    ["3", "03/08/2026", 3200.0, "3", "Entradas de cine y combo", "Activo"],
+    ["4", "04/08/2026", 1800.0, "4", "Farmacia medicamentos", "Activo"],
+    ["5", "05/08/2026", 7500.0, "5", "Pago cuota curso online", "Activo"],
+    ["6", "10/08/2026", 18200.0, "1", "Compra mensual supermercado", "Activo"],
+    ["7", "12/08/2026", 6000.0, "2", "Recarga de tarjeta transporte", "Activo"],
+    ["8", "15/08/2026", 5400.0, "3", "Cena con amigos", "Activo"],
 ]
 
-'''datos de porcentaje'''
-datos_porcentaje = [
-    [g["nombre"] for g in gastos], 
-    [g["monto"] for g in gastos]
+# -------------------------------------------------------------------------
+# Usuarios, Roles y Permisos (utiliza conjuntos 'set')
+# -------------------------------------------------------------------------
+PERMISOS_DISPONIBLES = ["gastos", "categorias", "presupuestos", "reportes", "usuarios"]
+
+roles_permisos = {
+    "administrador": {"gastos", "categorias", "presupuestos", "reportes", "usuarios"},
+    "editor": {"gastos", "categorias", "presupuestos", "reportes"},
+    "lector": {"reportes"}
+}
+
+usuarios = [
+    {
+        "id": 1,
+        "user": "admin",
+        "pass": "Admin1234",
+        "rol": "administrador",
+        "permisos": {"gastos", "categorias", "presupuestos", "reportes", "usuarios"},
+        "estado": "Activo"
+    },
+    {
+        "id": 2,
+        "user": "familiar",
+        "pass": "Familiar2026",
+        "rol": "editor",
+        "permisos": {"gastos", "categorias", "presupuestos", "reportes"},
+        "estado": "Activo"
+    },
+    {
+        "id": 3,
+        "user": "invitado",
+        "pass": "User1234",
+        "rol": "lector",
+        "permisos": {"reportes"},
+        "estado": "Activo"
+    }
 ]

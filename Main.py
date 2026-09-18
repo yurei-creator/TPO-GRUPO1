@@ -1,45 +1,32 @@
-# HAY QUE RENOMBRAR ESTE A MAIN
+# -----------------------------------------------------------------------------
+# SISTEMA DE CONTROL DE GASTOS PERSONALES Y FAMILIARES
+# Programación 1 - Algoritmos y Estructuras de Datos 1
+# Trabajo Práctico Obligatorio - Primera Entrega
+# -----------------------------------------------------------------------------
 
-# Funciones Rich
-from Menus.menus import *
+from Menus.menus import menu_principal
 from Datos.Datos import (
-    gastos,
-    presupuestos,
     categoria,
+    presupuestos,
+    gastos,
     encabezadosC,
-    encabezadosG,
-    encabezadosP
+    encabezadosP,
+    encabezadosG
 )
 from Crud.Crud_Usuarios import login
-# -- FUNCIONES RICH
-
-# Desde Func.Func_Rich
-
-# --FUNCIONES DE VALIDACION
-
-# Desde Func.Auxiliares
-
-# -- FUNCIONES MATRICES
-
-# Desde Func.Func_Matriz 
-
-# CRUD CATEGORIAS
-
-# Desde Crud.Crud_Cat
-
-## CRUD PRESUPUESTOS
-
-# Desde Crud.Crud_Pres
-
-# CRUD GASTOS
-
-# Desde Crud.Crud_Gast
 
 def main():
     usuario = login()
     if usuario:
-        menu_principal(usuario,categoria,presupuestos,gastos,encabezadosC,encabezadosP,encabezadosG)
-
+        menu_principal(
+            usuario,
+            categoria,
+            presupuestos,
+            gastos,
+            encabezadosC,
+            encabezadosP,
+            encabezadosG
+        )
 
 if __name__ == "__main__":
     main()

@@ -11,3 +11,7 @@ env/
 # Archivos de sistema / IDE
 .DS_Store
 Thumbs.db
+
+# Documentación interna de trabajo
+*.txt
+
