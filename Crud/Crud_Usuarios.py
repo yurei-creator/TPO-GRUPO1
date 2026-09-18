@@ -255,4 +255,5 @@ def login():
     mostrar_mensaje("Acceso bloqueado por alcanzar el límite máximo de intentos fallidos.", "error")
     return {}
 
-login()
+if __name__ == "__main__":
+    login()

@@ -10,6 +10,7 @@ from Datos.Datos import (
     encabezadosG,
     encabezadosP
 )
+from Crud.Crud_Usuarios import login
 # -- FUNCIONES RICH
 
 # Desde Func.Func_Rich
@@ -35,7 +36,9 @@ from Datos.Datos import (
 # Desde Crud.Crud_Gast
 
 def main():
-    menu_principal(categoria,presupuestos,gastos,encabezadosC,encabezadosP,encabezadosG)
+    usuario = login()
+    if usuario:
+        menu_principal(usuario,categoria,presupuestos,gastos,encabezadosC,encabezadosP,encabezadosG)
 
 
 if __name__ == "__main__":
