@@ -1,6 +1,9 @@
-# Bytecode y cache de Python
+# Bytecode y cache de Python 
+**/__pycache__/
 __pycache__/
 *.py[cod]
+*.pyc
+*.pyo
 *$py.class
 
 # Entornos virtuales
