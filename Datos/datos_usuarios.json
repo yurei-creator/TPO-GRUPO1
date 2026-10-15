@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "user": "admin",
+        "pass": "Admin1234",
+        "rol": "administrador",
+        "permisos": {"gastos":true, "categorias":true, "presupuestos":true, "reportes":true, "usuarios":true},
+        "estado": "Activo"
+    },
+    {
+        "id": 2,
+        "user": "familiar",
+        "pass": "Familiar2026",
+        "rol": "editor",
+        "permisos": {"gastos":true, "categorias":true, "presupuestos":true, "reportes":true},
+        "estado": "Activo"
+    },
+    {
+        "id": 3,
+        "user": "invitado",
+        "pass": "User1234",
+        "rol": "lector",
+        "permisos": {"reportes":true},
+        "estado": "Activo"
+    }
+]
