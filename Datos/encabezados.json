@@ -1,0 +1,4 @@
+[ ["ID", "Nombre", "Descripcion", "Estado"] , 
+   ["ID", "Fecha", "Monto", "ID_Categoria", "Descripcion", "Estado"] , 
+   ["ID", "ID_Categoria", "Periodo", "Monto Limite", "Estado"] 
+]
