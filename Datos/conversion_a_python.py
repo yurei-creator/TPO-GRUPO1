@@ -1,131 +1,64 @@
 import json
 
-ruta_encabezadoC = "Datos/encabezadosC.json"
-ruta_encabezadoG = "Datos/encabezadosG.json"
-ruta_encabezadoP = "Datos/encabezadosP.json"
-ruta_categoria = "Datos/categoria.json"
-ruta_presupuesto = "Datos/presupuesto.json"
-ruta_gastos = "Datos/gastos.json"
-ruta_rolespermisos = "Datos/roles_permisos.json"
-ruta_datos_permisos_disponibles = "Datos/datos_permisos_disponibles.json"
+ruta_encabezado = "Datos/encabezados.json"
+ruta_categoria = "Datos/categorias.json"
+ruta_permisos = "Datos/permisos.json"
 ruta_usuarios = "Datos/datos_usuarios.json"
 
 
-'''conversion de encabezadoC'''
+'''conversion de encabezados'''
 try:
-    encabC = open(ruta_encabezadoC, "r")
-    encabezadosC = json.load(encabC)
+    encab = open(ruta_encabezado, "r", encoding="utf-8")
+    datos_encabezados = json.load(encab)
+    encabezadosC = datos_encabezados[0]
+    encabezadosG = datos_encabezados[1]
+    encabezadosP = datos_encabezados[2]
 except:
-    print("no se puede abrir el archivo encabezadoC")
+    print("no se puede abrir un archivo ")
 finally:
     try:
-        encabC.close()
+        encab.close()
     except Exception as e:
-        print(f"no se pudo cerrar el archivo sobre el encabezadoC correctamente: {e}")
+        print(f"no se pudo cerrar el archivo correctamente: {e}")
 
 
 
-'''conversion de encabezadoG'''
+'''conversion de categorias'''
 try:
-    encabG = open(ruta_encabezadoG, "r")
-    encabezadosG = json.load(encabG)
+    categ = open(ruta_categoria, "r", encoding="utf-8")
+    dato_categoria = json.load(categ)
+    categoria = dato_categoria[0]
+    gastos = dato_categoria[1]
+    presupuesto = dato_categoria[2]
 except:
-    print("no se puede abrir el archivo encabezadoG")
-finally:
-    try:
-        encabG.close()
-    except Exception as e:
-        print(f"no se pudo cerrar el archivo sobre el encabezadoG correctamente: {e}")
-
-
-
-'''conversion de encabezadoP'''
-try:
-    encabP = open(ruta_encabezadoP, "r")
-    encabezadoP = json.load(encabP)
-except:
-    print("no se puede abrir el archivo encabezadoP")
-finally:
-    try:
-        encabP.close()
-    except Exception as e:
-        print(f"no se pudo cerrar el archivo sobre el encabezadoP correctamente: {e}")
-
-
-
-'''conversion de categoria'''
-try:
-    categ = open(ruta_categoria, "r")
-    categoria = json.load(categ)
-except:
-    print("no se puede abrir el archivo categoria")
+    print("no se puede abrir el archivo")
 finally:
     try:
         categ.close()
     except Exception as e:
-        print(f"no se pudo cerrar el archivo categoria correctamente: {e}")
+        print(f"no se pudo cerrar el archivo correctamente: {e}")
 
 
 
-'''conversion de presupuesto'''
+'''conversion de permisos'''
 try:
-    pres = open(ruta_presupuesto, "r")
-    presupuesto = json.load(pres)
+    per = open(ruta_permisos, "r", encoding="utf-8")
+    datos_permisos = json.load(per)
+    roles_permisos = datos_permisos[0]
+    permisos_disponibles = datos_permisos[1]
 except:
-    print("no se puede abrir el archivo presupuesto")
+    print("no se puede abrir el archivo")
 finally:
     try:
-        pres.close()
+        per.close()
     except Exception as e:
-        print(f"no se pudo cerrar el archivo presupuesto correctamente: {e}")
-
-
-
-'''conversion de gastos'''
-try:
-    gas = open(ruta_gastos, "r")
-    gastos = json.load(gas)
-except:
-    print("no se puede abrir el archivo gastos")
-finally:
-    try:
-        gas.close()
-    except Exception as e:
-        print(f"no se pudo cerrar el archivo gastos correctamente: {e}")
-
-
-
-'''conversion de rolespermisos'''
-try:
-    rol = open(ruta_rolespermisos, "r")
-    roles_permisos = json.load(rol)
-except:
-    print("no se puede abrir el archivo roles_permisos")
-finally:
-    try:
-        rol.close()
-    except Exception as e:
-        print(f"no se pudo cerrar el archivo roles_permisos correctamente: {e}")
-
-
-
-'''conversion de datos_permisos_disponibles'''
-try:
-    permiso = open(ruta_datos_permisos_disponibles, "r")
-    permisos_disponibles = json.load(permiso)
-except:
-    print("no se puede abrir el archivo sobre datos_permisos_disponibles")
-finally:
-    try:
-        permiso.close()
-    except Exception as e:
-        print(f"no se pudo cerrar el archivo sobre datos_permisos_disponibles correctamente: {e}")
+        print(f"no se pudo cerrar el archivo correctamente: {e}")
 
 
 
 '''conversion de datos de usuarios'''
 try:
-    usu = open(ruta_usuarios, "r")
+    usu = open(ruta_usuarios, "r", encoding="utf-8")
     usuarios = json.load(usu)
 except:
     print("no se puede abrir el archivo usuarios")
