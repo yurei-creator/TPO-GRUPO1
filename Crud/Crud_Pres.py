@@ -8,6 +8,9 @@ from Func.Func_val import (
     pedir_opcion_menu,
     seleccionar_categoria_id
 )
+from Datos.Datos import (
+    guardar_presupuestos
+)
 from Func.Func_Matriz import obtener_nombre_categoria, fila_a_diccionario
 from rich.table import Table
 
@@ -39,6 +42,8 @@ def agregar_presupuesto(presupuestos, categorias):
     nom_cat = obtener_nombre_categoria(id_cat, categorias)
     mostrar_mensaje(f"Presupuesto para '{nom_cat}' creado con éxito (ID: {nuevo_id}, Límite: ${monto:,.2f}).", "exito")
     console.input("[dim]Presione ENTER para continuar...[/dim]")
+
+    guardar_presupuestos(presupuestos)
 
 def consultar_presupuesto(presupuestos, categorias, gastos, encabezadosP):
     console.print("\n[bold yellow]--- [R] CONSULTAR / BUSCAR PRESUPUESTO ---[/bold yellow]")
@@ -123,6 +128,7 @@ def modificar_presupuesto(presupuestos, categorias):
         p_sel[4] = "Inactivo" if p_sel[4] == "Activo" else "Activo"
         mostrar_mensaje(f"Estado cambiado a: {p_sel[4]}", "info")
 
+    guardar_presupuestos(presupuestos)
     mostrar_mensaje("Presupuesto actualizado exitosamente.", "exito")
     console.input("[dim]Presione ENTER para continuar...[/dim]")
 
@@ -164,4 +170,5 @@ def eliminar_presupuesto(presupuestos, categorias):
         else:
             mostrar_mensaje("Operación cancelada.", "info")
 
+    guardar_presupuestos(presupuestos)
     console.input("[dim]Presione ENTER para continuar...[/dim]")
