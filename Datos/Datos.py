@@ -22,14 +22,7 @@ categoria = [
 # Entidad: Presupuestos
 # Fila: [ID, ID_Categoria, Período, Monto Límite, Estado]
 # -------------------------------------------------------------------------
-presupuestos = [
-    ["1", "1", "01/08/2026-31/08/2026", 50000.0, "Activo"],
-    ["2", "2", "01/08/2026-31/08/2026", 20000.0, "Activo"],
-    ["3", "3", "01/08/2026-31/08/2026", 15000.0, "Activo"],
-    ["4", "4", "01/08/2026-31/08/2026", 10000.0, "Activo"],
-    ["5", "5", "01/08/2026-31/08/2026", 12000.0, "Activo"],
-]
-
+presupuesto_ruta = "Datos/presupuestos.txt"
 # -------------------------------------------------------------------------
 # Entidad: Gastos (Entidad de Unión)
 # Fila: [ID, Fecha, Monto, ID_Categoria, Descripción, Estado]
@@ -82,3 +75,33 @@ usuarios = [
         "estado": "Activo"
     }
 ]
+
+
+import os
+
+def cargar_presupuestos(ruta):
+    presupuestos = []
+    try:
+        with open(ruta, "r", encoding="utf-8") as archivo:
+            for linea in archivo:
+                linea = linea.strip()
+                if not linea:
+                    continue
+                id_p, id_cat, periodo, monto, estado = linea.split("|")
+                presupuestos.append([id_p, id_cat, periodo, float(monto), estado])
+    except FileNotFoundError:
+        pass  # primera ejecución: lista vacía
+    return presupuestos
+
+
+
+def guardar_presupuestos(presupuestos, ruta):
+    with open(ruta, "w", encoding="utf-8") as archivo:
+        for fila in presupuestos:
+            archivo.write("|".join(str(campo) for campo in fila) + "\n")
+
+
+def guardar_presupuestos(presupuestos, ruta=presupuesto_ruta):
+    with open(ruta, "w", encoding="utf-8") as archivo:
+        for fila in presupuestos:
+            archivo.write("|".join(str(campo) for campo in fila) + "\n")
