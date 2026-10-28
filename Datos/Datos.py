@@ -1,3 +1,6 @@
+
+import os
+
 # Datos iniciales del Sistema de Control de Gastos Personales y Familiares
 # Modelado canónico en matrices bidimensionales (listas de listas por fila)
 
@@ -10,19 +13,26 @@ encabezadosG = ["ID", "Fecha", "Monto", "ID_Categoria", "Descripcion", "Estado"]
 # Entidad: Categorías
 # Fila: [ID, Nombre, Descripción, Estado]
 # -------------------------------------------------------------------------
-categoria = [
-    ["1", "Alimentos", "Gastos de supermercado, carnicería y verdulería", "Activo"],
-    ["2", "Transporte", "Combustible, pasajes y mantenimiento vehicular", "Activo"],
-    ["3", "Ocio", "Salidas, cine, restaurantes y recreación", "Activo"],
-    ["4", "Salud", "Farmacia, consultas médicas y medicamentos", "Activo"],
-    ["5", "Educación", "Cursos, libros y materiales de estudio", "Activo"],
-]
-
+#categoria = [
+#    ["1", "Alimentos", "Gastos de supermercado, carnicería y verdulería", "Activo"],
+#    ["2", "Transporte", "Combustible, pasajes y mantenimiento vehicular", "Activo"],
+#    ["3", "Ocio", "Salidas, cine, restaurantes y recreación", "Activo"],
+#    ["4", "Salud", "Farmacia, consultas médicas y medicamentos", "Activo"],
+#    ["5", "Educación", "Cursos, libros y materiales de estudio", "Activo"],
+#]
+# presupuestos
+#1|1|01/08/2026-31/08/2026|50000.0|Activo
+#2|2|01/08/2026-31/08/2026|20000.0|Activo
+#3|3|01/08/2026-31/08/2026|15000.0|Activo
+#4|4|01/08/2026-31/08/2026|10000.0|Activo
+#5|5|01/08/2026-31/08/2026|12000.0|Activo
+#
 # -------------------------------------------------------------------------
 # Entidad: Presupuestos
 # Fila: [ID, ID_Categoria, Período, Monto Límite, Estado]
 # -------------------------------------------------------------------------
 presupuesto_ruta = "Datos/presupuestos.txt"
+categoria_ruta = "Datos/categorias.txt"
 # -------------------------------------------------------------------------
 # Entidad: Gastos (Entidad de Unión)
 # Fila: [ID, Fecha, Monto, ID_Categoria, Descripción, Estado]
@@ -77,9 +87,8 @@ usuarios = [
 ]
 
 
-import os
 
-def cargar_presupuestos(ruta):
+def cargar_presupuestos(ruta=presupuesto_ruta):
     presupuestos = []
     try:
         with open(ruta, "r", encoding="utf-8") as archivo:
@@ -90,18 +99,31 @@ def cargar_presupuestos(ruta):
                 id_p, id_cat, periodo, monto, estado = linea.split("|")
                 presupuestos.append([id_p, id_cat, periodo, float(monto), estado])
     except FileNotFoundError:
-        pass  # primera ejecución: lista vacía
+        print("El archivo esta vacio")
     return presupuestos
 
+def cargar_categorias(ruta=categoria_ruta):
+    categorias = []
+    try:
+        with open(ruta, "r", encoding="utf-8") as archivo:
+            for linea in archivo:
+                linea = linea.strip()
+                if not linea:
+                    continue
+                id_cat, nombre, descripcion, estado= linea.split("|")
+                categorias.append([id_cat, nombre, descripcion, estado])
+    except FileNotFoundError:
+        print("El archivo esta vacio")
+    return categorias
 
-
-def guardar_presupuestos(presupuestos, ruta):
+def guardar_presupuestos(matriz, ruta=presupuesto_ruta):
     with open(ruta, "w", encoding="utf-8") as archivo:
-        for fila in presupuestos:
+        for fila in matriz:
             archivo.write("|".join(str(campo) for campo in fila) + "\n")
 
 
-def guardar_presupuestos(presupuestos, ruta=presupuesto_ruta):
+def guardar_categorias(matriz, ruta=categoria_ruta):
     with open(ruta, "w", encoding="utf-8") as archivo:
-        for fila in presupuestos:
+        for fila in matriz:
             archivo.write("|".join(str(campo) for campo in fila) + "\n")
+
