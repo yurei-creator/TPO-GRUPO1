@@ -1,5 +1,6 @@
 from .Func_Rich import console, mostrar_mensaje, renderizar_tabla
 
+
 def fila_a_diccionario(encabezados, fila):
     return dict(zip(encabezados, fila))
 
@@ -49,3 +50,4 @@ def mostrar_gastos(gastos, categorias, encabezados):
     encs = ["ID", "Fecha", "Monto", "Categoría", "Descripción", "Estado"]
     renderizar_tabla(encs, filas, "Control General de Gastos")
     console.input("[dim]Presione ENTER para continuar...[/dim]")
+
