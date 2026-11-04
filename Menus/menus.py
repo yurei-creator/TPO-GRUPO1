@@ -5,7 +5,8 @@ from Crud.Crud_Cat import (
     agregar_categoria,
     consultar_categoria,
     modificar_categoria,
-    eliminar_categoria
+    eliminar_categoria,
+    alta_categoria
 )
 from Crud.Crud_Pres import (
     agregar_presupuesto,
@@ -56,7 +57,7 @@ def menu_categorias(categoria, gastos, presupuestos, encabezadosC, encabezadosG)
         elif opc == "2":
             consultar_categoria(categoria, gastos, presupuestos, encabezadosC, encabezadosG)
         elif opc == "3":
-            agregar_categoria(categoria)
+            alta_categoria()
         elif opc == "4":
             modificar_categoria(categoria)
         elif opc == "5":
