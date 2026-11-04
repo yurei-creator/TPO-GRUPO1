@@ -1,4 +1,11 @@
+import json
 from Func.Func_Rich import console, mostrar_mensaje, renderizar_tabla
+
+from Datos.conversion_a_python import (
+    conversion_a_python,
+    conversion_a_json
+)
+
 from Func.Func_val import (
     pedir_monto,
     pedir_monto_opcional,
@@ -49,6 +56,8 @@ def agregar_gasto(gastos, categorias, presupuestos):
             console.print(f"[dim]Presupuesto restante en {nom_cat}: ${disponible:,.2f} (Límite: ${limite:,.2f})[/dim]")
 
     console.input("[dim]Presione ENTER para continuar...[/dim]")
+
+    conversion_a_json(gastos)
 
 def consultar_gasto(gastos, categorias, presupuestos, encabezadosG):
     console.print("\n[bold yellow]--- [R] CONSULTAR GASTO ESPECÍFICO ---[/bold yellow]")
@@ -163,6 +172,7 @@ def modificar_gasto(gastos, categorias):
 
     mostrar_mensaje("Gasto modificado exitosamente.", "exito")
     console.input("[dim]Presione ENTER para continuar...[/dim]")
+    conversion_a_json(gastos)
 
 def eliminar_gasto(gastos, categorias):
     console.print("\n[bold red]--- [D] BAJA / REACTIVACIÓN LÓGICA DE GASTO ---[/bold red]")
@@ -202,3 +212,4 @@ def eliminar_gasto(gastos, categorias):
             mostrar_mensaje("Operación cancelada.", "info")
 
     console.input("[dim]Presione ENTER para continuar...[/dim]")
+    conversion_a_json(gastos)

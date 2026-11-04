@@ -1,0 +1,37 @@
+[
+    {
+        "id": "1",
+        "id_categoria": "1",
+        "periodo": "01/08/2026-31/08/2026",
+        "monto_limite": 50000.0,
+        "estado": "Activo"
+    },
+    {
+        "id": "2",
+        "id_categoria": "2",
+        "periodo": "01/08/2026-31/08/2026",
+        "monto_limite": 20000.0,
+        "estado": "Activo"
+    },
+    {
+        "id": "3",
+        "id_categoria": "3",
+        "periodo": "01/08/2026-31/08/2026",
+        "monto_limite": 15000.0,
+        "estado": "Activo"
+    },
+    {
+        "id": "4",
+        "id_categoria": "4",
+        "periodo": "01/08/2026-31/08/2026",
+        "monto_limite": 10000.0,
+        "estado": "Activo"
+    },
+    {
+        "id": "5",
+        "id_categoria": "5",
+        "periodo": "01/08/2026-31/08/2026",
+        "monto_limite": 12000.0,
+        "estado": "Activo"
+    }
+]
