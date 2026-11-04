@@ -1,0 +1,40 @@
+def obtener_ultimo_codigo(archivo):
+    ultimo_codigo = "A000"
+    try:
+        with open(archivo, "rt", encoding="UTF-8") as arch:
+            for linea in arch:
+                datos = linea.strip().split(";")
+                ultimo_codigo = datos[0]
+    except FileNotFoundError:
+        pass  # Si no existe el archivo, empezamos desde cero
+    return ultimo_codigo
+
+def siguiente_codigo(codigo_actual):
+    numero = int(codigo_actual[1:]) + 1
+    #return f"A{numero:03d}"
+    return f"A{str(numero).zfill(3)}"
+
+def alta_producto(archivo):
+    ultimo = obtener_ultimo_codigo(archivo)
+    nuevo_codigo = siguiente_codigo(ultimo)
+    
+    descripcion = input("Descripción: ")
+    precio = int(input("Precio: "))
+    
+    try:
+        arch = open(archivo, "a", encoding="UTF-8")
+        nuevo_producto = f'{nuevo_codigo};{descripcion};{precio}\n'
+        arch.write(nuevo_producto)
+        print("Se ha agregado el siguiente producto:")
+        print(f'{nuevo_codigo}: {descripcion} - $ {precio}')
+    except OSError as mensaje:
+        print("No se puede grabar el archivo:", mensaje)
+    finally:
+        try:
+            arch.close()
+        except NameError:
+            pass
+
+# Programa principal
+archivo = r'CRUD_archivos/productos.txt'
+alta_producto(archivo)
