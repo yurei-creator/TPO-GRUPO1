@@ -14,6 +14,12 @@ from Datos.Datos import (
     cargar_categorias
 )
 from Crud.Crud_Usuarios import login
+from Datos.conversion_a_python import (
+    gastos,
+    encabezadosC,
+    encabezadosG,
+    encabezadosP,
+)
 
 def main():
     usuario = login()

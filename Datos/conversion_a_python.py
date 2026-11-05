@@ -46,9 +46,9 @@ def conversion_a_json(informacion):
 for i in range(len(rutas)):
     rutas[i] = conversion_a_python[i]
 
-encabezadoC = rutas[0]
-encabezadoP = rutas[1]
-encabezadoG = rutas[2]
+encabezadosC = rutas[0]
+encabezadosP = rutas[1]
+encabezadosG = rutas[2]
 categorias = rutas[3]
 gastos = rutas[4]
 presupuestos = rutas[5]

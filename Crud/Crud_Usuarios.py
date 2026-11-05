@@ -1,6 +1,7 @@
 import re
 from Func.Func_Rich import console, mostrar_mensaje, Table
 from Datos.Datos import usuarios, roles_permisos, PERMISOS_DISPONIBLES
+from Datos.conversion_a_python import usuarios, permisos, PERMISOS_DISPONIBLES
 
 def validar_password(password):
     if len(password) < 6:
