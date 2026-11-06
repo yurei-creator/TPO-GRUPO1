@@ -205,3 +205,35 @@ def mostrar_categorias(archivo=categoria_ruta,encabezados=encabezadosC):
 
     renderizar_tabla(encabezados, filas, "Listado de Categorías")
     console.input("\n[dim]Presione ENTER para continuar...[/dim]")
+
+def buscar_categoria(archivo=categoria_ruta):
+   
+    console.print("\n[bold yellow]--- BUSCAR CATEGORÍA ---[/bold yellow]")
+    busqueda = pedir_texto_no_vacio("Ingrese el ID o el nombre de la categoría:").strip().lower()
+    encontrada = False
+    try:
+        arch = open(archivo, "r", encoding="UTF-8")
+        linea = arch.readline()
+        while linea and not encontrada:
+            linea = linea.strip()
+            if linea:
+                try:
+                    id_cat, nombre = linea.split("|")[:2]
+                    print(id_cat, nombre)
+                    if busqueda == id_cat.lower() or busqueda == nombre.lower():
+                        encontrada = True
+                        console.print(f'\n{"ID":8}{"Nombre":25}')
+                        console.print(f'{id_cat:8}{nombre:25}')
+                except ValueError:
+                    mostrar_mensaje(f"Línea con formato inválido, se omite: {linea}", "alerta")
+            linea = arch.readline() 
+        if not encontrada:
+            mostrar_mensaje("No se encontró ninguna categoría con ese ID o nombre.", "alerta")
+    except OSError:
+        mostrar_mensaje("No se pudo leer el archivo de categorías.", "error")
+    finally:
+        try:
+            arch.close()
+        except:
+            print("No se pudo cerrar el archivo")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")

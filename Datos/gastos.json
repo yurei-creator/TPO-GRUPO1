@@ -50,9 +50,9 @@
     {
         "id": "7",
         "fecha": "12/08/2026",
-        "monto": 6000.0,
+        "monto": 9000.0,
         "categoria_id": "2",
-        "descripcion": "Recarga de tarjeta transporte",
+        "descripcion": "YEA",
         "estado": "Activo"
     },
     {
@@ -61,6 +61,6 @@
         "monto": 5400.0,
         "categoria_id": "3",
         "descripcion": "Cena con amigos",
-        "estado": "Activo"
+        "estado": "Inactivo"
     }
 ]

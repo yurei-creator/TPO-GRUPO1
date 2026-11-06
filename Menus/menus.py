@@ -8,19 +8,19 @@ from Crud.Crud_Categorias.Crud_Cat import (
     eliminar_categoria,
     mostrar_categorias,
     alta_categoria,
-    modificar_categoria
+    modificar_categoria,
+    buscar_categoria
     )
 
 from Crud.Crud_Presupuestos.Crud_Pres import (
     mostrar_presupuestos,
     eliminar_presupuesto,
     modificar_presupuesto,
-    agregar_presupuesto
+    agregar_presupuesto,
+    buscar_presupuesto
 )
 
-from Crud.Crud_Pres import (
-    consultar_presupuesto
-)
+
 from Crud.Crud_Gast import (
     mostrar_gastos,
     agregar_gasto,
@@ -47,7 +47,7 @@ from Func.Func_Estadisticas import (
     simulacion_proyeccion_inflacion
 )
 
-def menu_categorias(gastos, presupuestos, encabezadosC, encabezadosG):
+def menu_categorias():
     activo = True
     opciones = [
         "Mostrar todas las categorías",
@@ -63,8 +63,7 @@ def menu_categorias(gastos, presupuestos, encabezadosC, encabezadosG):
         if opc == "1":
             mostrar_categorias()
         elif opc == "2":
-            print("Consultar categorias)")
-            #consultar_categoria(gastos, presupuestos, encabezadosC, encabezadosG)
+            buscar_categoria()
         elif opc == "3":
             alta_categoria()
         elif opc == "4":
@@ -74,7 +73,7 @@ def menu_categorias(gastos, presupuestos, encabezadosC, encabezadosG):
         elif opc == "0":
             activo = False
 
-def menu_presupuestos(presupuestos, categoria, gastos, encabezadosP):
+def menu_presupuestos():
     activo = True
     opciones = [
         "Mostrar todos los presupuestos",
@@ -88,19 +87,14 @@ def menu_presupuestos(presupuestos, categoria, gastos, encabezadosP):
         opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4", "5"])
 
         if opc == "1":
-            print("Mostrar presupuestos")
             mostrar_presupuestos()
         elif opc == "2":
-            print("Consultar presupuestos")
-            #consultar_presupuesto(presupuestos, categoria, gastos, encabezadosP)
+            buscar_presupuesto()
         elif opc == "3":
-            print("Agregar presupuestos")
             agregar_presupuesto()
         elif opc == "4":
-            print("Modificar presupuestos")
             modificar_presupuesto()
         elif opc == "5":
-            print("Eliminar presupuestos")
             eliminar_presupuesto()
         elif opc == "0":
             activo = False
@@ -229,9 +223,9 @@ def menu_principal(usuario, presupuestos, gastos, encabezadosC, encabezadosP, en
             if permiso_elegido == "gastos":
                 menu_gastos()
             elif permiso_elegido == "presupuestos":
-                menu_presupuestos(presupuestos, gastos, encabezadosP)
+                menu_presupuestos()
             elif permiso_elegido == "categorias":
-                menu_categorias(gastos, presupuestos, encabezadosC, encabezadosG)
+                menu_categorias()
             elif permiso_elegido == "reportes":
                 menu_estadisticas(gastos, presupuestos, encabezadosG)
             elif permiso_elegido == "usuarios":
