@@ -33,35 +33,18 @@ def registrar_usuario():
     console.print("\n[bold green]--- REGISTRO DE NUEVO USUARIO ---[/bold green]")
     nuevo_id = usuarios[-1]["id"] + 1 if len(usuarios) > 0 else 1
     
-    try:
-        username = console.input("[bold cyan]Ingrese nombre de usuario:[/bold cyan] ").strip()
-        if not username:
-            raise ValueError("El nombre de usuario no puede estar vacío.")
-        if [u for u in usuarios if u["user"] == username]:
-            raise ValueError("El nombre de usuario ingresado ya existe.")
-    except ValueError as e:
-        mostrar_mensaje(str(e), "error")
-        console.input("[dim]Presione ENTER para continuar...[/dim]")
+    username = console.input("[bold cyan]Ingrese nombre de usuario:[/bold cyan] ").strip()
+    if [u for u in usuarios if u["user"] == username]:
+        mostrar_mensaje("El nombre de usuario ingresado ya existe.", "error")
         return
 
-    while True:
-        try:
-            password = console.input("[bold cyan]Ingrese contraseña (mínimo 6 caracteres, 1 mayúscula y números):[/bold cyan] ").strip()
-            if not validar_password(password):
-                raise ValueError("La contraseña no cumple con los requisitos mínimos de seguridad.")
-            break
-        except ValueError as e:
-            mostrar_mensaje(str(e), "alerta")
+    password = console.input("[bold cyan]Ingrese contraseña (mínimo 6 caracteres, 1 mayúscula y números):[/bold cyan] ").strip()
+    while not validar_password(password):
+        mostrar_mensaje("La contraseña no cumple con los requisitos mínimos de seguridad.", "alerta")
+        password = console.input("[bold cyan]Ingrese una contraseña válida:[/bold cyan] ").strip()
 
     console.print("\n[dim]Roles disponibles: 1. Administrador | 2. Editor | 3. Lector[/dim]")
-    while True:
-        try:
-            opc = console.input("[bold cyan]Seleccione el rol (1/2/3):[/bold cyan] ").strip()
-            if opc not in ("1", "2", "3"):
-                raise ValueError("Debe seleccionar 1, 2 o 3.")
-            break
-        except ValueError as e:
-            mostrar_mensaje(str(e), "error")
+    opc = console.input("[bold cyan]Seleccione el rol (1/2/3):[/bold cyan] ").strip()
     
     if opc == "1":
         rol = "administrador"
@@ -83,7 +66,6 @@ def registrar_usuario():
     }
     usuarios.append(nuevo)
     mostrar_mensaje(f"Usuario '{username}' registrado exitosamente con ID {nuevo_id}.", "exito")
-    console.input("[dim]Presione ENTER para continuar...[/dim]")
 
 def eliminar_usuario(usuario_actual=None):
     console.print("\n[bold red]--- BAJA / REACTIVACIÓN LÓGICA DE USUARIO ---[/bold red]")
@@ -96,14 +78,12 @@ def eliminar_usuario(usuario_actual=None):
     id_ingresado = console.input("[bold cyan]Ingrese el ID del usuario a modificar estado (0 para cancelar):[/bold cyan] ").strip()
     if id_ingresado == "0":
         return
-
-    try:
-        id_buscar = int(id_ingresado)
-    except ValueError:
+    if not id_ingresado.isdigit():
         mostrar_mensaje("El ID ingresado debe ser un valor numérico.", "error")
         console.input("[dim]Presione ENTER para continuar...[/dim]")
         return
 
+    id_buscar = int(id_ingresado)
     user_sel = None
     for u in usuarios:
         if u["id"] == id_buscar:
@@ -144,11 +124,10 @@ def eliminar_usuario(usuario_actual=None):
     console.input("[dim]Presione ENTER para continuar...[/dim]")
 
 def verificar_permiso(usuario, permiso_requerido):
-    try:
-        permiso_a_revisar = {permiso_requerido}
-        return permiso_a_revisar.issubset(usuario["permisos"])
-    except (KeyError, TypeError, AttributeError):
+    if not usuario or "permisos" not in usuario:
         return False
+    permiso_a_revisar = {permiso_requerido}
+    return permiso_a_revisar.issubset(usuario["permisos"])
 
 def mostrar_permisos_disponibles():
     tabla_permisos = Table(title="[bold yellow]Permisos Disponibles del Sistema[/bold yellow]", border_style="yellow")
@@ -172,12 +151,10 @@ def modificar_permisos():
     if tipo == "1":
         listar_usuarios()
         id_ingresado = console.input("[bold cyan]Ingrese el ID del usuario a modificar:[/bold cyan] ").strip()
-        try:
-            id_buscar = int(id_ingresado)
-        except ValueError:
+        if not id_ingresado.isdigit():
             mostrar_mensaje("El ID ingresado debe ser un valor numérico.", "error")
-            console.input("[dim]Presione ENTER para continuar...[/dim]")
             return
+        id_buscar = int(id_ingresado)
 
         usuario_encontrado = None
         for u in usuarios:
@@ -187,7 +164,6 @@ def modificar_permisos():
 
         if not usuario_encontrado:
             mostrar_mensaje("No se encontró ningún usuario con el ID especificado.", "error")
-            console.input("[dim]Presione ENTER para continuar...[/dim]")
             return
 
         permisos_actuales = ", ".join(sorted(list(usuario_encontrado["permisos"])))
@@ -211,19 +187,15 @@ def modificar_permisos():
         else:
             mostrar_mensaje("Opción de acción no válida.", "error")
 
-        console.input("[dim]Presione ENTER para continuar...[/dim]")
-
     elif tipo == "2":
         console.print("\n[dim]Roles configurables: administrador | editor | lector[/dim]")
         rol = console.input("[bold cyan]Ingrese el nombre del rol a configurar:[/bold cyan] ").strip().lower()
 
-        try:
-            permisos_rol = ", ".join(sorted(list(roles_permisos[rol])))
-        except KeyError:
+        if rol not in roles_permisos:
             mostrar_mensaje("El rol ingresado no existe en el sistema.", "error")
-            console.input("[dim]Presione ENTER para continuar...[/dim]")
             return
 
+        permisos_rol = ", ".join(sorted(list(roles_permisos[rol])))
         console.print(f"\n[bold]Rol seleccionado:[/bold] [yellow]{rol}[/yellow]")
         console.print(f"[bold]Permisos actuales del rol:[/bold] [green]{permisos_rol}[/green]\n")
         
@@ -243,7 +215,6 @@ def modificar_permisos():
             mostrar_mensaje(f"Permisos revocados correctamente del rol '{rol}'.", "exito")
         else:
             mostrar_mensaje("Opción no válida.", "error")
-            console.input("[dim]Presione ENTER para continuar...[/dim]")
             return
 
         actualizar = console.input("\n[bold cyan]¿Desea sincronizar estos permisos en los usuarios existentes con este rol? (s/n):[/bold cyan] ").strip().lower()
@@ -253,11 +224,8 @@ def modificar_permisos():
                     u["permisos"] = roles_permisos[rol].copy()
             mostrar_mensaje("Todos los usuarios con dicho rol fueron actualizados.", "info")
 
-        console.input("[dim]Presione ENTER para continuar...[/dim]")
-
     else:
         mostrar_mensaje("Opción no válida seleccionada.", "error")
-        console.input("[dim]Presione ENTER para continuar...[/dim]")
 
 def login():
     console.print("\n[bold cyan]====================================================[/bold cyan]")
