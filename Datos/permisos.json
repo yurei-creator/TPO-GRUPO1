@@ -1,0 +1,9 @@
+[
+    [{
+    "administrador": {"gastos":true, "categorias":true, "presupuestos":true, "reportes":true, "usuarios":true},
+    "editor": {"gastos":true, "categorias":true, "presupuestos":true, "reportes":true},
+    "lector": {"reportes":true}
+    }] ,
+
+    ["gastos", "categorias", "presupuestos", "reportes", "usuarios"]
+]
