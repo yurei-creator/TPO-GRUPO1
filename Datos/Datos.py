@@ -4,29 +4,16 @@ import os
 # Datos iniciales del Sistema de Control de Gastos Personales y Familiares
 # Modelado canónico en matrices bidimensionales (listas de listas por fila)
 
-# Encabezados de entidades
-encabezadosC = ["ID", "Nombre", "Descripcion", "Estado"]
-encabezadosP = ["ID", "ID_Categoria", "Periodo", "Monto Limite", "Estado"]
-encabezadosG = ["ID", "Fecha", "Monto", "ID_Categoria", "Descripcion", "Estado"]
 
 # -------------------------------------------------------------------------
 # Entidad: Categorías
 # Fila: [ID, Nombre, Descripción, Estado]
 # -------------------------------------------------------------------------
-#categoria = [
-#    ["1", "Alimentos", "Gastos de supermercado, carnicería y verdulería", "Activo"],
-#    ["2", "Transporte", "Combustible, pasajes y mantenimiento vehicular", "Activo"],
-#    ["3", "Ocio", "Salidas, cine, restaurantes y recreación", "Activo"],
-#    ["4", "Salud", "Farmacia, consultas médicas y medicamentos", "Activo"],
-#    ["5", "Educación", "Cursos, libros y materiales de estudio", "Activo"],
-#]
-# presupuestos
-#1|1|01/08/2026-31/08/2026|50000.0|Activo
-#2|2|01/08/2026-31/08/2026|20000.0|Activo
-#3|3|01/08/2026-31/08/2026|15000.0|Activo
-#4|4|01/08/2026-31/08/2026|10000.0|Activo
-#5|5|01/08/2026-31/08/2026|12000.0|Activo
-#
+encabezadosG = ["ID", "Fecha", "Monto", "ID_Categoria", "Descripcion", "Estado"]
+encabezadosP = ["ID", "ID_Categoria", "Periodo", "Monto Limite", "Estado"]
+encabezadosC = ["ID", "Nombre", "Descripcion", "Estado"]
+categoria_ruta = r"Datos/categorias.txt"
+presupuesto_ruta = r"Datos/presupuestos.txt"
 # -------------------------------------------------------------------------
 # Entidad: Presupuestos
 # Fila: [ID, ID_Categoria, Período, Monto Límite, Estado]

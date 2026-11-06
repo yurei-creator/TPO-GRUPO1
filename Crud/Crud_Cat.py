@@ -8,72 +8,6 @@ from Datos.Datos import (
 )
 
 
-def agregar_categoria(categoria):
-    console.print("\n[bold green]--- [C] AGREGAR NUEVA CATEGORÍA ---[/bold green]")
-    ids_existentes = [int(c[0]) for c in categoria if c[0].isdigit()]
-    nuevo_id = str(max(ids_existentes) + 1) if ids_existentes else "1"
-
-    nombre = pedir_texto_no_vacio("Ingrese nombre de la categoría:")
-    
-    # Validar que no exista categoría activa con el mismo nombre
-    for c in categoria:
-        if c[1].lower() == nombre.lower() and c[3] == "Activo":
-            mostrar_mensaje(f"Ya existe una categoría activa con el nombre '{nombre}'.", "alerta")
-            console.input("[dim]Presione ENTER para continuar...[/dim]")
-            return
-
-    descripcion = pedir_texto_no_vacio("Ingrese descripción:")
-    categoria.append([nuevo_id, nombre, descripcion, "Activo"])
-    guardar_categorias(categoria)
-    mostrar_mensaje(f"Categoría '{nombre}' agregada exitosamente con ID: {nuevo_id}", "exito")
-    console.input("[dim]Presione ENTER para continuar...[/dim]")
-
-def obtener_ultimo_codigo(archivo=categoria_ruta):
-    ultimo_codigo = "1"
-    nombres = []
-
-    try:
-        arch = open(archivo, "r", encoding="UTF-8")
-
-        for linea in arch:
-            fila = linea.strip().split("|")
-
-            ultimo_codigo = int(fila[0])
-            nombres.append(fila[1])
-
-        arch.close()
-
-    except OSError as mensaje:
-        print("No se puede leer el archivo:", mensaje)
-
-    return ultimo_codigo, nombres
-
-
-def alta_categoria(archivo=categoria_ruta):
-    ultimo, nombres = obtener_ultimo_codigo()
-    nuevo_codigo = int(ultimo) + 1
-
-
-    nombre = pedir_texto_no_vacio("Ingrese nombre de la categoría:")
-    while nombre in nombres:
-        nombre = pedir_texto_no_vacio("Esa categoria ya existe, ingrese un nuevo nombre:")
-    descripcion = pedir_texto_no_vacio("Ingrese descripción:")
-    estado = "Activo"
-    
-    try:
-        arch = open(archivo, "a", encoding="UTF-8")
-        nueva_categoria = f'{nuevo_codigo}|{nombre}|{descripcion}|{estado}\n'
-        arch.write(nueva_categoria)
-        mostrar_mensaje(f"Categoría '{nombre}' agregada exitosamente con ID: {nuevo_codigo}", "exito")
-        console.input("[dim]Presione ENTER para continuar...[/dim]")
-    except OSError as mensaje:
-        print("No se puede grabar el archivo:", mensaje)
-    finally:
-        try:
-            arch.close()
-        except NameError:
-            pass
-
 def consultar_categoria(categoria, gastos, presupuestos, encabezadosC, encabezadosG):
     console.print("\n[bold yellow]--- [R] CONSULTAR / BUSCAR CATEGORÍA ---[/bold yellow]")
     if not categoria:
@@ -142,42 +76,7 @@ def consultar_categoria(categoria, gastos, presupuestos, encabezadosC, encabezad
     console.print()
     console.input("[dim]Presione ENTER para continuar...[/dim]")
 
-def modificar_categoria(categoria):
-    console.print("\n[bold blue]--- [U] MODIFICAR CATEGORÍA ---[/bold blue]")
-    activas = [c for c in categoria if c[3] == "Activo"]
-    if not activas:
-        mostrar_mensaje("No hay categorías activas para modificar.", "alerta")
-        console.input("[dim]Presione ENTER para continuar...[/dim]")
-        return
 
-    console.print("Seleccione la categoría a modificar:")
-    for i in range(len(activas)):
-        c = activas[i]
-        console.print(f"  [yellow]{i + 1}[/yellow]. ID {c[0]} - {c[1]} [dim]({c[2]})[/dim]")
-
-    opciones = [str(i + 1) for i in range(len(activas))]
-    opciones.append("0")
-    opc = pedir_opcion_menu("Número de categoría a modificar (0 para cancelar):", opciones)
-    if opc == "0":
-        return
-
-    idx_activa = int(opc) - 1
-    cat_seleccionada = activas[idx_activa]
-
-    console.print(f"\n[dim]Modificando '{cat_seleccionada[1]}' (ENTER para conservar valor):[/dim]")
-    cat_seleccionada[1] = pedir_opcional("Nuevo nombre", cat_seleccionada[1])
-    cat_seleccionada[2] = pedir_opcional("Nueva descripción", cat_seleccionada[2])
-
-    cambiar_est = pedir_texto_no_vacio(f"¿Desea cambiar el estado actual ({cat_seleccionada[3]})? (s/n):").lower()
-    if cambiar_est == "s":
-        cat_seleccionada[3] = "Inactivo" if cat_seleccionada[3] == "Activo" else "Activo"
-        mostrar_mensaje(f"Estado actualizado a: {cat_seleccionada[3]}", "info")
-
-    guardar_categorias(categoria)
-    mostrar_mensaje("Categoría actualizada correctamente.", "exito")
-    console.input("[dim]Presione ENTER para continuar...[/dim]")
-
-def eliminar_categoria(categoria):
     console.print("\n[bold red]--- [D] BAJA / REACTIVACIÓN LÓGICA DE CATEGORÍA ---[/bold red]")
     if not categoria:
         mostrar_mensaje("No hay categorías registradas.", "error")
