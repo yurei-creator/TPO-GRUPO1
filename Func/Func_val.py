@@ -4,33 +4,64 @@ from .Func_Rich import console, mostrar_mensaje
 def pedir_monto(mensaje):
     while True:
         entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] ").strip()
+        
         if not entrada:
-            mostrar_mensaje("El campo no puede estar vacío.", "error")
+            mostrar_mensaje("El monto no puede estar vacío.", "error")
+            continue
+            
+        partes = entrada.split(".")
+        
+        numeros_validos = True
+        if len(partes) > 2:
+            numeros_validos = False
+        else:
+            for p in partes:
+                if not p.isdigit():
+                    numeros_validos = False
+                    
+        if not numeros_validos:
+            mostrar_mensaje("Debe ingresar un monto numérico válido (ej: 1500 o 1500.50).", "error")
             continue
             
         try:
-            valor = float(entrada.replace(",", "."))
-            if valor <= 0:
-                mostrar_mensaje("El monto debe ser un número mayor a cero.", "alerta")
-                continue
-            return valor
+            monto = float(entrada)
+            if monto > 0:
+                return str(monto)
+            else:
+                mostrar_mensaje("El monto debe ser mayor a 0.", "error")
         except ValueError:
-            mostrar_mensaje("El formato ingresado no es un número válido.", "error")
+            mostrar_mensaje("Error inesperado en la conversión.", "error")
 
 def pedir_monto_opcional(mensaje, valor_actual):
     while True:
-        entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] [yellow][${valor_actual}][/yellow]: ").strip()
+        entrada = console.input(f"[bold cyan]{mensaje} (Actual: {valor_actual}) [Enter para omitir]:[/bold cyan] ").strip()
+        
         if not entrada:
-            return float(valor_actual)
+            return valor_actual
+            
+        partes = entrada.split(".")
+        
+        numeros_validos = True
+        
+        if len(partes) > 2:
+            numeros_validos = False
+        else:
+            for p in partes:
+                if not p.isdigit():
+                    numeros_validos = False
+                    
+        if not numeros_validos:
+            mostrar_mensaje("Debe ingresar un monto numérico válido (ej: 1500 o 1500.50).", "error")
+            continue
             
         try:
-            valor = float(entrada.replace(",", "."))
-            if valor <= 0:
-                mostrar_mensaje("El monto debe ser mayor a cero.", "alerta")
-                continue
-            return valor
+            monto = float(entrada)
+            if monto > 0:
+                return str(monto)
+            else:
+                mostrar_mensaje("El monto debe ser mayor a 0.", "error")
         except ValueError:
-            mostrar_mensaje("El formato ingresado no es un número válido.", "error")
+            mostrar_mensaje("Error inesperado en la conversión.", "error")
 
 def es_fecha_valida(fecha_str):
     try:
@@ -96,18 +127,25 @@ def pedir_opcional(mensaje, valor_actual):
 def pedir_opcion_menu(mensaje, opciones_validas):
     while True:
         entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] ").strip()
+        
         if not entrada:
-            mostrar_mensaje("Debe ingresar una opción.", "error")
+            mostrar_mensaje("La opción no puede estar vacía.", "error")
+            continue
+            
+        if not re.match(r"^[0-9]+$", entrada):
+            mostrar_mensaje("Debe ingresar únicamente números enteros positivos.", "error")
             continue
             
         try:
-            int(entrada)
-            if entrada not in opciones_validas:
-                mostrar_mensaje("Opción fuera de rango.", "error")
-                continue
-            return entrada
+            opcion = int(entrada)
+            
+            if str(opcion) in opciones_validas:
+                return str(opcion)
+            else:
+                mostrar_mensaje("La opción ingresada no es válida para este menú.", "error")
+                
         except ValueError:
-            mostrar_mensaje("Opción inválida. Seleccione una de las opciones numéricas disponibles.", "error")
+            mostrar_mensaje("Error inesperado en la conversión numérica.", "error")
 
 def seleccionar_categoria_id(categorias):
     console.print("\n[bold cyan]Seleccione una Categoría:[/bold cyan]")

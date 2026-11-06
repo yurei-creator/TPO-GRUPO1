@@ -40,7 +40,8 @@ def registrar_usuario():
         if not username:
             mostrar_mensaje("El nombre de usuario no puede estar vacío.", "error")
             continue
-        if any(u["user"] == username for u in usuarios):
+        coincidencias = [u for u in usuarios if u.get("user") == username]
+        if coincidencias:
             mostrar_mensaje("El nombre de usuario ingresado ya existe.", "error")
             continue
         break 
@@ -100,7 +101,8 @@ def eliminar_usuario(usuario_actual=None):
             mostrar_mensaje("El ID ingresado debe ser un valor numérico.", "error")
             continue
 
-        user_sel = next((u for u in usuarios if u["id"] == id_buscar), None)
+        coincidencias = [u for u in usuarios if u.get("id") == id_buscar]
+        user_sel = coincidencias[0] if coincidencias else None
 
         if not user_sel:
             mostrar_mensaje("No se encontró ningún usuario con el ID especificado.", "error")
@@ -192,7 +194,8 @@ def modificar_permisos():
                 mostrar_mensaje("El ID ingresado debe ser un valor numérico.", "error")
                 continue
 
-            usuario_encontrado = next((u for u in usuarios if u["id"] == id_buscar), None)
+            coincidencias = [u for u in usuarios if u.get("id") == id_buscar]
+            usuario_encontrado = coincidencias[0] if coincidencias else None
 
             if not usuario_encontrado:
                 mostrar_mensaje("No se encontró ningún usuario con el ID especificado.", "error")
