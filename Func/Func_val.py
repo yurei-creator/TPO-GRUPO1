@@ -3,34 +3,28 @@ from .Func_Rich import console, mostrar_mensaje
 
 def pedir_monto(mensaje):
     while True:
+        entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] ").strip()
+        if not entrada:
+            mostrar_mensaje("El campo no puede estar vacío.", "error")
+            continue
+            
         try:
-            entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] ").strip()
-            if len(entrada) == 0:
-                raise ValueError("El campo no puede estar vacío.")
-            
-            entrada_norm = entrada.replace(",", ".")
-            valor = float(entrada_norm)
-            
+            valor = float(entrada.replace(",", "."))
             if valor <= 0:
                 mostrar_mensaje("El monto debe ser un número mayor a cero.", "alerta")
                 continue
             return valor
-        except ValueError as e:
-            if "vacío" in str(e):
-                mostrar_mensaje(str(e), "error")
-            else:
-                mostrar_mensaje("El formato ingresado no es un número válido.", "error")
+        except ValueError:
+            mostrar_mensaje("El formato ingresado no es un número válido.", "error")
 
 def pedir_monto_opcional(mensaje, valor_actual):
     while True:
+        entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] [yellow][${valor_actual}][/yellow]: ").strip()
+        if not entrada:
+            return float(valor_actual)
+            
         try:
-            entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] [yellow][${valor_actual}][/yellow]: ").strip()
-            if len(entrada) == 0:
-                return float(valor_actual)
-            
-            entrada_norm = entrada.replace(",", ".")
-            valor = float(entrada_norm)
-            
+            valor = float(entrada.replace(",", "."))
             if valor <= 0:
                 mostrar_mensaje("El monto debe ser mayor a cero.", "alerta")
                 continue
@@ -65,35 +59,30 @@ def es_fecha_valida(fecha_str):
 
 def solicitar_y_verificar_fecha(mensaje="Ingrese fecha (DD/MM/AAAA):"):
     while True:
-        try:
-            entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] ").strip()
-            if not es_fecha_valida(entrada):
-                raise ValueError("Fecha inválida en el calendario. Use el formato DD/MM/AAAA.")
-            return entrada
-        except ValueError as e:
-            mostrar_mensaje(str(e), "error")
+        entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] ").strip()
+        if not es_fecha_valida(entrada):
+            mostrar_mensaje("Fecha inválida en el calendario. Use el formato DD/MM/AAAA.", "error")
+            continue
+        return entrada
 
 def solicitar_fecha_opcional(mensaje, fecha_actual):
     while True:
-        try:
-            entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] [yellow][{fecha_actual}][/yellow]: ").strip()
-            if len(entrada) == 0:
-                return fecha_actual
-            if not es_fecha_valida(entrada):
-                raise ValueError("Fecha inválida en el calendario. Use el formato DD/MM/AAAA.")
-            return entrada
-        except ValueError as e:
-            mostrar_mensaje(str(e), "error")
+        entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] [yellow][{fecha_actual}][/yellow]: ").strip()
+        if not entrada:
+            return fecha_actual
+            
+        if not es_fecha_valida(entrada):
+            mostrar_mensaje("Fecha inválida en el calendario. Use el formato DD/MM/AAAA.", "error")
+            continue
+        return entrada
 
 def pedir_texto_no_vacio(mensaje):
     while True:
-        try:
-            entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] ").strip()
-            if len(entrada) == 0:
-                raise ValueError("Este campo no puede estar vacío.")
-            return entrada
-        except ValueError as e:
-            mostrar_mensaje(str(e), "error")
+        entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] ").strip()
+        if not entrada:
+            mostrar_mensaje("Este campo no puede estar vacío.", "error")
+            continue
+        return entrada
 
 def pedir_opcional(mensaje, valor_actual):
     try:
@@ -106,11 +95,16 @@ def pedir_opcional(mensaje, valor_actual):
 
 def pedir_opcion_menu(mensaje, opciones_validas):
     while True:
+        entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] ").strip()
+        if not entrada:
+            mostrar_mensaje("Debe ingresar una opción.", "error")
+            continue
+            
         try:
-            entrada = console.input(f"[bold cyan]{mensaje}[/bold cyan] ").strip()
             int(entrada)
             if entrada not in opciones_validas:
-                raise ValueError("Opción fuera de rango.")
+                mostrar_mensaje("Opción fuera de rango.", "error")
+                continue
             return entrada
         except ValueError:
             mostrar_mensaje("Opción inválida. Seleccione una de las opciones numéricas disponibles.", "error")
