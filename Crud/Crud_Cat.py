@@ -2,9 +2,31 @@ from Func.Func_Rich import console, mostrar_mensaje, renderizar_tabla
 from Func.Func_val import pedir_texto_no_vacio, pedir_opcional, pedir_opcion_menu
 from Func.Func_Matriz import fila_a_diccionario
 from rich.table import Table
+from Datos.Datos import (
+    guardar_categorias,
+    categoria_ruta
+)
 
-from Datos.Datos import categoria_ruta
 
+def agregar_categoria(categoria):
+    console.print("\n[bold green]--- [C] AGREGAR NUEVA CATEGORÍA ---[/bold green]")
+    ids_existentes = [int(c[0]) for c in categoria if c[0].isdigit()]
+    nuevo_id = str(max(ids_existentes) + 1) if ids_existentes else "1"
+
+    nombre = pedir_texto_no_vacio("Ingrese nombre de la categoría:")
+    
+    # Validar que no exista categoría activa con el mismo nombre
+    for c in categoria:
+        if c[1].lower() == nombre.lower() and c[3] == "Activo":
+            mostrar_mensaje(f"Ya existe una categoría activa con el nombre '{nombre}'.", "alerta")
+            console.input("[dim]Presione ENTER para continuar...[/dim]")
+            return
+
+    descripcion = pedir_texto_no_vacio("Ingrese descripción:")
+    categoria.append([nuevo_id, nombre, descripcion, "Activo"])
+    guardar_categorias(categoria)
+    mostrar_mensaje(f"Categoría '{nombre}' agregada exitosamente con ID: {nuevo_id}", "exito")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
 
 def obtener_ultimo_codigo(archivo=categoria_ruta):
     ultimo_codigo = "1"
@@ -151,6 +173,7 @@ def modificar_categoria(categoria):
         cat_seleccionada[3] = "Inactivo" if cat_seleccionada[3] == "Activo" else "Activo"
         mostrar_mensaje(f"Estado actualizado a: {cat_seleccionada[3]}", "info")
 
+    guardar_categorias(categoria)
     mostrar_mensaje("Categoría actualizada correctamente.", "exito")
     console.input("[dim]Presione ENTER para continuar...[/dim]")
 
@@ -190,4 +213,5 @@ def eliminar_categoria(categoria):
             mostrar_mensaje(f"Categoría '{c[1]}' dada de baja correctamente (Inactivo).", "exito")
         else:
             mostrar_mensaje("Operación cancelada.", "info")
+    guardar_categorias(categoria)
     console.input("[dim]Presione ENTER para continuar...[/dim]")
