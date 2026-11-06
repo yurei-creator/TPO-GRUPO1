@@ -46,18 +46,18 @@ from Func.Func_Estadisticas import (
     simulacion_proyeccion_inflacion
 )
 
-def menu_categorias(gastos, presupuestos, encabezadosC, encabezadosG):
+def menu_categorias(categoria, gastos, presupuestos, encabezadosC, encabezadosG):
     activo = True
-    opciones = [
+    opciones = (
         "Mostrar todas las categorías",
         "Consultar / Buscar categoría",
         "Agregar categoría",
         "Modificar categoría",
         "Baja / Reactivación lógica de categoría",
-    ]
+    )
     while activo:
         mostrar_menu("GESTIÓN DE CATEGORÍAS", opciones)
-        opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4", "5"])
+        opc = pedir_opcion_menu("Seleccione una opción:", ("0", "1", "2", "3", "4", "5"))
 
         if opc == "1":
             mostrar_categorias()
@@ -75,16 +75,16 @@ def menu_categorias(gastos, presupuestos, encabezadosC, encabezadosG):
 
 def menu_presupuestos(presupuestos, categoria, gastos, encabezadosP):
     activo = True
-    opciones = [
+    opciones = (
         "Mostrar todos los presupuestos",
         "Consultar / Buscar presupuesto",
         "Agregar presupuesto",
         "Modificar presupuesto",
         "Baja / Reactivación lógica de presupuesto",
-    ]
+    )
     while activo:
         mostrar_menu("GESTIÓN DE PRESUPUESTOS", opciones)
-        opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4", "5"])
+        opc = pedir_opcion_menu("Seleccione una opción:", ("0", "1", "2", "3", "4", "5"))
 
         if opc == "1":
             print("Mostrar presupuestos")
@@ -106,17 +106,17 @@ def menu_presupuestos(presupuestos, categoria, gastos, encabezadosP):
 
 def menu_gastos(gastos, categoria, presupuestos, encabezadosG):
     activo = True
-    opciones = [
+    opciones = (
         "Mostrar todos los gastos",
         "Consultar / Buscar gasto específico",
         "Registrar nuevo gasto",
         "Modificar gasto",
         "Baja / Reactivación lógica de gasto",
         "Consultar gastos por rango de fechas",
-    ]
+    )
     while activo:
         mostrar_menu("GESTIÓN DE GASTOS", opciones)
-        opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4", "5", "6"])
+        opc = pedir_opcion_menu("Seleccione una opción:", ("0", "1", "2", "3", "4", "5", "6"))
 
         if opc == "1":
             mostrar_gastos(gastos, categoria, encabezadosG)
@@ -135,7 +135,7 @@ def menu_gastos(gastos, categoria, presupuestos, encabezadosG):
 
 def menu_estadisticas(gastos, categoria, presupuestos, encabezadosG):
     activo = True
-    opciones = [
+    opciones = (
         "Resumen Estadístico General Consolidado",
         "Reporte de Promedios (General y por Categoría)",
         "Conteo de Registros Totales y por Categoría",
@@ -144,10 +144,10 @@ def menu_estadisticas(gastos, categoria, presupuestos, encabezadosG):
         "Comparativa Gasto Real vs. Presupuesto Previsto",
         "Ordenamiento dinámico de gastos",
         "Estimación de variación e inflación",
-    ]
+    )
     while activo:
         mostrar_menu("REPORTES Y ESTADÍSTICAS DEL SISTEMA", opciones)
-        opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4", "5", "6", "7", "8"])
+        opc = pedir_opcion_menu("Seleccione una opción:", ("0", "1", "2", "3", "4", "5", "6", "7", "8"))
 
         if opc == "1":
             mostrar_resumen_estadistico_completo(gastos, categoria, presupuestos)
@@ -170,15 +170,15 @@ def menu_estadisticas(gastos, categoria, presupuestos, encabezadosG):
 
 def menu_usuarios(usuario_actual=None):
     activo = True
-    opciones = [
+    opciones = (
         "Listar usuarios registrados",
         "Registrar nuevo usuario",
         "Modificar permisos de usuario o rol",
         "Baja / Reactivación lógica de usuario",
-    ]
+    )
     while activo:
         mostrar_menu("ADMINISTRACIÓN DE USUARIOS Y PERMISOS", opciones)
-        opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4"])
+        opc = pedir_opcion_menu("Seleccione una opción:", ("0", "1", "2", "3", "4"))
 
         if opc == "1":
             listar_usuarios()
@@ -191,16 +191,16 @@ def menu_usuarios(usuario_actual=None):
         elif opc == "0":
             activo = False
 
-def menu_principal(usuario, presupuestos, gastos, encabezadosC, encabezadosP, encabezadosG):
+def menu_principal(usuario, categoria, presupuestos, gastos, encabezadosC, encabezadosP, encabezadosG):
     ejecutando = True
 
-    modulos = [
+    modulos = (
         ("gastos", "Gestión de Gastos (CRUD)"),
         ("presupuestos", "Gestión de Presupuestos (CRUD)"),
         ("categorias", "Gestión de Categorías (CRUD)"),
         ("reportes", "Reportes y Estadísticas Financieras"),
         ("usuarios", "Administración de Usuarios y Permisos"),
-    ]
+    )
 
     while ejecutando:
         disponibles = []
@@ -209,14 +209,14 @@ def menu_principal(usuario, presupuestos, gastos, encabezadosC, encabezadosP, en
             if verificar_permiso(usuario, permiso):
                 disponibles.append((permiso, texto))
 
-        opciones_texto = [d[1] for d in disponibles]
+        opciones_texto = tuple(d[1] for d in disponibles)
         mostrar_menu("SISTEMA DE CONTROL DE GASTOS PERSONALES Y FAMILIARES", opciones_texto)
 
         opciones_validas = ["0"]
         for i in range(len(disponibles)):
             opciones_validas.append(str(i + 1))
 
-        opcion = pedir_opcion_menu("Seleccione una opción:", opciones_validas)
+        opcion = pedir_opcion_menu("Seleccione una opción:", tuple(opciones_validas))
 
         if opcion == "0":
             mostrar_mensaje("¡Gracias por utilizar el sistema! Sesión finalizada.", "info")
@@ -226,14 +226,12 @@ def menu_principal(usuario, presupuestos, gastos, encabezadosC, encabezadosP, en
             permiso_elegido = disponibles[indice][0]
 
             if permiso_elegido == "gastos":
-                print("GASTOS-TESTING")
-                menu_gastos(gastos, presupuestos, encabezadosG)
+                menu_gastos(gastos, categoria, presupuestos, encabezadosG)
             elif permiso_elegido == "presupuestos":
-                menu_presupuestos(presupuestos, gastos, encabezadosP)
+                menu_presupuestos(presupuestos, categoria, gastos, encabezadosP)
             elif permiso_elegido == "categorias":
-                menu_categorias(gastos, presupuestos, encabezadosC, encabezadosG)
+                menu_categorias(categoria, gastos, presupuestos, encabezadosC, encabezadosG)
             elif permiso_elegido == "reportes":
-                menu_estadisticas(gastos, presupuestos, encabezadosG)
+                menu_estadisticas(gastos, categoria, presupuestos, encabezadosG)
             elif permiso_elegido == "usuarios":
                 menu_usuarios(usuario)
-

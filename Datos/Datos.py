@@ -1,3 +1,6 @@
+
+import os
+
 # Datos iniciales del Sistema de Control de Gastos Personales y Familiares
 # Modelado canónico en matrices bidimensionales (listas de listas por fila)
 
@@ -15,14 +18,8 @@ presupuesto_ruta = r"Datos/presupuestos.txt"
 # Entidad: Presupuestos
 # Fila: [ID, ID_Categoria, Período, Monto Límite, Estado]
 # -------------------------------------------------------------------------
-presupuestos = [
-    ["1", "1", "01/08/2026-31/08/2026", 50000.0, "Activo"],
-    ["2", "2", "01/08/2026-31/08/2026", 20000.0, "Activo"],
-    ["3", "3", "01/08/2026-31/08/2026", 15000.0, "Activo"],
-    ["4", "4", "01/08/2026-31/08/2026", 10000.0, "Activo"],
-    ["5", "5", "01/08/2026-31/08/2026", 12000.0, "Activo"],
-]
-
+presupuesto_ruta = "Datos/presupuestos.txt"
+categoria_ruta = "Datos/categorias.txt"
 # -------------------------------------------------------------------------
 # Entidad: Gastos (Entidad de Unión)
 # Fila: [ID, Fecha, Monto, ID_Categoria, Descripción, Estado]
@@ -75,3 +72,45 @@ usuarios = [
         "estado": "Activo"
     }
 ]
+
+
+
+def cargar_presupuestos(ruta=presupuesto_ruta):
+    presupuestos = []
+    try:
+        with open(ruta, "r", encoding="utf-8") as archivo:
+            for linea in archivo:
+                linea = linea.strip()
+                if not linea:
+                    continue
+                id_p, id_cat, periodo, monto, estado = linea.split("|")
+                presupuestos.append([id_p, id_cat, periodo, float(monto), estado])
+    except FileNotFoundError:
+        print("El archivo esta vacio")
+    return presupuestos
+
+def cargar_categorias(ruta=categoria_ruta):
+    categorias = []
+    try:
+        with open(ruta, "r", encoding="utf-8") as archivo:
+            for linea in archivo:
+                linea = linea.strip()
+                if not linea:
+                    continue
+                id_cat, nombre, descripcion, estado= linea.split("|")
+                categorias.append([id_cat, nombre, descripcion, estado])
+    except FileNotFoundError:
+        print("El archivo esta vacio")
+    return categorias
+
+def guardar_presupuestos(matriz, ruta=presupuesto_ruta):
+    with open(ruta, "w", encoding="utf-8") as archivo:
+        for fila in matriz:
+            archivo.write("|".join(str(campo) for campo in fila) + "\n")
+
+
+def guardar_categorias(matriz, ruta=categoria_ruta):
+    with open(ruta, "w", encoding="utf-8") as archivo:
+        for fila in matriz:
+            archivo.write("|".join(str(campo) for campo in fila) + "\n")
+

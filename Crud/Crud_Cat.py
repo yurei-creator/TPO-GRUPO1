@@ -2,6 +2,10 @@ from Func.Func_Rich import console, mostrar_mensaje, renderizar_tabla
 from Func.Func_val import pedir_texto_no_vacio, pedir_opcional, pedir_opcion_menu
 from Func.Func_Matriz import fila_a_diccionario
 from rich.table import Table
+from Datos.Datos import (
+    guardar_categorias,
+    categoria_ruta
+)
 
 
 def consultar_categoria(categoria, gastos, presupuestos, encabezadosC, encabezadosG):
@@ -108,4 +112,5 @@ def consultar_categoria(categoria, gastos, presupuestos, encabezadosC, encabezad
             mostrar_mensaje(f"Categoría '{c[1]}' dada de baja correctamente (Inactivo).", "exito")
         else:
             mostrar_mensaje("Operación cancelada.", "info")
+    guardar_categorias(categoria)
     console.input("[dim]Presione ENTER para continuar...[/dim]")
