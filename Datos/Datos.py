@@ -6,9 +6,9 @@
 # Entidad: Categorías
 # Fila: [ID, Nombre, Descripción, Estado]
 # -------------------------------------------------------------------------
-encabezadosG = ["ID", "Fecha", "Monto", "ID_Categoria", "Descripcion", "Estado"]
-encabezadosP = ["ID", "ID_Categoria", "Periodo", "Monto Limite", "Estado"]
-encabezadosC = ["ID", "Nombre", "Descripcion", "Estado"]
+encabezadosG = ("ID", "Fecha", "Monto", "ID_Categoria", "Descripcion", "Estado")
+encabezadosP = ("ID", "ID_Categoria", "Periodo", "Monto Limite", "Estado")
+encabezadosC = ("ID", "Nombre", "Descripcion", "Estado")
 categoria_ruta = r"Datos/categorias.txt"
 presupuesto_ruta = r"Datos/presupuestos.txt"
 # -------------------------------------------------------------------------
