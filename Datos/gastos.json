@@ -1,0 +1,66 @@
+[
+  {
+    "id": "1",
+    "fecha": "01/08/2026",
+    "monto": 12500.0,
+    "categoria_id": "1",
+    "descripcion": "Supermercado compra semanal",
+    "estado": "Activo"
+  },
+  {
+    "id": "2",
+    "fecha": "02/08/2026",
+    "monto": 4500.0,
+    "categoria_id": "2",
+    "descripcion": "Carga de combustible",
+    "estado": "Activo"
+  },
+  {
+    "id": "3",
+    "fecha": "03/08/2026",
+    "monto": 3200.0,
+    "categoria_id": "3",
+    "descripcion": "Entradas de cine y combo",
+    "estado": "Activo"
+  },
+  {
+    "id": "4",
+    "fecha": "04/08/2026",
+    "monto": 1800.0,
+    "categoria_id": "4",
+    "descripcion": "Farmacia medicamentos",
+    "estado": "Activo"
+  },
+  {
+    "id": "5",
+    "fecha": "05/08/2026",
+    "monto": 7500.0,
+    "categoria_id": "5",
+    "descripcion": "Pago cuota curso online",
+    "estado": "Activo"
+  },
+  {
+    "id": "6",
+    "fecha": "10/08/2026",
+    "monto": 18200.0,
+    "categoria_id": "1",
+    "descripcion": "Compra mensual supermercado",
+    "estado": "Activo"
+  },
+  {
+    "id": "7",
+    "fecha": "12/08/2026",
+    "monto": 6000.0,
+    "categoria_id": "2",
+    "descripcion": "Recarga de tarjeta transporte",
+    "estado": "Activo"
+  },
+  {
+    "id": "8",
+    "fecha": "15/08/2026",
+    "monto": 5400.0,
+    "categoria_id": "3",
+    "descripcion": "Cena con amigos",
+    "estado": "Activo"
+  }
+]

@@ -3,25 +3,54 @@ from Func.Func_val import pedir_texto_no_vacio, pedir_opcional, pedir_opcion_men
 from Func.Func_Matriz import fila_a_diccionario
 from rich.table import Table
 
-def agregar_categoria(categoria):
-    console.print("\n[bold green]--- [C] AGREGAR NUEVA CATEGORÍA ---[/bold green]")
-    ids_existentes = [int(c[0]) for c in categoria if c[0].isdigit()]
-    nuevo_id = str(max(ids_existentes) + 1) if ids_existentes else "1"
+from Datos.Datos import categoria_ruta
+
+
+def obtener_ultimo_codigo(archivo=categoria_ruta):
+    ultimo_codigo = "1"
+    nombres = []
+
+    try:
+        arch = open(archivo, "r", encoding="UTF-8")
+
+        for linea in arch:
+            fila = linea.strip().split("|")
+
+            ultimo_codigo = int(fila[0])
+            nombres.append(fila[1])
+
+        arch.close()
+
+    except OSError as mensaje:
+        print("No se puede leer el archivo:", mensaje)
+
+    return ultimo_codigo, nombres
+
+
+def alta_categoria(archivo=categoria_ruta):
+    ultimo, nombres = obtener_ultimo_codigo()
+    nuevo_codigo = int(ultimo) + 1
+
 
     nombre = pedir_texto_no_vacio("Ingrese nombre de la categoría:")
-    
-    # Validar que no exista categoría activa con el mismo nombre
-    for c in categoria:
-        if c[1].lower() == nombre.lower() and c[3] == "Activo":
-            mostrar_mensaje(f"Ya existe una categoría activa con el nombre '{nombre}'.", "alerta")
-            console.input("[dim]Presione ENTER para continuar...[/dim]")
-            return
-
+    while nombre in nombres:
+        nombre = pedir_texto_no_vacio("Esa categoria ya existe, ingrese un nuevo nombre:")
     descripcion = pedir_texto_no_vacio("Ingrese descripción:")
-    categoria.append([nuevo_id, nombre, descripcion, "Activo"])
-
-    mostrar_mensaje(f"Categoría '{nombre}' agregada exitosamente con ID: {nuevo_id}", "exito")
-    console.input("[dim]Presione ENTER para continuar...[/dim]")
+    estado = "Activo"
+    
+    try:
+        arch = open(archivo, "a", encoding="UTF-8")
+        nueva_categoria = f'{nuevo_codigo}|{nombre}|{descripcion}|{estado}\n'
+        arch.write(nueva_categoria)
+        mostrar_mensaje(f"Categoría '{nombre}' agregada exitosamente con ID: {nuevo_codigo}", "exito")
+        console.input("[dim]Presione ENTER para continuar...[/dim]")
+    except OSError as mensaje:
+        print("No se puede grabar el archivo:", mensaje)
+    finally:
+        try:
+            arch.close()
+        except NameError:
+            pass
 
 def consultar_categoria(categoria, gastos, presupuestos, encabezadosC, encabezadosG):
     console.print("\n[bold yellow]--- [R] CONSULTAR / BUSCAR CATEGORÍA ---[/bold yellow]")
@@ -161,5 +190,4 @@ def eliminar_categoria(categoria):
             mostrar_mensaje(f"Categoría '{c[1]}' dada de baja correctamente (Inactivo).", "exito")
         else:
             mostrar_mensaje("Operación cancelada.", "info")
-
     console.input("[dim]Presione ENTER para continuar...[/dim]")

@@ -6,21 +6,22 @@
 
 from Menus.menus import menu_principal
 from Datos.Datos import (
-    categoria,
     presupuestos,
     gastos,
     encabezadosC,
     encabezadosP,
     encabezadosG
 )
+
 from Crud.Crud_Usuarios import login
 
 def main():
+
     usuario = login()
     if usuario:
+        print(encabezadosG)
         menu_principal(
             usuario,
-            categoria,
             presupuestos,
             gastos,
             encabezadosC,

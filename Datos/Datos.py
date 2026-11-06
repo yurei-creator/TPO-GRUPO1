@@ -10,14 +10,10 @@ encabezadosG = ["ID", "Fecha", "Monto", "ID_Categoria", "Descripcion", "Estado"]
 # Entidad: Categorías
 # Fila: [ID, Nombre, Descripción, Estado]
 # -------------------------------------------------------------------------
-categoria = [
-    ["1", "Alimentos", "Gastos de supermercado, carnicería y verdulería", "Activo"],
-    ["2", "Transporte", "Combustible, pasajes y mantenimiento vehicular", "Activo"],
-    ["3", "Ocio", "Salidas, cine, restaurantes y recreación", "Activo"],
-    ["4", "Salud", "Farmacia, consultas médicas y medicamentos", "Activo"],
-    ["5", "Educación", "Cursos, libros y materiales de estudio", "Activo"],
-]
-
+encabezadosG = ["ID", "Fecha", "Monto", "ID_Categoria", "Descripcion", "Estado"]
+encabezadosP = ["ID", "ID_Categoria", "Periodo", "Monto Limite", "Estado"]
+encabezadosC = ["ID", "Nombre", "Descripcion", "Estado"]
+categoria_ruta = r"Datos/categorias.txt"
 # -------------------------------------------------------------------------
 # Entidad: Presupuestos
 # Fila: [ID, ID_Categoria, Período, Monto Límite, Estado]

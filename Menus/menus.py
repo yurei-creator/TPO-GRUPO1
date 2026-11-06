@@ -2,10 +2,10 @@ from Func.Func_Rich import console, mostrar_mensaje, mostrar_menu
 from Func.Func_Matriz import mostrar_categorias, mostrar_presupuestos, mostrar_gastos
 from Func.Func_val import pedir_opcion_menu
 from Crud.Crud_Cat import (
-    agregar_categoria,
     consultar_categoria,
     modificar_categoria,
-    eliminar_categoria
+    eliminar_categoria,
+    alta_categoria
 )
 from Crud.Crud_Pres import (
     agregar_presupuesto,
@@ -38,7 +38,7 @@ from Func.Func_Estadisticas import (
     simulacion_proyeccion_inflacion
 )
 
-def menu_categorias(categoria, gastos, presupuestos, encabezadosC, encabezadosG):
+def menu_categorias(gastos, presupuestos, encabezadosC, encabezadosG):
     activo = True
     opciones = [
         "Mostrar todas las categorías",
@@ -56,7 +56,7 @@ def menu_categorias(categoria, gastos, presupuestos, encabezadosC, encabezadosG)
         elif opc == "2":
             consultar_categoria(categoria, gastos, presupuestos, encabezadosC, encabezadosG)
         elif opc == "3":
-            agregar_categoria(categoria)
+            alta_categoria()
         elif opc == "4":
             modificar_categoria(categoria)
         elif opc == "5":
@@ -177,7 +177,7 @@ def menu_usuarios(usuario_actual=None):
         elif opc == "0":
             activo = False
 
-def menu_principal(usuario, categoria, presupuestos, gastos, encabezadosC, encabezadosP, encabezadosG):
+def menu_principal(usuario, presupuestos, gastos, encabezadosC, encabezadosP, encabezadosG):
     ejecutando = True
 
     modulos = [
@@ -212,13 +212,14 @@ def menu_principal(usuario, categoria, presupuestos, gastos, encabezadosC, encab
             permiso_elegido = disponibles[indice][0]
 
             if permiso_elegido == "gastos":
-                menu_gastos(gastos, categoria, presupuestos, encabezadosG)
+                print("GASTOS-TESTING")
+                menu_gastos(gastos, presupuestos, encabezadosG)
             elif permiso_elegido == "presupuestos":
-                menu_presupuestos(presupuestos, categoria, gastos, encabezadosP)
+                menu_presupuestos(presupuestos, gastos, encabezadosP)
             elif permiso_elegido == "categorias":
-                menu_categorias(categoria, gastos, presupuestos, encabezadosC, encabezadosG)
+                menu_categorias(gastos, presupuestos, encabezadosC, encabezadosG)
             elif permiso_elegido == "reportes":
-                menu_estadisticas(gastos, categoria, presupuestos, encabezadosG)
+                menu_estadisticas(gastos, presupuestos, encabezadosG)
             elif permiso_elegido == "usuarios":
                 menu_usuarios(usuario)
 

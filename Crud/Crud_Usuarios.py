@@ -235,8 +235,8 @@ def login():
     max_intentos = 3
     
     while intentos < max_intentos:
-        user = console.input("[bold]Usuario:[/bold] ").strip()
-        clave = console.input("[bold]Contraseña:[/bold] ").strip()
+        user = "admin" #console.input("[bold]Usuario:[/bold] ").strip()
+        clave = "Admin1234" #console.input("[bold]Contraseña:[/bold] ").strip()
         
         for u in usuarios:
             if u["user"] == user and u["pass"] == clave:
