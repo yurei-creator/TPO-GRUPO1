@@ -1,10 +1,6 @@
 # Datos iniciales del Sistema de Control de Gastos Personales y Familiares
 # Modelado canónico en matrices bidimensionales (listas de listas por fila)
 
-# Encabezados de entidades
-encabezadosC = ["ID", "Nombre", "Descripcion", "Estado"]
-encabezadosP = ["ID", "ID_Categoria", "Periodo", "Monto Limite", "Estado"]
-encabezadosG = ["ID", "Fecha", "Monto", "ID_Categoria", "Descripcion", "Estado"]
 
 # -------------------------------------------------------------------------
 # Entidad: Categorías
@@ -14,6 +10,7 @@ encabezadosG = ["ID", "Fecha", "Monto", "ID_Categoria", "Descripcion", "Estado"]
 encabezadosP = ["ID", "ID_Categoria", "Periodo", "Monto Limite", "Estado"]
 encabezadosC = ["ID", "Nombre", "Descripcion", "Estado"]
 categoria_ruta = r"Datos/categorias.txt"
+presupuesto_ruta = r"Datos/presupuestos.txt"
 # -------------------------------------------------------------------------
 # Entidad: Presupuestos
 # Fila: [ID, ID_Categoria, Período, Monto Límite, Estado]

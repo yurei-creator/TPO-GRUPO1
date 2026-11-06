@@ -2,16 +2,24 @@ from Func.Func_Rich import console, mostrar_mensaje, mostrar_menu
 from Func.Func_Matriz import mostrar_categorias, mostrar_presupuestos, mostrar_gastos
 from Func.Func_val import pedir_opcion_menu
 from Crud.Crud_Cat import (
-    consultar_categoria,
-    modificar_categoria,
-    eliminar_categoria,
-    alta_categoria
+    consultar_categoria
 )
-from Crud.Crud_Pres import (
-    agregar_presupuesto,
-    consultar_presupuesto,
+from Crud.Crud_Categorias.Crud_Cat import (
+    eliminar_categoria,
+    mostrar_categorias,
+    alta_categoria,
+    modificar_categoria
+    )
+
+from Crud.Crud_Presupuestos.Crud_Pres import (
+    mostrar_presupuestos,
+    eliminar_presupuesto,
     modificar_presupuesto,
-    eliminar_presupuesto
+    agregar_presupuesto
+)
+
+from Crud.Crud_Pres import (
+    consultar_presupuesto
 )
 from Crud.Crud_Gast import (
     agregar_gasto,
@@ -52,15 +60,16 @@ def menu_categorias(gastos, presupuestos, encabezadosC, encabezadosG):
         opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4", "5"])
 
         if opc == "1":
-            mostrar_categorias(categoria, encabezadosC)
+            mostrar_categorias()
         elif opc == "2":
-            consultar_categoria(categoria, gastos, presupuestos, encabezadosC, encabezadosG)
+            print("Consultar categorias)")
+            #consultar_categoria(gastos, presupuestos, encabezadosC, encabezadosG)
         elif opc == "3":
             alta_categoria()
         elif opc == "4":
-            modificar_categoria(categoria)
+            modificar_categoria()
         elif opc == "5":
-            eliminar_categoria(categoria)
+            eliminar_categoria()
         elif opc == "0":
             activo = False
 
@@ -78,15 +87,20 @@ def menu_presupuestos(presupuestos, categoria, gastos, encabezadosP):
         opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4", "5"])
 
         if opc == "1":
-            mostrar_presupuestos(presupuestos, categoria, encabezadosP)
+            print("Mostrar presupuestos")
+            mostrar_presupuestos()
         elif opc == "2":
-            consultar_presupuesto(presupuestos, categoria, gastos, encabezadosP)
+            print("Consultar presupuestos")
+            #consultar_presupuesto(presupuestos, categoria, gastos, encabezadosP)
         elif opc == "3":
-            agregar_presupuesto(presupuestos, categoria)
+            print("Agregar presupuestos")
+            agregar_presupuesto()
         elif opc == "4":
-            modificar_presupuesto(presupuestos, categoria)
+            print("Modificar presupuestos")
+            modificar_presupuesto()
         elif opc == "5":
-            eliminar_presupuesto(presupuestos, categoria)
+            print("Eliminar presupuestos")
+            eliminar_presupuesto()
         elif opc == "0":
             activo = False
 
