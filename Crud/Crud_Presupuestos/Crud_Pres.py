@@ -339,3 +339,35 @@ def agregar_presupuesto(archivo=presupuesto_ruta, archivo_cat=categoria_ruta):
     )
 
     console.input("[dim]Presione ENTER para continuar...[/dim]")
+
+def buscar_presupuesto(archivo=presupuesto_ruta):
+
+    console.print("\n[bold yellow]--- BUSCAR PRESUPUESTO POR ID ---[/bold yellow]")
+    busqueda = pedir_texto_no_vacio("Ingrese el ID del presupuesto:").strip().lower()
+    encontrado = False
+
+    try:
+        arch = open(archivo, "r", encoding="UTF-8")
+        linea = arch.readline()
+        while linea and not encontrado:
+            linea = linea.strip()
+            if linea:
+                try:
+                    id_p, id_cat, periodo, limite, estado = linea.split("|")
+                    if id_p.lower() == busqueda:
+                        encontrado = True
+                        console.print(f'\n{"ID":6}{"Categoría":12}{"Período":12}{"Límite":14}{"Estado":10}')
+                        console.print(f'{id_p:6}{id_cat:12}{periodo:12}{float(limite):<14,.2f}{estado:10}')
+                except ValueError:
+                    mostrar_mensaje(f"Línea con formato inválido, se omite: {linea}", "alerta")
+            linea = arch.readline()
+        if not encontrado:
+            mostrar_mensaje("No se encontró ningún presupuesto con ese ID.", "alerta")
+    except OSError:
+        mostrar_mensaje("No se pudo leer el archivo de presupuestos.", "error")
+    finally:
+        try:
+            arch.close()
+        except:
+            print("No se pudo cerrar el archivo")
+    console.input("[dim]Presione ENTER para continuar...[/dim]")

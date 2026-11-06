@@ -39,13 +39,16 @@ def mostrar_presupuestos(presupuestos, categorias, encabezados):
     renderizar_tabla(encs, filas, "Listado de Presupuestos")
     console.input("[dim]Presione ENTER para continuar...[/dim]")
 
-def mostrar_gastos(gastos, categorias, encabezados):
-    filas = []
-    for g in gastos:
-        nom_cat = obtener_nombre_categoria(g[3], categorias)
-        monto_fmt = f"${float(g[2]):,.2f}"
-        filas.append([g[0], g[1], monto_fmt, nom_cat, g[4], g[5]])
-    
-    encs = ["ID", "Fecha", "Monto", "Categoría", "Descripción", "Estado"]
-    renderizar_tabla(encs, filas, "Control General de Gastos")
-    console.input("[dim]Presione ENTER para continuar...[/dim]")
+def cargar_matriz(archivo):
+    matriz = []
+
+    try:
+        with open(archivo, "rt", encoding="utf-8") as arch:
+            for linea in arch:
+                datos = linea.strip().split("|")
+                matriz.append(datos)
+
+    except FileNotFoundError:
+        mostrar_mensaje("No se encontró el archivo.", "error")
+
+    return matriz

@@ -8,23 +8,22 @@
 from Menus.menus import menu_principal
 from Datos.Datos import (
     presupuestos,
-    gastos,
     encabezadosC,
     encabezadosP,
     encabezadosG
 )
 
 from Crud.Crud_Usuarios import login
+from Crud.Crud_Gast import leer_gastos
 
 def main():
 
     usuario = login()
     if usuario:
-        print(encabezadosG)
         menu_principal(
             usuario,
             presupuestos,
-            gastos,
+            leer_gastos(),
             encabezadosC,
             encabezadosP,
             encabezadosG

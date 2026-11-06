@@ -1,15 +1,6 @@
-<<<<<<< HEAD
-# Bytecode y cache de Python 
-**/__pycache__/
-__pycache__/
-*.py[cod]
-*.pyc
-*.pyo
-=======
 # Bytecode y cache de Python
 __pycache__/
 *.py[cod]
->>>>>>> e48c314abd9f5b7c659a1cfcfbfbf8c06591d684
 *$py.class
 
 # Entornos virtuales
@@ -20,10 +11,3 @@ env/
 # Archivos de sistema / IDE
 .DS_Store
 Thumbs.db
-<<<<<<< HEAD
-
-# Documentación interna de trabajo
-*.txt
-
-=======
->>>>>>> e48c314abd9f5b7c659a1cfcfbfbf8c06591d684

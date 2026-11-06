@@ -6,11 +6,12 @@
 # Entidad: Categorías
 # Fila: [ID, Nombre, Descripción, Estado]
 # -------------------------------------------------------------------------
-encabezadosG = ["ID", "Fecha", "Monto", "ID_Categoria", "Descripcion", "Estado"]
-encabezadosP = ["ID", "ID_Categoria", "Periodo", "Monto Limite", "Estado"]
-encabezadosC = ["ID", "Nombre", "Descripcion", "Estado"]
+encabezadosG = ("ID", "Fecha", "Monto", "ID_Categoria", "Descripcion", "Estado")
+encabezadosP = ("ID", "ID_Categoria", "Periodo", "Monto Limite", "Estado")
+encabezadosC = ("ID", "Nombre", "Descripcion", "Estado")
 categoria_ruta = r"Datos/categorias.txt"
 presupuesto_ruta = r"Datos/presupuestos.txt"
+ruta_gastos = r"Datos/gastos.json"
 # -------------------------------------------------------------------------
 # Entidad: Presupuestos
 # Fila: [ID, ID_Categoria, Período, Monto Límite, Estado]
@@ -21,21 +22,6 @@ presupuestos = [
     ["3", "3", "01/08/2026-31/08/2026", 15000.0, "Activo"],
     ["4", "4", "01/08/2026-31/08/2026", 10000.0, "Activo"],
     ["5", "5", "01/08/2026-31/08/2026", 12000.0, "Activo"],
-]
-
-# -------------------------------------------------------------------------
-# Entidad: Gastos (Entidad de Unión)
-# Fila: [ID, Fecha, Monto, ID_Categoria, Descripción, Estado]
-# -------------------------------------------------------------------------
-gastos = [
-    ["1", "01/08/2026", 12500.0, "1", "Supermercado compra semanal", "Activo"],
-    ["2", "02/08/2026", 4500.0, "2", "Carga de combustible", "Activo"],
-    ["3", "03/08/2026", 3200.0, "3", "Entradas de cine y combo", "Activo"],
-    ["4", "04/08/2026", 1800.0, "4", "Farmacia medicamentos", "Activo"],
-    ["5", "05/08/2026", 7500.0, "5", "Pago cuota curso online", "Activo"],
-    ["6", "10/08/2026", 18200.0, "1", "Compra mensual supermercado", "Activo"],
-    ["7", "12/08/2026", 6000.0, "2", "Recarga de tarjeta transporte", "Activo"],
-    ["8", "15/08/2026", 5400.0, "3", "Cena con amigos", "Activo"],
 ]
 
 # -------------------------------------------------------------------------

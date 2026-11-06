@@ -184,11 +184,16 @@ def filtrar_por_fechas_recursivo(gastos_lista, fecha_inicio, fecha_fin):
     gasto_actual = gastos_lista[0]
     resto = filtrar_por_fechas_recursivo(gastos_lista[1:], fecha_inicio, fecha_fin)
 
-    if gasto_actual[5] == "Activo":
-        num_gasto = fecha_a_numero(gasto_actual[1])
+    if gasto_actual["estado"] == "Activo":
+        num_gasto = fecha_a_numero(gasto_actual["fecha"])
         num_inicio = fecha_a_numero(fecha_inicio)
         num_fin = fecha_a_numero(fecha_fin)
         if num_inicio <= num_gasto <= num_fin:
             return [gasto_actual] + resto
 
     return resto
+
+def sumar_montos_recursivo(gastos_lista, i=0):
+    if i >= len(gastos_lista):
+        return 0.0
+    return float(gastos_lista[i]["monto"]) + sumar_montos_recursivo(gastos_lista, i + 1)
