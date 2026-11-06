@@ -144,3 +144,8 @@ def filtrar_por_fechas_recursivo(gastos_lista, fecha_inicio, fecha_fin):
             return [gasto_actual] + resto
 
     return resto
+
+def sumar_montos_recursivo(gastos_lista, i=0):
+    if i >= len(gastos_lista):
+        return 0.0
+    return float(gastos_lista[i]["monto"]) + sumar_montos_recursivo(gastos_lista, i + 1)

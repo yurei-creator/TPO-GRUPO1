@@ -129,11 +129,24 @@ def eliminar_categoria(archivo=categoria_ruta):
     console.input("[dim]Presione ENTER para continuar...[/dim]")
 
 def modificar_categoria(archivo=categoria_ruta):
-    codigo_modif = input("Ingrese el código de la categoría a modificar: ")
+    console.print("\n[bold blue]--- [U] MODIFICAR CATEGORIA ---[/bold blue]")
+
+    codigo_modif = pedir_texto_no_vacio(
+        "Ingrese el codigo de la categoria a modificar: "
+    )
+
     temp = "temp.txt"
     encontrado = False
+    nombres = []
 
     try:
+        with open(archivo, "rt", encoding="utf-8") as arch:
+            for linea in arch:
+                datos = linea.strip().split("|")
+
+                if datos[0] != codigo_modif:
+                    nombres.append(datos[1].lower())
+
         with open(archivo, "rt", encoding="utf-8") as arch, \
              open(temp, "wt", encoding="utf-8") as aux:
 
@@ -149,48 +162,62 @@ def modificar_categoria(archivo=categoria_ruta):
                     descripcion = datos[2]
                     estado = datos[3]
 
-                    print(f"\nCategoría encontrada: {codigo} - {nombre} - {descripcion}")
+                    mostrar_mensaje(
+                        f"Categoría encontrada: {codigo} - {nombre} - {descripcion}"
+                    )
 
-                    nuevo_nombre = input(
+                    nuevo_nombre = console.input(
                         "Nuevo nombre (Enter para mantener): "
                     ).strip()
+
+                    while nuevo_nombre != "" and nuevo_nombre.lower() in nombres:
+                        mostrar_mensaje(
+                            "Esa categoría ya existe, ingrese otro nombre.",
+                            "alerta"
+                        )
+
+                        nuevo_nombre = console.input(
+                            "Nuevo nombre: "
+                        ).strip()
 
                     if nuevo_nombre == "":
                         nuevo_nombre = nombre
 
-                    nueva_descripcion = input(
+                    nueva_descripcion = console.input(
                         "Nueva descripción (Enter para mantener): "
                     ).strip()
 
                     if nueva_descripcion == "":
                         nueva_descripcion = descripcion
 
-                    nueva_linea = f"{codigo}|{nuevo_nombre}|{nueva_descripcion}|{estado}\n"
+                    nueva_linea = (
+                        f"{codigo}|{nuevo_nombre}|"
+                        f"{nueva_descripcion}|{estado}\n"
+                    )
 
                     aux.write(nueva_linea)
 
-                    print(f"Categoría {codigo} modificada.")
+                    mostrar_mensaje(f"Categoría {codigo} modificada.")
 
                 else:
                     aux.write(linea)
 
-    except FileNotFoundError:
-        print("El archivo no existe.")
-        return
-
-    except OSError as error:
-        print("Error en el acceso al archivo:", error)
-        return
-
-    if encontrado:
-        try:
+        if encontrado:
+            import os
             os.replace(temp, archivo)
-        except OSError as error:
-            print("Error al reemplazar el archivo:", error)
+        else:
+            import os
+            os.remove(temp)
 
-    else:
-        os.remove(temp)
-        print(f"No se encontró la categoría {codigo_modif}.")
+            mostrar_mensaje(
+                "No se encontró una categoría con ese código.",
+                "alerta"
+            )
+
+    except FileNotFoundError:
+        mostrar_mensaje("No se encontró el archivo de categorías.", "error")
+
+    console.input("[dim]Presione ENTER para continuar...[/dim]")
 
 def mostrar_categorias(archivo=categoria_ruta,encabezados=encabezadosC):
     console.print("\n[bold cyan]--- LISTADO DE PRESUPUESTOS ---[/bold cyan]")

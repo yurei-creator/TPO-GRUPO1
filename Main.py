@@ -20,7 +20,6 @@ def main():
 
     usuario = login()
     if usuario:
-        print(encabezadosG)
         menu_principal(
             usuario,
             presupuestos,

@@ -11,6 +11,7 @@ encabezadosP = ("ID", "ID_Categoria", "Periodo", "Monto Limite", "Estado")
 encabezadosC = ("ID", "Nombre", "Descripcion", "Estado")
 categoria_ruta = r"Datos/categorias.txt"
 presupuesto_ruta = r"Datos/presupuestos.txt"
+ruta_gastos = r"Datos/gastos.json"
 # -------------------------------------------------------------------------
 # Entidad: Presupuestos
 # Fila: [ID, ID_Categoria, Período, Monto Límite, Estado]

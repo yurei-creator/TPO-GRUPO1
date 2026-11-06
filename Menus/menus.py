@@ -1,9 +1,7 @@
 from Func.Func_Rich import console, mostrar_mensaje, mostrar_menu
-from Func.Func_Matriz import mostrar_categorias, mostrar_presupuestos
+from Func.Func_Matriz import mostrar_categorias, mostrar_presupuestos, cargar_matriz
 from Func.Func_val import pedir_opcion_menu
-from Crud.Crud_Cat import (
-    consultar_categoria
-)
+
 from Crud.Crud_Categorias.Crud_Cat import (
     eliminar_categoria,
     mostrar_categorias,
@@ -20,6 +18,10 @@ from Crud.Crud_Presupuestos.Crud_Pres import (
     buscar_presupuesto
 )
 
+from Datos.Datos import (
+    categoria_ruta,
+    presupuesto_ruta
+)
 
 from Crud.Crud_Gast import (
     mostrar_gastos,
@@ -27,7 +29,9 @@ from Crud.Crud_Gast import (
     consultar_gasto,
     consultar_gastos_por_rango_fechas,
     modificar_gasto,
-    eliminar_gasto
+    eliminar_gasto,
+    leer_gastos,
+    gastos_a_matriz
 )
 from Crud.Crud_Usuarios import (
     verificar_permiso,
@@ -128,7 +132,7 @@ def menu_gastos():
         elif opc == "0":
             activo = False
 
-def menu_estadisticas(gastos, categoria, presupuestos, encabezadosG):
+def menu_estadisticas():
     activo = True
     opciones = [
         "Resumen Estadístico General Consolidado",
@@ -140,9 +144,13 @@ def menu_estadisticas(gastos, categoria, presupuestos, encabezadosG):
         "Ordenamiento dinámico de gastos",
         "Estimación de variación e inflación",
     ]
+    gastos = gastos_a_matriz(leer_gastos())
+    presupuestos = cargar_matriz(presupuesto_ruta)
+    categoria= cargar_matriz(categoria_ruta)
     while activo:
         mostrar_menu("REPORTES Y ESTADÍSTICAS DEL SISTEMA", opciones)
         opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4", "5", "6", "7", "8"])
+
 
         if opc == "1":
             mostrar_resumen_estadistico_completo(gastos, categoria, presupuestos)
@@ -227,7 +235,7 @@ def menu_principal(usuario, presupuestos, gastos, encabezadosC, encabezadosP, en
             elif permiso_elegido == "categorias":
                 menu_categorias()
             elif permiso_elegido == "reportes":
-                menu_estadisticas(gastos, presupuestos, encabezadosG)
+                menu_estadisticas()
             elif permiso_elegido == "usuarios":
                 menu_usuarios(usuario)
 

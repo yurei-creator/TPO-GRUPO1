@@ -38,3 +38,17 @@ def mostrar_presupuestos(presupuestos, categorias, encabezados):
     encs = ["ID", "Categoría", "Período", "Monto Límite", "Estado"]
     renderizar_tabla(encs, filas, "Listado de Presupuestos")
     console.input("[dim]Presione ENTER para continuar...[/dim]")
+
+def cargar_matriz(archivo):
+    matriz = []
+
+    try:
+        with open(archivo, "rt", encoding="utf-8") as arch:
+            for linea in arch:
+                datos = linea.strip().split("|")
+                matriz.append(datos)
+
+    except FileNotFoundError:
+        mostrar_mensaje("No se encontró el archivo.", "error")
+
+    return matriz

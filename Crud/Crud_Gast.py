@@ -16,12 +16,14 @@ from Func.Func_Matriz import (
     obtener_categoria_por_id,
     obtener_presupuesto_por_categoria
 )
-from Datos.Datos import categoria_ruta, presupuesto_ruta
+from Datos.Datos import categoria_ruta, presupuesto_ruta, ruta_gastos
 from rich.table import Table
 from rich.panel import Panel
 
-ruta_gastos = "Datos/gastos.json"
 
+
+def gastos_a_matriz(gastos):
+    return [[g["id"], g["fecha"], g["monto"], g["categoria_id"], g["descripcion"], g["estado"]] for g in gastos]
 # de JSON a python, lee los gastos del archivo.
 def leer_gastos():
     try:
@@ -182,21 +184,36 @@ def consultar_gastos_por_rango_fechas():
     f_inicio = solicitar_y_verificar_fecha("Ingrese fecha inicial (DD/MM/AAAA):")
     f_fin = solicitar_y_verificar_fecha("Ingrese fecha final (DD/MM/AAAA):")
 
-    # Ejecución de la función recursiva
-    resultados = filtrar_por_fechas_recursivo(gastos, f_inicio, f_fin)
+    try:
+        resultados = filtrar_por_fechas_recursivo(gastos, f_inicio, f_fin)
+    except RecursionError:
+        mostrar_mensaje("Hay demasiados registros para filtrar de forma recursiva (límite de recursión superado).", "error")
+        console.input("[dim]Presione ENTER para continuar...[/dim]")
+        return
+    except (KeyError, ValueError, TypeError, IndexError):
+        mostrar_mensaje("Se encontró un gasto con datos inválidos en gastos.json.", "error")
+        console.input("[dim]Presione ENTER para continuar...[/dim]")
+        return
 
     if not resultados:
         mostrar_mensaje(f"No se registraron gastos activos entre el {f_inicio} y el {f_fin}.", "alerta")
         console.input("[dim]Presione ENTER para continuar...[/dim]")
         return
 
+    try:
+        total_periodo = sumar_montos_recursivo(resultados)
+    except RecursionError:
+        mostrar_mensaje("Demasiados registros para sumar de forma recursiva; se calcula de forma iterativa.", "alerta")
+        total_periodo = sum(float(g["monto"]) for g in resultados)
+    except (KeyError, ValueError, TypeError):
+        mostrar_mensaje("Algún gasto tiene un monto inválido; no se puede calcular el total.", "error")
+        console.input("[dim]Presione ENTER para continuar...[/dim]")
+        return
+
     filas = []
-    total_periodo = 0.0
     for g in resultados:
         nom_cat = obtener_nombre_categoria(g["categoria_id"], categorias)
-        monto = float(g["monto"])
-        total_periodo += monto
-        filas.append([g["id"], g["fecha"], f"${monto:,.2f}", nom_cat, g["descripcion"]])
+        filas.append([g["id"], g["fecha"], f"${float(g['monto']):,.2f}", nom_cat, g["descripcion"]])
 
     encs = ["ID", "Fecha", "Monto", "Categoría", "Descripción"]
     renderizar_tabla(encs, filas, f"Gastos Registrados ({f_inicio} al {f_fin})")

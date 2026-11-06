@@ -345,6 +345,7 @@ def buscar_presupuesto(archivo=presupuesto_ruta):
     console.print("\n[bold yellow]--- BUSCAR PRESUPUESTO POR ID ---[/bold yellow]")
     busqueda = pedir_texto_no_vacio("Ingrese el ID del presupuesto:").strip().lower()
     encontrado = False
+
     try:
         arch = open(archivo, "r", encoding="UTF-8")
         linea = arch.readline()
