@@ -1,5 +1,5 @@
 from Func.Func_Rich import console, mostrar_mensaje, mostrar_menu
-from Func.Func_Matriz import mostrar_categorias, mostrar_presupuestos, mostrar_gastos
+from Func.Func_Matriz import mostrar_categorias, mostrar_presupuestos
 from Func.Func_val import pedir_opcion_menu
 from Crud.Crud_Cat import (
     consultar_categoria
@@ -22,6 +22,7 @@ from Crud.Crud_Pres import (
     consultar_presupuesto
 )
 from Crud.Crud_Gast import (
+    mostrar_gastos,
     agregar_gasto,
     consultar_gasto,
     consultar_gastos_por_rango_fechas,
@@ -104,7 +105,7 @@ def menu_presupuestos(presupuestos, categoria, gastos, encabezadosP):
         elif opc == "0":
             activo = False
 
-def menu_gastos(gastos, categoria, presupuestos, encabezadosG):
+def menu_gastos():
     activo = True
     opciones = [
         "Mostrar todos los gastos",
@@ -119,17 +120,17 @@ def menu_gastos(gastos, categoria, presupuestos, encabezadosG):
         opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4", "5", "6"])
 
         if opc == "1":
-            mostrar_gastos(gastos, categoria, encabezadosG)
+            mostrar_gastos()
         elif opc == "2":
-            consultar_gasto(gastos, categoria, presupuestos, encabezadosG)
+            consultar_gasto()
         elif opc == "3":
-            agregar_gasto(gastos, categoria, presupuestos)
+            agregar_gasto()
         elif opc == "4":
-            modificar_gasto(gastos, categoria)
+            modificar_gasto()
         elif opc == "5":
-            eliminar_gasto(gastos, categoria)
+            eliminar_gasto()
         elif opc == "6":
-            consultar_gastos_por_rango_fechas(gastos, categoria, encabezadosG)
+            consultar_gastos_por_rango_fechas()
         elif opc == "0":
             activo = False
 
@@ -226,8 +227,7 @@ def menu_principal(usuario, presupuestos, gastos, encabezadosC, encabezadosP, en
             permiso_elegido = disponibles[indice][0]
 
             if permiso_elegido == "gastos":
-                print("GASTOS-TESTING")
-                menu_gastos(gastos, presupuestos, encabezadosG)
+                menu_gastos()
             elif permiso_elegido == "presupuestos":
                 menu_presupuestos(presupuestos, gastos, encabezadosP)
             elif permiso_elegido == "categorias":
