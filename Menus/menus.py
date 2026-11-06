@@ -48,16 +48,16 @@ from Func.Func_Estadisticas import (
 
 def menu_categorias(gastos, presupuestos, encabezadosC, encabezadosG):
     activo = True
-    opciones = [
+    opciones = (
         "Mostrar todas las categorías",
         "Consultar / Buscar categoría",
         "Agregar categoría",
         "Modificar categoría",
         "Baja / Reactivación lógica de categoría",
-    ]
+    )
     while activo:
         mostrar_menu("GESTIÓN DE CATEGORÍAS", opciones)
-        opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4", "5"])
+        opc = pedir_opcion_menu("Seleccione una opción:", ("0", "1", "2", "3", "4", "5"))
 
         if opc == "1":
             mostrar_categorias()
@@ -75,16 +75,16 @@ def menu_categorias(gastos, presupuestos, encabezadosC, encabezadosG):
 
 def menu_presupuestos(presupuestos, categoria, gastos, encabezadosP):
     activo = True
-    opciones = [
+    opciones = (
         "Mostrar todos los presupuestos",
         "Consultar / Buscar presupuesto",
         "Agregar presupuesto",
         "Modificar presupuesto",
         "Baja / Reactivación lógica de presupuesto",
-    ]
+    )
     while activo:
         mostrar_menu("GESTIÓN DE PRESUPUESTOS", opciones)
-        opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4", "5"])
+        opc = pedir_opcion_menu("Seleccione una opción:", ("0", "1", "2", "3", "4", "5"))
 
         if opc == "1":
             print("Mostrar presupuestos")
@@ -106,17 +106,17 @@ def menu_presupuestos(presupuestos, categoria, gastos, encabezadosP):
 
 def menu_gastos(gastos, categoria, presupuestos, encabezadosG):
     activo = True
-    opciones = [
+    opciones = (
         "Mostrar todos los gastos",
         "Consultar / Buscar gasto específico",
         "Registrar nuevo gasto",
         "Modificar gasto",
         "Baja / Reactivación lógica de gasto",
         "Consultar gastos por rango de fechas",
-    ]
+    )
     while activo:
         mostrar_menu("GESTIÓN DE GASTOS", opciones)
-        opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4", "5", "6"])
+        opc = pedir_opcion_menu("Seleccione una opción:", ("0", "1", "2", "3", "4", "5", "6"))
 
         if opc == "1":
             mostrar_gastos(gastos, categoria, encabezadosG)
@@ -135,7 +135,7 @@ def menu_gastos(gastos, categoria, presupuestos, encabezadosG):
 
 def menu_estadisticas(gastos, categoria, presupuestos, encabezadosG):
     activo = True
-    opciones = [
+    opciones = (
         "Resumen Estadístico General Consolidado",
         "Reporte de Promedios (General y por Categoría)",
         "Conteo de Registros Totales y por Categoría",
@@ -144,10 +144,10 @@ def menu_estadisticas(gastos, categoria, presupuestos, encabezadosG):
         "Comparativa Gasto Real vs. Presupuesto Previsto",
         "Ordenamiento dinámico de gastos",
         "Estimación de variación e inflación",
-    ]
+    )
     while activo:
         mostrar_menu("REPORTES Y ESTADÍSTICAS DEL SISTEMA", opciones)
-        opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4", "5", "6", "7", "8"])
+        opc = pedir_opcion_menu("Seleccione una opción:", ("0", "1", "2", "3", "4", "5", "6", "7", "8"))
 
         if opc == "1":
             mostrar_resumen_estadistico_completo(gastos, categoria, presupuestos)
@@ -170,15 +170,15 @@ def menu_estadisticas(gastos, categoria, presupuestos, encabezadosG):
 
 def menu_usuarios(usuario_actual=None):
     activo = True
-    opciones = [
+    opciones = (
         "Listar usuarios registrados",
         "Registrar nuevo usuario",
         "Modificar permisos de usuario o rol",
         "Baja / Reactivación lógica de usuario",
-    ]
+    )
     while activo:
         mostrar_menu("ADMINISTRACIÓN DE USUARIOS Y PERMISOS", opciones)
-        opc = pedir_opcion_menu("Seleccione una opción:", ["0", "1", "2", "3", "4"])
+        opc = pedir_opcion_menu("Seleccione una opción:", ("0", "1", "2", "3", "4"))
 
         if opc == "1":
             listar_usuarios()
