@@ -39,16 +39,25 @@ def mostrar_presupuestos(presupuestos, categorias, encabezados):
     renderizar_tabla(encs, filas, "Listado de Presupuestos")
     console.input("[dim]Presione ENTER para continuar...[/dim]")
 
+def leer_lineas_recursivo(arch, matriz):
+    '''Lee el archivo línea por línea de forma recursiva y agrega cada registro a la matriz.'''
+    linea = arch.readline()
+    if linea:  # caso base: cuando readline() devuelve "" se terminó el archivo
+        if linea.strip():
+            matriz.append(linea.strip().split("|"))
+        leer_lineas_recursivo(arch, matriz)  # caso recursivo: sigue con la próxima línea
+
 def cargar_matriz(archivo):
     matriz = []
 
     try:
         with open(archivo, "rt", encoding="utf-8") as arch:
-            for linea in arch:
-                datos = linea.strip().split("|")
-                matriz.append(datos)
-
+            leer_lineas_recursivo(arch, matriz)
     except FileNotFoundError:
-        mostrar_mensaje("No se encontró el archivo.", "error")
+        mostrar_mensaje(f"No se encontró el archivo {archivo}.", "error")
+    except OSError as error:
+        mostrar_mensaje(f"No se pudo leer el archivo {archivo}: {error}", "error")
+    except RecursionError:
+        mostrar_mensaje(f"El archivo {archivo} tiene demasiadas líneas para leerlo de forma recursiva.", "error")
 
     return matriz

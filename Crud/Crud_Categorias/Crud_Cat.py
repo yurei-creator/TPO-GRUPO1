@@ -220,7 +220,7 @@ def modificar_categoria(archivo=categoria_ruta):
     console.input("[dim]Presione ENTER para continuar...[/dim]")
 
 def mostrar_categorias(archivo=categoria_ruta,encabezados=encabezadosC):
-    console.print("\n[bold cyan]--- LISTADO DE PRESUPUESTOS ---[/bold cyan]")
+    console.print("\n[bold cyan]--- LISTADO DE CATEGORÍAS ---[/bold cyan]")
     filas = []
     try:
         with open(archivo, "r", encoding="utf-8") as arch:
@@ -246,7 +246,6 @@ def buscar_categoria(archivo=categoria_ruta):
             if linea:
                 try:
                     id_cat, nombre = linea.split("|")[:2]
-                    print(id_cat, nombre)
                     if busqueda == id_cat.lower() or busqueda == nombre.lower():
                         encontrada = True
                         console.print(f'\n{"ID":8}{"Nombre":25}')

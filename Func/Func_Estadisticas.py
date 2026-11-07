@@ -276,8 +276,8 @@ def simulacion_proyeccion_inflacion(gastos):
     console.print("2. Proyección Anual")
     modo = pedir_opcion_menu("Seleccione modalidad (1/2):", ["1", "2"])
 
-    tiempo = pedir_monto("Ingrese la cantidad de períodos (meses o años):")
-    tasa_input = pedir_monto("Ingrese la tasa de variación estimada (%):")
+    tiempo = float(pedir_monto("Ingrese la cantidad de períodos (meses o años):"))
+    tasa_input = float(pedir_monto("Ingrese la tasa de variación estimada (%):"))
 
     periodos = tiempo if modo == "1" else tiempo * 12
     tasa_decimal = (tasa_input / 100.0) if modo == "1" else (tasa_input / 100.0) / 12

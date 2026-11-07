@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # SISTEMA DE CONTROL DE GASTOS PERSONALES Y FAMILIARES
 # Programación 1 - Algoritmos y Estructuras de Datos 1
-# Trabajo Práctico Obligatorio - Primera Entrega
+# Trabajo Práctico Obligatorio - Segunda Entrega
 # -----------------------------------------------------------------------------
 
 

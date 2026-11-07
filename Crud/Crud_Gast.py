@@ -9,12 +9,14 @@ from Func.Func_val import (
     pedir_opcional,
     pedir_opcion_menu,
     seleccionar_categoria_id,
-    filtrar_por_fechas_recursivo
+    filtrar_por_fechas_recursivo,
+    sumar_montos_recursivo
 )
 from Func.Func_Matriz import (
     obtener_nombre_categoria,
     obtener_categoria_por_id,
-    obtener_presupuesto_por_categoria
+    obtener_presupuesto_por_categoria,
+    cargar_matriz
 )
 from Datos.Datos import categoria_ruta, presupuesto_ruta, ruta_gastos
 from rich.table import Table
@@ -42,15 +44,6 @@ def guardar_gastos(gastos):
     except (FileNotFoundError, OSError) as error:
         mostrar_mensaje(f"No se pudo guardar el archivo {ruta_gastos}: {error}", "error")
         return False
-
-
-def cargar_matriz(ruta):
-    try:
-        with open(ruta, "r", encoding="utf-8") as archivo:
-            return [linea.strip().split("|") for linea in archivo if linea.strip()]
-    except OSError as error:
-        mostrar_mensaje(f"No se pudo leer el archivo {ruta}: {error}", "alerta")
-        return []
 
 def mostrar_gastos():
     gastos = leer_gastos()
@@ -105,7 +98,7 @@ def agregar_gasto():
         return
 
     nom_cat = obtener_nombre_categoria(id_cat, categorias)
-    mostrar_mensaje(f"Gasto registrado exitosamente con ID: {nuevo_id} por ${monto:,.2f} en '{nom_cat}'.", "exito")
+    mostrar_mensaje(f"Gasto registrado exitosamente con ID: {nuevo_id} por ${float(monto):,.2f} en '{nom_cat}'.", "exito")
 
     # Alerta de presupuesto si corresponde
     pres = obtener_presupuesto_por_categoria(id_cat, presupuestos)
@@ -204,7 +197,7 @@ def consultar_gastos_por_rango_fechas():
         total_periodo = sumar_montos_recursivo(resultados)
     except RecursionError:
         mostrar_mensaje("Demasiados registros para sumar de forma recursiva; se calcula de forma iterativa.", "alerta")
-        total_periodo = sum(float(g["monto"]) for g in resultados)
+        total_periodo = sum([float(g["monto"]) for g in resultados])
     except (KeyError, ValueError, TypeError):
         mostrar_mensaje("Algún gasto tiene un monto inválido; no se puede calcular el total.", "error")
         console.input("[dim]Presione ENTER para continuar...[/dim]")

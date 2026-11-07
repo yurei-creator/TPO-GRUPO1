@@ -2,7 +2,7 @@
 
 from Crud.Crud_Categorias.Crud_Cat import obtener_ultimo_codigo
 from Datos.Datos import encabezadosC
-from Func.Func_Matriz import fila_a_diccionario, obtener_categoria_por_id
+from Func.Func_Matriz import fila_a_diccionario, obtener_categoria_por_id, cargar_matriz
 from Func.Func_val import seleccionar_categoria_id
 
 # datos de prueba
@@ -50,3 +50,16 @@ def test_fila_de_categoria_a_diccionario():
 
 def test_ultimo_codigo_sin_archivo():
     assert obtener_ultimo_codigo("archivo_que_no_existe.txt") == ("1", [])
+
+
+# leer el archivo de categorías de forma recursiva
+
+def test_cargar_matriz_sin_archivo():
+    assert cargar_matriz("archivo_que_no_existe.txt") == []
+
+def test_cargar_matriz_lee_todas_las_columnas():
+    categorias = cargar_matriz("Datos/categorias.txt")
+    assert len(categorias) > 0
+    # cada fila tiene ID, nombre, descripción y estado
+    for fila in categorias:
+        assert len(fila) == 4

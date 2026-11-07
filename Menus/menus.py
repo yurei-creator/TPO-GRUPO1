@@ -144,7 +144,11 @@ def menu_estadisticas():
         "Ordenamiento dinámico de gastos",
         "Estimación de variación e inflación",
       )
-    gastos = gastos_a_matriz(leer_gastos())
+    gastos_json = leer_gastos()
+    if gastos_json is None:
+        console.input("[dim]Presione ENTER para continuar...[/dim]")
+        return
+    gastos = gastos_a_matriz(gastos_json)
     presupuestos = cargar_matriz(presupuesto_ruta)
     categoria= cargar_matriz(categoria_ruta)
     while activo:

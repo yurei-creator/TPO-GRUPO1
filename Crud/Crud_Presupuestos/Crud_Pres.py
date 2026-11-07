@@ -20,7 +20,7 @@ from Datos.Datos import(
 
 
 def mostrar_presupuestos(archivo=presupuesto_ruta,encabezados=encabezadosP):
-    console.print("\n[bold cyan]--- LISTADO DE CATEGORÍAS ---[/bold cyan]")
+    console.print("\n[bold cyan]--- LISTADO DE PRESUPUESTOS ---[/bold cyan]")
     filas = []
     try:
         with open(archivo, "r", encoding="utf-8") as arch:
@@ -118,68 +118,6 @@ def modificar_presupuesto(archivo=presupuesto_ruta, archivo_cat=categoria_ruta):
         mostrar_mensaje(f"Error al guardar el presupuesto: {error}", "error")
 
     console.input("[dim]Presione ENTER para continuar...[/dim]")
-    codigo_modif = input("Ingrese el código de la categoría a modificar: ")
-    temp = os.path.join(os.path.dirname(archivo), "temp.txt")
-    encontrado = False
-
-    try:
-        with open(archivo, "rt", encoding="utf-8") as arch, \
-             open(temp, "wt", encoding="utf-8") as aux:
-
-            for linea in arch:
-                datos = linea.strip().split("|")
-
-                codigo = datos[0]
-
-                if codigo == codigo_modif:
-                    encontrado = True
-
-                    nombre = datos[1]
-                    descripcion = datos[2]
-                    estado = datos[3]
-
-                    print(f"\nCategoría encontrada: {codigo} - {nombre} - {descripcion}")
-
-                    nuevo_nombre = input(
-                        "Nuevo nombre (Enter para mantener): "
-                    ).strip()
-
-                    if nuevo_nombre == "":
-                        nuevo_nombre = nombre
-
-                    nueva_descripcion = input(
-                        "Nueva descripción (Enter para mantener): "
-                    ).strip()
-
-                    if nueva_descripcion == "":
-                        nueva_descripcion = descripcion
-
-                    nueva_linea = f"{codigo}|{nuevo_nombre}|{nueva_descripcion}|{estado}\n"
-
-                    aux.write(nueva_linea)
-
-                    print(f"Categoría {codigo} modificada.")
-
-                else:
-                    aux.write(linea)
-
-    except FileNotFoundError:
-        print("El archivo no existe.")
-        return
-
-    except OSError as error:
-        print("Error en el acceso al archivo:", error)
-        return
-
-    if encontrado:
-        try:
-            os.replace(temp, archivo)
-        except OSError as error:
-            print("Error al reemplazar el archivo:", error)
-
-    else:
-        os.remove(temp)
-        print(f"No se encontró la categoría {codigo_modif}.")
 
 def eliminar_presupuesto(archivo=presupuesto_ruta, archivo_cat=categoria_ruta):
     console.print("\n[bold red]--- [D] BAJA / REACTIVACIÓN LÓGICA DE PRESUPUESTO ---[/bold red]")
